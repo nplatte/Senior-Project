@@ -33,8 +33,6 @@ class TestCreateNewClass(LiveServerTestCase):
         self.assertNotIn('OperationalError ', self.browser.title)
 
         # The admin clicks the add user
-        
-
         # The admin then has a list of other users to make admins
         # The admin then puts in the first name
         # The first email

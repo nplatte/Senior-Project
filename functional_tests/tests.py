@@ -53,6 +53,8 @@ class TestCreateNewClass(LiveServerTestCase):
         self.assertNotIn('OperationalError ', self.browser.title)
 
         # The admin user selects the create class option on the page
+        section_list = self.browser.find_elements_by_class_name('section')
+
         # The admin is taken to a page where they choose to upload a file in html format
         # After puting in more information, they are taken to their new class page displaying student information like numbers, names, and emails
         # This page has the course title, the term, and prefessor name on the top

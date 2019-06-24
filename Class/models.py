@@ -1,6 +1,21 @@
 from django.db import models
+from html.parser import HTMLParser
+
+
 
 class Course(models.Model):
+    
+    Class_File = models.FileField(upload_to='class_htmls')
 
-    title = models.CharField(default='', max_length = 70, help_text = 'Class name')
-    professor = models.CharField(default = '', max_length = 30, help_text = 'Course Instructor')
+
+class MyHTMLParser(HTMLParser):
+
+    def handle_starttag(self, tag, attrs):
+        pass
+
+    def handle_endtag(self, tag):
+        pass
+
+    def handle_data(self, data):
+        course_info = data.split(' | ')
+        self.course_title = course_info[2]

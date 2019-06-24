@@ -5,21 +5,26 @@ from os import listdir
 
 class TestCourseModel(TestCase):
     
-    def test_uploads_to_class_htmls(self):
-        test_class = Course()
-        pre_up = len(listdir('C:\Users\nplat\OneDrive\Desktop\Senior Project\Class\class_htmls'))
-        post_up = len(listdir('C:\Users\nplat\OneDrive\Desktop\Senior Project\Class\class_htmls'))
-
+    pass
 
 class TestMyHTMLParser(TestCase):
 
-    def test_parser_pulls_course_title(self):
-        HtmlPars = MyHTMLParser()
-        HtmlPars.feed(
-            '<th colspan="12"><span class="left"><span>Class List 2019 May Term | Undergraduate | CS 260 01 | Introduction to Computer Graphics (17 students)</span></span><span class="right"></span></th>'
-            )
-        self.assertEqual(HtmlPars.course_title, 'CS 260 01')
-
     def test_feed_full_file(self):
-        pass
+        HtmlPars = MyHTMLParser()
+        HtmlPars.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+        first_data = '\t\t'
+        last_data = '\t\t'
+        self.assertEqual(first_data, HtmlPars.data_list[0])
+        self.assertEqual(last_data, HtmlPars.data_list[-1])
+
+    def test_sort_list_based_on_start_stop(self):
+        HtmlPars = MyHTMLParser()
+        HtmlPars.data_list = ['a', 'start', 'b', 'o', 'stop', 'a', 'stop', 'start', 'b', 'stop', 'a']
+        slist_key = ['b', 'o', 'b']
+        sorted_list = HtmlPars.sort_data_list('start', 'stop')
+        self.assertEqual(slist_key, sorted_list)
+
+    def test_list_has_course_info(self):
+        HtmlPars = MyHTMLParser()
+        HtmlPars.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
         

@@ -9,8 +9,6 @@ class Course(models.Model):
     
     def __init__(self):
         models.Model.__init__(self)
-        self.code = None
-        
 
     def create(self, file):
         self.Parser = MyHTMLParser()
@@ -18,6 +16,9 @@ class Course(models.Model):
         self.Parser.sort_data_list('\t\t\t', '\t\t')
         course_info = self.Parser.data_list[0][1].split(' | ')
         self.code = course_info[2]
+        self.term = course_info[0][11:]
+        self.title = course_info[3][:-14]
+        self.Students = []
 
 
 class MyHTMLParser(HTMLParser):
@@ -63,6 +64,6 @@ class MyHTMLParser(HTMLParser):
         self.data_list = new_data_list
 
 
-class Student:
+class Student(models.Model):
 
     pass

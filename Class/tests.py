@@ -18,6 +18,12 @@ class TestCourseModel(TestCase):
         self.test_class.add_students()
         self.assertEqual(17, len(self.test_class.Students))
 
+    def test_Course_uses_database(self):
+        course = Course.objects.all().first()
+        self.assertEqual(course.title, 'Introduction to Computer Graphics')
+        self.assertEqual(course.term, '2019 May Term')
+        self.assertEqual(course.code, 'CS 260 01')
+
 
 class TestMyHTMLParser(TestCase):
 

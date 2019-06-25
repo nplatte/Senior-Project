@@ -6,11 +6,12 @@ from html.parser import HTMLParser
 class Course(models.Model):
     
     Class_File = models.FileField(upload_to='class_htmls')
-    
-    def __init__(self):
-        models.Model.__init__(self)
+    code = models.CharField(default='', max_length=20, blank=True)
+    title = models.CharField(default='', max_length=50, blank=True)
+    term = models.CharField(default='', max_length=60, blank=True)
 
     def create(self, file):
+        
         Parser = MyHTMLParser()      
         Parser.feed_file(file)
         Parser.sort_data_list('\t\t\t', '\t\t')
@@ -20,6 +21,7 @@ class Course(models.Model):
         self.term = course_info[0][11:]
         self.title = course_info[3][:-14]
         self.Students = []
+        self.save()
 
     def add_students(self):
         for info in self.student_info:

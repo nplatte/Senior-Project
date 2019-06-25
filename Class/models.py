@@ -11,14 +11,21 @@ class Course(models.Model):
         models.Model.__init__(self)
 
     def create(self, file):
-        self.Parser = MyHTMLParser()
-        self.Parser.feed_file(file)
-        self.Parser.sort_data_list('\t\t\t', '\t\t')
-        course_info = self.Parser.data_list[0][1].split(' | ')
+        Parser = MyHTMLParser()      
+        Parser.feed_file(file)
+        Parser.sort_data_list('\t\t\t', '\t\t')
+        course_info = Parser.data_list[0][1].split(' | ')
+        self.student_info = Parser.data_list[2:]
         self.code = course_info[2]
         self.term = course_info[0][11:]
         self.title = course_info[3][:-14]
         self.Students = []
+
+    def add_students(self):
+        for i in range(len(self.student_info)):
+            new_student = Student()
+            new_student.add_info()
+            self.Students.append(new_student)
 
 
 class MyHTMLParser(HTMLParser):
@@ -66,4 +73,5 @@ class MyHTMLParser(HTMLParser):
 
 class Student(models.Model):
 
-    pass
+    def add_info(self):
+        pass

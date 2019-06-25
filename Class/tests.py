@@ -5,12 +5,21 @@ from os import listdir
 
 class TestCourseModel(TestCase):
     
+    def setUp(self):
+        self.test_class = Course()
+        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+    
     def test_course_has_info(self):
-        test_class = Course()
-        test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
-        self.assertEqual(test_class.code, 'CS 260 01')
-        self.assertEqual(test_class.term, '2019 May Term')
-        self.assertEqual(test_class.title, 'Introduction to Computer Graphics')
+        self.assertEqual(self.test_class.code, 'CS 260 01')
+        self.assertEqual(self.test_class.term, '2019 May Term')
+        self.assertEqual(self.test_class.title, 'Introduction to Computer Graphics')
+
+    def test_add_students_to_list(self):
+        self.test_class.add_students()
+        self.assertEqual(17, len(self.test_class.Students))
+
+    def test_student_has_info(self):
+        pass
 
 
 class TestMyHTMLParser(TestCase):
@@ -44,4 +53,4 @@ class TestStudentModel(TestCase):
         test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
 
     def test_student_has_name(self):
-        test_student = Student()
+        pass

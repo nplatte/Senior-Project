@@ -18,9 +18,6 @@ class TestCourseModel(TestCase):
         self.test_class.add_students()
         self.assertEqual(17, len(self.test_class.Students))
 
-    def test_student_has_info(self):
-        pass
-
 
 class TestMyHTMLParser(TestCase):
 
@@ -49,8 +46,24 @@ class TestMyHTMLParser(TestCase):
 class TestStudentModel(TestCase):
 
     def setUp(self):
-        test_class = Course()
-        test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+        self.test_class = Course()
+        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+        self.test_class.add_students()
 
     def test_student_has_name(self):
-        pass
+        test_student = self.test_class.Students[9]
+        self.assertEqual(test_student.name, 'Platte, Nathan Wayne')
+
+    def test_student_saves_to_database(self):
+        test_student = Student()
+        test_student.add_info(['\t\t\t', 'N', '868019', 'Platte, Nathan Wayne', 'H - History', '\xa0', 'nathan.platte@wartburg.edu', '\xa0', 'Computer Science', 'Fourth Year'])
+        
+        self.assertEqual(len(Student.objects.all()), 18)
+        student = Student.objects.filter(email='nathan.platte@wartburg.edu').first()
+        self.assertEqual(student.name, 'Platte, Nathan Wayne')
+
+    def test_student_has_all_info(self):
+        student = Student.objects.filter(name='Hookham, Trey Charles').first()
+        self.assertEqual(student.email, 'trey.hookham@wartburg.edu')
+        self.assertEqual(student.number, 1129224)
+        self.assertEqual(student.year, 'Fourth Year')

@@ -22,9 +22,9 @@ class Course(models.Model):
         self.Students = []
 
     def add_students(self):
-        for i in range(len(self.student_info)):
+        for info in self.student_info:
             new_student = Student()
-            new_student.add_info()
+            new_student.add_info(info)
             self.Students.append(new_student)
 
 
@@ -33,12 +33,6 @@ class MyHTMLParser(HTMLParser):
         HTMLParser.__init__(self)
         self.data_list = []
         self.tag_list = []
-
-    def handle_starttag(self, tag, attrs):
-        self.tag_list.append(tag)
-
-    def handle_endtag(self, tag):
-        self.tag_list.append(tag)
 
     def handle_data(self, data):
         if data not in ['\t', '\n']:
@@ -72,6 +66,15 @@ class MyHTMLParser(HTMLParser):
 
 
 class Student(models.Model):
+    
+    name = models.CharField(default = '', max_length = 50)
+    email = models.CharField(default = '', max_length = 40)
+    number = models.IntegerField(default = '')
+    year = models.CharField(default = '', max_length = 19)
 
-    def add_info(self):
-        pass
+    def add_info(self, info):
+        self.name = info[3]
+        self.email = info[6]
+        self.number = int(info[2])
+        self.year = info[-1]
+        self.save()

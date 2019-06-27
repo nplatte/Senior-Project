@@ -19,7 +19,7 @@ class Course(models.Model):
         self.student_info = Parser.data_list[2:]
         self.code = course_info[2]
         self.term = course_info[0][11:]
-        self.title = course_info[3][:-14]
+        self.title = course_info[3][:course_info[3].find(' (')]
         self.Students = []
         self.save()
 
@@ -50,7 +50,7 @@ class MyHTMLParser(HTMLParser):
         for student in self.data_list:
             print(student)
 
-    def sort_data_list(self, start_char, stop_char):
+    def sort_data_list(self, start_char='\t\t\t', stop_char='\t\t'):
         # Sorts the data list compiling all of the data for each student into sperate lists
         new_data_list = []
         will_append = False

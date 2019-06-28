@@ -21,7 +21,6 @@ class Course(models.Model):
         self.term = course_info[0][11:]
         self.title = course_info[3][:course_info[3].find(' (')]
         self.Students = []
-        self.save()
 
     def add_students(self):
         for info in self.student_info:
@@ -29,6 +28,10 @@ class Course(models.Model):
             new_student.add_info(info)
             self.Students.append(new_student)
 
+    def save(self, *args, **kwargs):
+        self.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\class_htmls\\original_file.xls')
+        print('here')
+        super().save(*args, **kwargs)
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):

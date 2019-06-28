@@ -2,6 +2,8 @@ from selenium import webdriver
 from django.test import LiveServerTestCase
 from selenium.webdriver.common.keys import Keys
 from time import sleep
+from os import remove
+from Class.models import Course
 
 
 class TestCreateNewClass(LiveServerTestCase):
@@ -53,8 +55,27 @@ class TestCreateNewClass(LiveServerTestCase):
         self.assertNotIn('OperationalError ', self.browser.title)
 
         # The admin user selects the create class option on the page
-        section_list = self.browser.find_elements_by_class_name('section')
+        self.browser.get('http://localhost:8000/admin/Class/course/add/')
 
-        # The admin is taken to a page where they choose to upload a file in html format
-        # After puting in more information, they are taken to their new class page displaying student information like numbers, names, and emails
-        # This page has the course title, the term, and prefessor name on the top
+
+        # The admin is taken to a page where they choose to upload an .xls file and no other information        
+        # the admin chooses the file and uploads it and presses the save button
+        file_upload = self.browser.find_element_by_name('Class_File')
+        file_upload.send_keys('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+        save_course = self.browser.find_element_by_name('_save')
+        save_course.click()
+
+        print(Course.objects.all())
+
+        saved_course = Course.objects.all().first()
+        self.assertEqual(saved_course.title, 'Introduction to Computer Graphics')
+        self.assertEqual(saved_course.term, '2019 May Term')
+        self.assertEqual(saved_course.code, 'CS 260 01')
+        
+        remove('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\class_htmls\\original_file.xls')
+
+        # They are shown a display page, previewing the information
+        self.assertEqual(self.browser.current_url, 'http://localhost:8000/admin/Class/course/preview/')
+        # This page has the course title, the term, and prefessor name on the top and the students displayed below
+
+        

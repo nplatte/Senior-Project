@@ -2,7 +2,6 @@ from django.db import models
 from html.parser import HTMLParser
 
 
-
 class Course(models.Model):
     
     Class_File = models.FileField(upload_to='class_htmls')
@@ -10,8 +9,9 @@ class Course(models.Model):
     title = models.CharField(default='', max_length=50, blank=True)
     term = models.CharField(default='', max_length=60, blank=True)
 
-    def create(self, file):
-        
+    def create(self, file=None):
+        if file is None:
+            file = self.Class_File.path
         Parser = MyHTMLParser()      
         Parser.feed_file(file)
         Parser.sort_data_list('\t\t\t', '\t\t')
@@ -21,6 +21,7 @@ class Course(models.Model):
         self.term = course_info[0][11:]
         self.title = course_info[3][:course_info[3].find(' (')]
         self.Students = []
+        self.save()
 
     def add_students(self):
         for info in self.student_info:
@@ -28,10 +29,27 @@ class Course(models.Model):
             new_student.add_info(info)
             self.Students.append(new_student)
 
-    def save(self, *args, **kwargs):
-        self.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\class_htmls\\original_file.xls')
-        print('here')
-        super().save(*args, **kwargs)
+    def __str__(self):
+        return self.title
+
+
+class Student(models.Model):
+    
+    name = models.CharField(default = '', max_length = 50)
+    email = models.CharField(default = '', max_length = 40)
+    number = models.IntegerField(default = '')
+    year = models.CharField(default = '', max_length = 19)
+
+    def add_info(self, info):
+        self.name = info[3]
+        self.email = info[6]
+        self.number = int(info[2])
+        self.year = info[-1]
+        self.save()
+
+    def __str__(self):
+        return self.name
+
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):
@@ -70,16 +88,4 @@ class MyHTMLParser(HTMLParser):
         self.data_list = new_data_list
 
 
-class Student(models.Model):
-    
-    name = models.CharField(default = '', max_length = 50)
-    email = models.CharField(default = '', max_length = 40)
-    number = models.IntegerField(default = '')
-    year = models.CharField(default = '', max_length = 19)
 
-    def add_info(self, info):
-        self.name = info[3]
-        self.email = info[6]
-        self.number = int(info[2])
-        self.year = info[-1]
-        self.save()

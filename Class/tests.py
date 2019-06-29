@@ -84,3 +84,5 @@ class TestStudentModel(TestCase):
         self.assertEqual(student.email, 'trey.hookham@wartburg.edu')
         self.assertEqual(student.number, 1129224)
         self.assertEqual(student.year, 'Fourth Year')
+
+    

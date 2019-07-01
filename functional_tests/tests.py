@@ -65,9 +65,7 @@ class TestCreateNewClass(LiveServerTestCase):
         save_course = self.browser.find_element_by_name('_save')
         save_course.click()
 
-        print(Course.objects.all())
-
-        saved_course = Course.objects.all().first()
+        saved_course = Course.objects.all()
         self.assertEqual(saved_course.title, 'Introduction to Computer Graphics')
         self.assertEqual(saved_course.term, '2019 May Term')
         self.assertEqual(saved_course.code, 'CS 260 01')

@@ -9,7 +9,7 @@ class CourseAdminModelForm(forms.ModelForm):
         model = Course
         
         fields = [
-            'Class_File', 'title', 'code', 'term'
+            'Class_File', 'title', 'code', 'term', 'students'
         ] 
 
 class CourseAdmin(admin.ModelAdmin):
@@ -20,9 +20,10 @@ class CourseAdmin(admin.ModelAdmin):
         ('Course Information', {
             'fields': ('Class_File', 'title', 'code', 'term')
         }),
+        ('Student Information', {
+            'fields': ('students',)
+        })
     )
-
-    #fields = ['Class_File', 'title', 'code', 'term']
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
@@ -35,14 +36,15 @@ class CourseAdmin(admin.ModelAdmin):
                     'fields': ('Class_File',)
                 }),
             )
-            #fields = ('Class_File',)
         else:
             fieldsets = (
                 ('Course Information', {
                     'fields': ('title', 'code', 'term')
                 }),
+                ('Student Information', {
+                'fields': ('students',)
+                }),
             )
-            #fields = ('title', 'code', 'term')
         return fieldsets
         
 admin.site.register(Course, CourseAdmin)

@@ -2,38 +2,6 @@ from django.db import models
 from django import forms
 from html.parser import HTMLParser
 
-
-class Course(models.Model):
-    
-    Class_File = models.FileField(upload_to='class_htmls')
-    code = models.CharField(default='', max_length=20, blank=True)
-    title = models.CharField(default='', max_length=50, blank=True)
-    term = models.CharField(default='', max_length=60, blank=True)
-
-    def create(self, file=None):
-        if file is None:
-            file = self.Class_File.path
-        Parser = MyHTMLParser()      
-        Parser.feed_file(file)
-        Parser.sort_data_list('\t\t\t', '\t\t')
-        course_info = Parser.data_list[0][1].split(' | ')
-        self.student_info = Parser.data_list[2:]
-        self.code = course_info[2]
-        self.term = course_info[0][11:]
-        self.title = course_info[3][:course_info[3].find(' (')]
-        self.Students = []
-        self.save()
-
-    def add_students(self):
-        for info in self.student_info:
-            new_student = Student()
-            new_student.add_info(info)
-            self.Students.append(new_student)
-
-    def __str__(self):
-        return self.title
-
-
 class Student(models.Model):
     
     name = models.CharField(default = '', max_length = 50)
@@ -50,6 +18,37 @@ class Student(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Course(models.Model):
+    
+    Class_File = models.FileField(upload_to='class_htmls')
+    code = models.CharField(default='', max_length=20, blank=True)
+    title = models.CharField(default='', max_length=50, blank=True)
+    term = models.CharField(default='', max_length=60, blank=True)
+    students = models.ManyToManyField(Student)
+
+    def create(self, file=None):
+        if file is None:
+            file = self.Class_File.path
+        Parser = MyHTMLParser()      
+        Parser.feed_file(file)
+        Parser.sort_data_list('\t\t\t', '\t\t')
+        course_info = Parser.data_list[0][1].split(' | ')
+        self.student_info = Parser.data_list[2:]
+        self.code = course_info[2]
+        self.term = course_info[0][11:]
+        self.title = course_info[3][:course_info[3].find(' (')]
+        self.save()
+
+    def add_students(self):
+        for info in self.student_info:
+            new_student = Student()
+            new_student.add_info(info)
+            self.students.add(new_student)
+
+    def __str__(self):
+        return self.title
 
 
 class MyHTMLParser(HTMLParser):

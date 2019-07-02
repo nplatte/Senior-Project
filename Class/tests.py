@@ -14,10 +14,6 @@ class TestCourseModel(TestCase):
         self.assertEqual(self.test_class.term, '2019 May Term')
         self.assertEqual(self.test_class.title, 'Introduction to Computer Graphics')
 
-    def test_add_students_to_list(self):
-        self.test_class.add_students()
-        self.assertEqual(17, len(self.test_class.Students))
-
     def test_Course_uses_database(self):
         course = Course.objects.all().first()
         self.assertEqual(course.title, 'Introduction to Computer Graphics')
@@ -30,6 +26,10 @@ class TestCourseModel(TestCase):
         self.assertEqual(new_class.code, 'CS 220 01')
         self.assertEqual(new_class.term, '2019 Winter Term')
         self.assertEqual(new_class.title, 'Obj-Orient Prog & Intro Data Struct')
+
+    def test_Course_adds_students_to_many_to_many_relationship(self):
+        self.test_class.add_students()
+        self.assertEqual(len(self.test_class.students), 18)
 
 
 class TestMyHTMLParser(TestCase):
@@ -68,7 +68,7 @@ class TestStudentModel(TestCase):
         self.test_class.add_students()
 
     def test_student_has_name(self):
-        test_student = self.test_class.Students[9]
+        test_student = Student.objects.filter(name = 'Platte, Nathan Wayne').first()
         self.assertEqual(test_student.name, 'Platte, Nathan Wayne')
 
     def test_student_saves_to_database(self):

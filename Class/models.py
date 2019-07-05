@@ -26,7 +26,7 @@ class Course(models.Model):
     code = models.CharField(default='', max_length=20, blank=True)
     title = models.CharField(default='', max_length=50, blank=True)
     term = models.CharField(default='', max_length=60, blank=True)
-    students = models.ManyToManyField(Student)
+    students = models.ManyToManyField(Student, related_name='students')
 
     def create(self, file=None):
         if file is None:
@@ -40,12 +40,20 @@ class Course(models.Model):
         self.term = course_info[0][11:]
         self.title = course_info[3][:course_info[3].find(' (')]
         self.save()
+        self.add_students()
+        self.save()
 
     def add_students(self):
+        students_in_db = Student.objects.all()
         for info in self.student_info:
-            new_student = Student()
-            new_student.add_info(info)
+            student_in_db = students_in_db.filter(number=info[2])
+            if student_in_db.count() == 1:
+                new_student = student_in_db.first()
+            elif student_in_db.count() == 0:
+                new_student = Student()
+                new_student.add_info(info)
             self.students.add(new_student)
+
 
     def __str__(self):
         return self.title

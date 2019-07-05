@@ -7,7 +7,7 @@ class TestCourseModel(TestCase):
     
     def setUp(self):
         self.test_class = Course()
-        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
     
     def test_course_has_info(self):
         self.assertEqual(self.test_class.code, 'CS 260 01')
@@ -22,15 +22,15 @@ class TestCourseModel(TestCase):
 
     def test_Course_correctly_pulls_different_course_info(self):
         new_class = Course()
-        new_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\ClassList.xls')
+        new_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
         self.assertEqual(new_class.code, 'CS 220 01')
         self.assertEqual(new_class.term, '2019 Winter Term')
         self.assertEqual(new_class.title, 'Obj-Orient Prog & Intro Data Struct')
 
-    def test_Course_adds_students_to_many_to_many_relationship(self):
-        self.test_class.add_students()
-        self.assertEqual(len(self.test_class.students), 18)
-
+    def test_Course_does_not_duplicate_students(self):
+        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260_extra_student.xls')
+        students = self.test_class.students.filter(number='868019')
+        self.assertEqual(students.count(), 1)
 
 class TestMyHTMLParser(TestCase):
 
@@ -38,7 +38,7 @@ class TestMyHTMLParser(TestCase):
         self.parser = MyHTMLParser()
 
     def test_feed_full_file(self):
-        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
         first_data = '\t\t'
         last_data = '\t\t'
         self.assertEqual(first_data, self.parser.data_list[0])
@@ -51,12 +51,12 @@ class TestMyHTMLParser(TestCase):
         self.assertEqual(slist_key, self.parser.data_list)
 
     def test_list_has_course_info(self):
-        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
         self.parser.sort_data_list('\t\t\t', '\t\t')
         self.assertIn(['\t\t\t', 'Class List 2019 May Term | Undergraduate | CS 260 01 | Introduction to Computer Graphics (17 students)'], self.parser.data_list)
 
     def test_parses_other_courses(self):
-        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\ClassList.xls')
+        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
         self.parser.sort_data_list()
         self.assertEqual(self.parser.data_list[0][1], 'Class List 2019 Winter Term | Undergraduate | CS 220 01 | Obj-Orient Prog & Intro Data Struct (23 students)')
 
@@ -64,8 +64,7 @@ class TestStudentModel(TestCase):
 
     def setUp(self):
         self.test_class = Course()
-        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
-        self.test_class.add_students()
+        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
 
     def test_student_has_name(self):
         test_student = Student.objects.filter(name = 'Platte, Nathan Wayne').first()
@@ -84,5 +83,3 @@ class TestStudentModel(TestCase):
         self.assertEqual(student.email, 'trey.hookham@wartburg.edu')
         self.assertEqual(student.number, 1129224)
         self.assertEqual(student.year, 'Fourth Year')
-
-    

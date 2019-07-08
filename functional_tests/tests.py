@@ -6,6 +6,18 @@ from os import remove
 from Class.models import Course
 
 
+class TestTeacherAssignmentPost(LiveServerTestCase):
+
+    def setUp(self):
+        self.browser = webdriver.Firefox()
+
+    def tearDown(self):
+        self.browser.quit()
+
+    def test_teacher_login(self):
+        pass
+
+
 class TestCreateNewClass(LiveServerTestCase):
 
     def setUp(self):
@@ -30,7 +42,7 @@ class TestCreateNewClass(LiveServerTestCase):
         self.assertIn('admin', self.browser.title)
 
         # The admin logs into the admin page
-        self.admin_login('admin', 'E!byz..D)4P!M4')
+        self.admin_login('nathan.platte', 'Sparta12456')
         sleep(1)
         self.assertNotIn('OperationalError ', self.browser.title)
 
@@ -50,7 +62,7 @@ class TestCreateNewClass(LiveServerTestCase):
         self.assertIn('admin', self.browser.title)
 
         # They log in using their credentials
-        self.admin_login('admin', 'E!byz..D)4P!M4')
+        self.admin_login('nathan.platte', 'Sparta12456')
         sleep(1)
         self.assertNotIn('OperationalError ', self.browser.title)
 
@@ -61,19 +73,22 @@ class TestCreateNewClass(LiveServerTestCase):
         # The admin is taken to a page where they choose to upload an .xls file and no other information        
         # the admin chooses the file and uploads it and presses the save button
         file_upload = self.browser.find_element_by_name('Class_File')
-        file_upload.send_keys('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\original_file.xls')
+        file_upload.send_keys('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\cs_220.xls')
         save_course = self.browser.find_element_by_name('_save')
         save_course.click()
 
-        saved_course = Course.objects.all()
+        
+        saved_course = Course.objects.all().first()
         self.assertEqual(saved_course.title, 'Introduction to Computer Graphics')
         self.assertEqual(saved_course.term, '2019 May Term')
         self.assertEqual(saved_course.code, 'CS 260 01')
         
-        remove('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\class_htmls\\original_file.xls')
+        remove('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\class_htmls\\cs_220.xls')
 
         # They are shown a display page, previewing the information
         self.assertEqual(self.browser.current_url, 'http://localhost:8000/admin/Class/course/preview/')
         # This page has the course title, the term, and prefessor name on the top and the students displayed below
+
+
 
         

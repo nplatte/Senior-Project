@@ -32,6 +32,12 @@ class TestCourseModel(TestCase):
         students = self.test_class.students.filter(number='868019')
         self.assertEqual(students.count(), 1)
 
+    def test_Course_only_has_students_in_xls_file_listed(self):
+        cs_220 = Course()
+        #cs_220.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
+        
+        print(cs_220.students.all())
+
 class TestMyHTMLParser(TestCase):
 
     def setUp(self):

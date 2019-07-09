@@ -20,7 +20,8 @@ class Student(models.Model):
         self.save()
 
     def __str__(self):
-        return self.name
+        name_parts = self.name.split()
+        return name_parts[1] + ' ' + name_parts[0][:-1]
 
 
 class MyHTMLParser(HTMLParser):

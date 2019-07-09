@@ -15,11 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from Class import urls as class_urls
-from student_view import urls as student_urls
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'Class/', include(class_urls)),
-    url(r'student/', include(student_urls))
+    url(r'accounts/', include('django.contrib.auth.urls'))
 ]

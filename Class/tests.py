@@ -1,6 +1,29 @@
 from django.test import TestCase
-from .models import Course, MyHTMLParser, Student
+from .models import Course, MyHTMLParser, Student, Assignment
 from os import listdir
+from django.contrib.auth.models import User
+
+
+class TestAssignmentModel(TestCase):
+
+    def setUp(self):
+        self.test_assignment = Assignment()
+        self.test_assignment.save()
+
+    def tearDown(self):
+        pass
+
+    def test_assignment_has_course(self):
+        cs_260 = Course()
+        cs_260.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
+        self.test_assignment.course = cs_260
+        self.assertEqual(self.test_assignment.course, Course.objects.get(code='CS 260 01'))
+
+    def test_assignment_has_title_and_body(self):
+        self.test_assignment.title = 'Make List'
+        self.test_assignment.description = 'List description'
+        self.assertEqual(self.test_assignment.title, 'Make List')
+        self.assertEqual(self.test_assignment.description, 'List description')
 
 
 class TestCourseModel(TestCase):
@@ -34,10 +57,13 @@ class TestCourseModel(TestCase):
 
     def test_Course_only_has_students_in_xls_file_listed(self):
         cs_220 = Course()
-        #cs_220.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
+        cs_220.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
         
-        print(cs_220.students.all())
-
+    def test_Course_has_instructor(self):
+        test_teacher = User().save()
+        self.test_class.course_instructor = test_teacher
+        self.assertEqual(self.test_class.course_instructor, User.objects.all().first())
+        
 class TestMyHTMLParser(TestCase):
 
     def setUp(self):

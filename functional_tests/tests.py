@@ -10,12 +10,28 @@ class TestTeacherAssignmentPost(LiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
+        self.browser.get('http://localhost:8000/admin/')
 
     def tearDown(self):
         self.browser.quit()
 
-    def test_teacher_login(self):
-        pass
+    def teacher_login(self, username, password):
+        username_input = self.browser.find_element_by_name('username')
+        username_input.send_keys(username)
+        password_input = self.browser.find_element_by_name('password')
+        password_input.send_keys(password)
+        password_input.send_keys(Keys.ENTER)
+
+    def test_teacher_post_assignment(self):
+        # A professor goes to the django admin site
+        # They proceed to login using their credentials
+        self.teacher_login('test_staff', 'Sparta12456')
+
+        # They click the courses button which takes them to their courses list
+        # They see only the courses that are assigned to them with the courses in term order
+        self.browser.get('http://localhost:8000/admin/Class/course/')
+        
+        
 
 
 class TestCreateNewClass(LiveServerTestCase):
@@ -45,12 +61,6 @@ class TestCreateNewClass(LiveServerTestCase):
         self.admin_login('nathan.platte', 'Sparta12456')
         sleep(1)
         self.assertNotIn('OperationalError ', self.browser.title)
-
-        # The admin clicks the add user
-        # The admin then has a list of other users to make admins
-        # The admin then puts in the first name
-        # The first email
-        # and the password for the new admin
 
     def test_create_new_class(self):
         # An admin user wants to create a new class page using the html file with student information

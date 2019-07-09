@@ -1,6 +1,11 @@
 from django.db import models
 from django import forms
 from html.parser import HTMLParser
+from django.conf import settings
+
+
+
+
 
 class Student(models.Model):
     
@@ -26,7 +31,8 @@ class Course(models.Model):
     code = models.CharField(default='', max_length=20, blank=True)
     title = models.CharField(default='', max_length=50, blank=True)
     term = models.CharField(default='', max_length=60, blank=True)
-    students = models.ManyToManyField(Student, related_name='students')
+    students = models.ManyToManyField(Student, related_name='enrolled_students')
+    course_instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
 
     def create(self, file=None):
         if file is None:
@@ -54,9 +60,15 @@ class Course(models.Model):
                 new_student.add_info(info)
             self.students.add(new_student)
 
-
     def __str__(self):
         return self.title
+
+
+class Assignment(models.Model):
+    
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
+    title = models.CharField(max_length=50, default='')
+    description = models.TextField(default='')
 
 
 class MyHTMLParser(HTMLParser):

@@ -19,7 +19,7 @@ class CourseAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Course Information', {
-            'fields': ('Class_File', 'title', 'code', 'term')
+            'fields': ('Class_File', 'title', 'code', 'term', 'course_instructor')
         }),
         ('Student Information', {
             'fields': ('students',)
@@ -47,7 +47,7 @@ class CourseAdmin(admin.ModelAdmin):
         else:
             fieldsets = (
                 ('Course Information', {
-                    'fields': ('title', 'code', 'term')
+                    'fields': ('title', 'code', 'term', 'course_instructor')
                 }),
                 ('Student Information', {
                 'fields': ('students',)

@@ -1,7 +1,60 @@
 from django.test import TestCase
-from .models import Course, MyHTMLParser, Student, Assignment
+from .models import Course, Assignment, MyHTMLParser, Student
 from os import listdir
 from django.contrib.auth.models import User
+
+
+class TestMyHTMLParser(TestCase):
+
+    def setUp(self):
+        self.parser = MyHTMLParser()
+
+    def test_feed_full_file(self):
+        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
+        first_data = '\t\t'
+        last_data = '\t\t'
+        self.assertEqual(first_data, self.parser.data_list[0])
+        self.assertEqual(last_data, self.parser.data_list[-1])
+
+    def test_sort_list_based_on_start_stop(self):
+        self.parser.data_list = ['a', 'start', 'b', 'o', 'stop', 'a', 'stop', 'start', 'b', 'stop', 'a']
+        slist_key = [['b', 'o'], ['b']]
+        self.parser.sort_data_list('start', 'stop')
+        self.assertEqual(slist_key, self.parser.data_list)
+
+    def test_list_has_course_info(self):
+        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
+        self.parser.sort_data_list('\t\t\t', '\t\t')
+        self.assertIn(['\t\t\t', 'Class List 2019 May Term | Undergraduate | CS 260 01 | Introduction to Computer Graphics (17 students)'], self.parser.data_list)
+
+    def test_parses_other_courses(self):
+        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
+        self.parser.sort_data_list()
+        self.assertEqual(self.parser.data_list[0][1], 'Class List 2019 Winter Term | Undergraduate | CS 220 01 | Obj-Orient Prog & Intro Data Struct (23 students)')
+
+class TestStudentModel(TestCase):
+
+    def setUp(self):
+        self.test_class = Course()
+        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
+
+    def test_student_has_name(self):
+        test_student = Student.objects.filter(name = 'Platte, Nathan Wayne').first()
+        self.assertEqual(test_student.name, 'Platte, Nathan Wayne')
+
+    def test_student_saves_to_database(self):
+        test_student = Student()
+        test_student.add_info(['\t\t\t', 'N', '868019', 'Platte, Nathan Wayne', 'H - History', '\xa0', 'nathan.platte@wartburg.edu', '\xa0', 'Computer Science', 'Fourth Year'])
+        
+        self.assertEqual(len(Student.objects.all()), 18)
+        student = Student.objects.filter(email='nathan.platte@wartburg.edu').first()
+        self.assertEqual(student.name, 'Platte, Nathan Wayne')
+
+    def test_student_has_all_info(self):
+        student = Student.objects.filter(name='Hookham, Trey Charles').first()
+        self.assertEqual(student.email, 'trey.hookham@wartburg.edu')
+        self.assertEqual(student.number, 1129224)
+        self.assertEqual(student.year, 'Fourth Year')
 
 
 class TestAssignmentModel(TestCase):
@@ -63,55 +116,3 @@ class TestCourseModel(TestCase):
         test_teacher = User().save()
         self.test_class.course_instructor = test_teacher
         self.assertEqual(self.test_class.course_instructor, User.objects.all().first())
-        
-class TestMyHTMLParser(TestCase):
-
-    def setUp(self):
-        self.parser = MyHTMLParser()
-
-    def test_feed_full_file(self):
-        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
-        first_data = '\t\t'
-        last_data = '\t\t'
-        self.assertEqual(first_data, self.parser.data_list[0])
-        self.assertEqual(last_data, self.parser.data_list[-1])
-
-    def test_sort_list_based_on_start_stop(self):
-        self.parser.data_list = ['a', 'start', 'b', 'o', 'stop', 'a', 'stop', 'start', 'b', 'stop', 'a']
-        slist_key = [['b', 'o'], ['b']]
-        self.parser.sort_data_list('start', 'stop')
-        self.assertEqual(slist_key, self.parser.data_list)
-
-    def test_list_has_course_info(self):
-        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
-        self.parser.sort_data_list('\t\t\t', '\t\t')
-        self.assertIn(['\t\t\t', 'Class List 2019 May Term | Undergraduate | CS 260 01 | Introduction to Computer Graphics (17 students)'], self.parser.data_list)
-
-    def test_parses_other_courses(self):
-        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
-        self.parser.sort_data_list()
-        self.assertEqual(self.parser.data_list[0][1], 'Class List 2019 Winter Term | Undergraduate | CS 220 01 | Obj-Orient Prog & Intro Data Struct (23 students)')
-
-class TestStudentModel(TestCase):
-
-    def setUp(self):
-        self.test_class = Course()
-        self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
-
-    def test_student_has_name(self):
-        test_student = Student.objects.filter(name = 'Platte, Nathan Wayne').first()
-        self.assertEqual(test_student.name, 'Platte, Nathan Wayne')
-
-    def test_student_saves_to_database(self):
-        test_student = Student()
-        test_student.add_info(['\t\t\t', 'N', '868019', 'Platte, Nathan Wayne', 'H - History', '\xa0', 'nathan.platte@wartburg.edu', '\xa0', 'Computer Science', 'Fourth Year'])
-        
-        self.assertEqual(len(Student.objects.all()), 18)
-        student = Student.objects.filter(email='nathan.platte@wartburg.edu').first()
-        self.assertEqual(student.name, 'Platte, Nathan Wayne')
-
-    def test_student_has_all_info(self):
-        student = Student.objects.filter(name='Hookham, Trey Charles').first()
-        self.assertEqual(student.email, 'trey.hookham@wartburg.edu')
-        self.assertEqual(student.number, 1129224)
-        self.assertEqual(student.year, 'Fourth Year')

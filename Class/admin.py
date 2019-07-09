@@ -1,21 +1,20 @@
 from django.contrib import admin
-from .models import Course
+from .models import Course, Assignment
 from django import forms
+from django.conf import settings
 
-class CourseAdminModelForm(forms.ModelForm):
 
-    class Meta:
-
-        model = Course
-        
-        fields = [
-            'Class_File', 'title', 'code', 'term', 'students'
-        ] 
+class AssignmentAdmin(admin.ModelAdmin):
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "course":
+            course_list = Course.objects.filter(course_instructor=request.user)
+            kwargs["queryset"] = course_list
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class CourseAdmin(admin.ModelAdmin):
 
-    form = CourseAdminModelForm
 
     fieldsets = (
         ('Course Information', {
@@ -56,3 +55,4 @@ class CourseAdmin(admin.ModelAdmin):
         return fieldsets
         
 admin.site.register(Course, CourseAdmin)
+admin.site.register(Assignment, AssignmentAdmin)

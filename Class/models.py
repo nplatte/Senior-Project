@@ -1,10 +1,8 @@
 from django.db import models
 from django import forms
-from html.parser import HTMLParser
 from django.conf import settings
-
-
-
+from html.parser import HTMLParser
+#from student_view.models import Student, MyHTMLParser
 
 
 class Student(models.Model):
@@ -23,6 +21,43 @@ class Student(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class MyHTMLParser(HTMLParser):
+    def __init__(self):
+        HTMLParser.__init__(self)
+        self.data_list = []
+        self.tag_list = []
+
+    def handle_data(self, data):
+        if data not in ['\t', '\n']:
+            self.data_list.append(data)        
+
+    def feed_file(self, file_path):
+        ofile = open(file_path, 'r')
+        f = ofile.readlines()
+        for line in f:
+            self.feed(line)
+
+    def print_data(self):
+        for student in self.data_list:
+            print(student)
+
+    def sort_data_list(self, start_char='\t\t\t', stop_char='\t\t'):
+        # Sorts the data list compiling all of the data for each student into sperate lists
+        new_data_list = []
+        will_append = False
+        for entry in self.data_list:
+            if entry == start_char:
+                will_append = True
+                student = []
+            elif entry == stop_char:
+                if will_append == True:
+                    new_data_list.append(student)
+                will_append = False
+            if will_append and entry is not start_char:
+                student.append(entry)
+        self.data_list = new_data_list
 
 
 class Course(models.Model):
@@ -70,42 +105,5 @@ class Assignment(models.Model):
     title = models.CharField(max_length=50, default='')
     description = models.TextField(default='')
 
-
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        HTMLParser.__init__(self)
-        self.data_list = []
-        self.tag_list = []
-
-    def handle_data(self, data):
-        if data not in ['\t', '\n']:
-            self.data_list.append(data)        
-
-    def feed_file(self, file_path):
-        ofile = open(file_path, 'r')
-        f = ofile.readlines()
-        for line in f:
-            self.feed(line)
-
-    def print_data(self):
-        for student in self.data_list:
-            print(student)
-
-    def sort_data_list(self, start_char='\t\t\t', stop_char='\t\t'):
-        # Sorts the data list compiling all of the data for each student into sperate lists
-        new_data_list = []
-        will_append = False
-        for entry in self.data_list:
-            if entry == start_char:
-                will_append = True
-                student = []
-            elif entry == stop_char:
-                if will_append == True:
-                    new_data_list.append(student)
-                will_append = False
-            if will_append and entry is not start_char:
-                student.append(entry)
-        self.data_list = new_data_list
-
-
-
+    def __str__(self):
+        return self.title

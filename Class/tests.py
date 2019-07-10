@@ -39,8 +39,8 @@ class TestStudentModel(TestCase):
         self.test_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
 
     def test_student_has_name(self):
-        test_student = Student.objects.filter(name = 'Platte, Nathan Wayne').first()
-        self.assertEqual(test_student.name, 'Platte, Nathan Wayne')
+        test_student = Student.objects.filter(number = 868019).first()
+        self.assertEqual(test_student.name, 'Nathan Platte')
 
     def test_student_saves_to_database(self):
         test_student = Student()
@@ -48,13 +48,16 @@ class TestStudentModel(TestCase):
         
         self.assertEqual(len(Student.objects.all()), 18)
         student = Student.objects.filter(email='nathan.platte@wartburg.edu').first()
-        self.assertEqual(student.name, 'Platte, Nathan Wayne')
+        self.assertEqual(student.name, 'Nathan Platte')
 
     def test_student_has_all_info(self):
-        student = Student.objects.filter(name='Hookham, Trey Charles').first()
+        student = Student.objects.filter(name='Trey Hookham').first()
         self.assertEqual(student.email, 'trey.hookham@wartburg.edu')
         self.assertEqual(student.number, 1129224)
         self.assertEqual(student.year, 'Fourth Year')
+
+    def test_student_has_account(self):
+        self.assertEqual(User.objects.all().count(), 17)
 
 
 class TestAssignmentModel(TestCase):
@@ -111,8 +114,3 @@ class TestCourseModel(TestCase):
     def test_Course_only_has_students_in_xls_file_listed(self):
         cs_220 = Course()
         cs_220.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
-        
-    def test_Course_has_instructor(self):
-        test_teacher = User().save()
-        self.test_class.course_instructor = test_teacher
-        self.assertEqual(self.test_class.course_instructor, User.objects.all().first())

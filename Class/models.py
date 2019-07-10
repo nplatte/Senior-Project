@@ -2,6 +2,7 @@ from django.db import models
 from django import forms
 from django.conf import settings
 from html.parser import HTMLParser
+from django.contrib.auth.models import User
 #from student_view.models import Student, MyHTMLParser
 
 
@@ -13,15 +14,18 @@ class Student(models.Model):
     year = models.CharField(default = '', max_length = 19)
 
     def add_info(self, info):
-        self.name = info[3]
+        self.name_parts = info[3].split()
+        self.name = self.name_parts[1] + ' ' + self.name_parts[0][:-1]
         self.email = info[6]
         self.number = int(info[2])
         self.year = info[-1]
         self.save()
 
+    def create_account(self):
+        user = User.objects.create(username=self.name_parts[1] + '.' + self.name_parts[0][:-1], password='changeme', email=self.email)
+
     def __str__(self):
-        name_parts = self.name.split()
-        return name_parts[1] + ' ' + name_parts[0][:-1]
+        return self.name
 
 
 class MyHTMLParser(HTMLParser):
@@ -94,6 +98,7 @@ class Course(models.Model):
             elif student_in_db.count() == 0:
                 new_student = Student()
                 new_student.add_info(info)
+                new_student.create_account()
             self.students.add(new_student)
 
     def __str__(self):

@@ -46,7 +46,6 @@ class Student(models.Model):
             first_name=self.name_parts[1],
             last_name=self.name_parts[0][:-1]
             )
-        print(self.name_parts[1] + '.' + self.name_parts[0][:-1] + ' : ' + password)
 
     def password_gen(self, size=6, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
         return ''.join(random.choice(chars) for _ in range(size))

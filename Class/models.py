@@ -3,7 +3,23 @@ from django import forms
 from django.conf import settings
 from html.parser import HTMLParser
 from django.contrib.auth.models import User
-#from student_view.models import Student, MyHTMLParser
+import string
+import random
+from email.message import EmailMessage
+import smtplib
+
+
+def email_password(sender, recipiant, password):
+    msg = EmailMessage()
+    msg.set_content(password)
+    msg['From'] = sender
+    msg['To'] = recipiant
+    msg['Subject'] = 'Password for Socrates'
+
+    smtp_server = smtplib.SMTP('localhost')
+    smtp_server.send_message(msg)
+    smtp_server.quit()
+    
 
 
 class Student(models.Model):
@@ -22,7 +38,18 @@ class Student(models.Model):
         self.save()
 
     def create_account(self):
-        user = User.objects.create(username=self.name_parts[1] + '.' + self.name_parts[0][:-1], password='changeme', email=self.email)
+        password = self.password_gen(8)
+        user = User.objects.create(
+            username=self.name_parts[1] + '.' + self.name_parts[0][:-1], 
+            password=password, 
+            email=self.email,
+            first_name=self.name_parts[1],
+            last_name=self.name_parts[0][:-1]
+            )
+        print(self.name_parts[1] + '.' + self.name_parts[0][:-1] + ' : ' + password)
+
+    def password_gen(self, size=6, chars=string.ascii_uppercase + string.digits + string.ascii_lowercase):
+        return ''.join(random.choice(chars) for _ in range(size))
 
     def __str__(self):
         return self.name

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .models import Course, Assignment, MyHTMLParser, Student
+from .models import Course, Assignment, MyHTMLParser, Student, email_password
 from os import listdir
 from django.contrib.auth.models import User
 
@@ -58,6 +58,10 @@ class TestStudentModel(TestCase):
 
     def test_student_has_account(self):
         self.assertEqual(User.objects.all().count(), 17)
+
+    def test_student_password_emails(self):
+        email = 'nathan.platte@wartburg.edu'
+        email_password(email, email, 'password')
 
 
 class TestAssignmentModel(TestCase):

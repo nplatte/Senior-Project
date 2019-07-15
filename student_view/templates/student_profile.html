@@ -1,28 +1,23 @@
- <!DOCTYPE html>
- <html>
-     <head>
-         <title>{{ user.first_name }} {{ user.last_name }} profile</title>
-     </head>
-     <body>
-         <div>
-             <h1>
-             Assignments
-            </h1>
-         </div>
-         {% for assignment in course_assignments %}
-            <div>
-                <a href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
-                <p>Due Date: {{ assignment.due_date }}</p>
-            </div>
-         {% endfor %}
-         <h1>
-             {{ user.first_name }} {{ user.last_name }} Information
-         </h1>
-         <h4>
-             <div>
-                 email: {{ user.email }}
-             </div>
-         </h4>
-         
-     </body>
- </html>
+{% extends 'student_view_base.html' %}
+
+
+{% block title %}
+    {{ user.first_name }} {{ user.last_name }} profile
+{% endblock %}
+
+
+{% block content %}
+    <div>
+        <h1>Assignments</h1>
+    </div>
+    {% for assignment in course_assignments %}
+    <div>
+        <a href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+        <p>Due Date: {{ assignment.due_date }}</p>
+    </div>
+    {% endfor %}
+    <h1>
+        {{ user.first_name }} {{ user.last_name }} Information
+    </h1>
+    <h4>email: {{ user.email }}</h4>
+{% endblock %}

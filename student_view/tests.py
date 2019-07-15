@@ -18,3 +18,6 @@ class HomePageTest(TestCase):
         self.assertIn('<title>Student Profile</title>')
         self.assertTrue(html.endswith('<html>'))
 
+    def test_fetches_queryset_of_assignments(self):
+        
+

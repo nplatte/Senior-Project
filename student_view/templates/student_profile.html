@@ -9,10 +9,9 @@
              Assignments
             </h1>
          </div>
-         {% for course in student_courses %}
+         {% for assignment in course_assignments %}
             <div>
-                <h3>{{ course.title }}</h3>
-                <h3>{{ course.code }}</h3>
+                <h2>{{ assignment.title }}</h2>
             </div>
          {% endfor %}
          <h1>

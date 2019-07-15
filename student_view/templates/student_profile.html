@@ -1,0 +1,28 @@
+ <!DOCTYPE html>
+ <html>
+     <head>
+         <title>{{ user.first_name }} {{ user.last_name }} profile</title>
+     </head>
+     <body>
+         <div>
+             <h1>
+             Assignments
+            </h1>
+         </div>
+         {% for course in student_courses %}
+            <div>
+                <h3>{{ course.title }}</h3>
+                <h3>{{ course.code }}</h3>
+            </div>
+         {% endfor %}
+         <h1>
+             {{ user.first_name }} {{ user.last_name }} Information
+         </h1>
+         <h4>
+             <div>
+                 email: {{ user.email }}
+             </div>
+         </h4>
+         
+     </body>
+ </html>

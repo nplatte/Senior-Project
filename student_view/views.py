@@ -7,13 +7,10 @@ def home_page(request):
 
 def profile_page(request):
     current_user = request.user
-    #print('\n' + current_user.first_name + current_user.last_name + '\n')
     course_list = Course.objects.filter(
         students__name=current_user.first_name + ' ' + current_user.last_name
         )
-    print(course_list)
-    assignments = Assignment.objects.filter(course__in=course_list)
-    print(assignments)
+    assignments = Assignment.objects.filter(course__in=course_list).order_by('-due_date')
     return render(
         request, 
         'student_profile.html', 
@@ -23,3 +20,7 @@ def profile_page(request):
         'course_assignments': assignments,
         }
         )
+
+def view_assignment(request, assignment_title):
+    current_assignment = Assignment.objects.get(title=assignment_title)
+    return render(request, 'assignment.html', {'assignment':current_assignment})

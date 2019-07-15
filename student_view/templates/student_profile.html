@@ -11,7 +11,8 @@
          </div>
          {% for assignment in course_assignments %}
             <div>
-                <h2>{{ assignment.title }}</h2>
+                <a href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+                <p>Due Date: {{ assignment.due_date }}</p>
             </div>
          {% endfor %}
          <h1>

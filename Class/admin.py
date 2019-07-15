@@ -6,6 +6,13 @@ from django.contrib.auth.models import User
 
 
 class AssignmentAdmin(admin.ModelAdmin):
+
+    fields = (
+        'course',
+        'due_date',
+        'title',
+        'description'
+    )
     
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "course":

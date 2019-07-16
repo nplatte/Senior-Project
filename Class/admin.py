@@ -18,7 +18,6 @@ class AssignmentAdmin(admin.ModelAdmin):
         'description'
     )
     
-    
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "course":
             course_list = Course.objects.filter(course_instructor=request.user)
@@ -27,6 +26,14 @@ class AssignmentAdmin(admin.ModelAdmin):
         
         if db_field.name == "course_instructor":
             staff_list = User.objects.filter(is_staff=True) 
+
+    def get_queryset(self, request):
+        # Controls what assignments the logged in admin sees after viewing the assigmnet models
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        users_courses = Course.objects.filter(course_instructor=request.user)
+        return qs.filter(course__in = users_courses)
 
 
 class CourseAdmin(admin.ModelAdmin):

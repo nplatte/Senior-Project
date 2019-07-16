@@ -137,6 +137,7 @@ class Assignment(models.Model):
     title = models.CharField(max_length=50, default='')
     description = models.TextField(default='')
     due_date = models.DateTimeField(blank=True, null=True)
+    #assignment_creator = models.CharField(default=request.user)
 
     def __str__(self):
         return self.title

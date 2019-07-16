@@ -7,12 +7,17 @@ from django.contrib.auth.models import User
 
 class AssignmentAdmin(admin.ModelAdmin):
 
+
+    list_display = ('title', 'course', 'due_date')
+    ordering = ['course']
+    list_filter = ('course', 'due_date')
     fields = (
         'course',
         'due_date',
         'title',
         'description'
     )
+    
     
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "course":
@@ -26,7 +31,8 @@ class AssignmentAdmin(admin.ModelAdmin):
 
 class CourseAdmin(admin.ModelAdmin):
 
-
+    list_display = ('title', 'code', 'term')
+    list_filter = ('term', 'code')
     fieldsets = (
         ('Course Information', {
             'fields': ('Class_File', 'title', 'code', 'term', 'course_instructor')
@@ -35,6 +41,12 @@ class CourseAdmin(admin.ModelAdmin):
             'fields': ('students',)
         })
     )
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        return qs.filter(course_instructor=request.user)
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "students":

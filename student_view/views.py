@@ -21,6 +21,12 @@ def profile_page(request):
         }
         )
 
-def view_assignment(request, assignment_title):
+def assignment_page(request, assignment_title):
+    print('\nAss\n')
     current_assignment = Assignment.objects.get(title=assignment_title)
     return render(request, 'assignment.html', {'assignment':current_assignment})
+
+def course_page(request, course_title):
+    print('\nCourse\n')
+    current_course = Course.objects.get(title=course_title)
+    return render(request, 'course.html', {'course':current_course})

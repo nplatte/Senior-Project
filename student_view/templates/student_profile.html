@@ -1,9 +1,25 @@
-{% extends 'base_view_side_bar.html' %}
+{% extends 'student_view_base.html' %}
 {% load static %}
 
 
 {% block title %}
     {{ user.first_name }} {{ user.last_name }} profile
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" 
+href="{% static 'student_view/sidebar.css' %}">   
+{% endblock %}
+
+{% block sidebar %}
+<div class=sidebar>
+    {% for course in student_courses %}
+    <div>
+        <a href="{% url 'view_course' course.title %}"> {{ course.title }} </a>
+    </div>
+    
+    {% endfor %}
+</div>
 {% endblock %}
 
 {% block content %}

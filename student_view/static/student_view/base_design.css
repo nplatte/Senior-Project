@@ -1,0 +1,15 @@
+*{
+    padding:0px;
+    margin:0px;
+}
+
+.banner{
+    background-color: #ff8103;
+    color:#fff;
+    border:5px #ff8103;
+    margin:5px 5px 5px 5px #ff8103;
+}
+
+.banner-text{
+    margin-left: 1%;
+}

@@ -1,14 +1,9 @@
-{% extends 'student_view_base.html' %}
+{% extends 'base_view_side_bar.html' %}
 {% load static %}
 
 
 {% block title %}
     {{ user.first_name }} {{ user.last_name }} profile
-{% endblock %}
-
-{% block style %}
-    <link rel="stylesheet" type="text/css" 
-    href="{% static 'student_view/sidebar.css' %}">
 {% endblock %}
 
 {% block content %}

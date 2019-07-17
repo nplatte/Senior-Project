@@ -1,15 +1,21 @@
 {% extends 'view_and_sidebar.html' %}
 {% load static %}
 
+{% block style %}
+<link rel="stylesheet" type="text/css" 
+ href="{% static 'student_view/assignments.css' %}"> 
+{% endblock %}
+
 {% block title %}
 {{ course.title }}
 {% endblock %}
 
 {% block content %}
-<h3>{{ course.title }}</h3>
+<h2 class = title>{{ course.title }}</h2>
 {% for assignment in courses_assignments %}
-<div class = each_assignment>
-    <a href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+<div class = assignment_container>
+    <a class = assignment href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+    <p>Due Date: {{ assignment.due_date }}</p>
 </div>
 {% endfor %}
 {% endblock %}

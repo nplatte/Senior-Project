@@ -7,17 +7,19 @@
 {% endblock %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" 
-href="{% static 'student_view/sidebar.css' %}">   
+<link rel = "stylesheet" type = "text/css" 
+ href="{% static 'student_view/sidebar.css' %}">
+<link rel = "stylesheet" type = "text/css" 
+ href = "{% static 'student_view/assignments.css' %}">      
 {% endblock %}
 
 {% block content %}
     <div>
-        <h1>Relevant Assignments</h1>
+        <h2 class = title>Upcoming Assignments</h2>
     </div>
     {% for assignment in course_assignments %}
-    <div>
-        <a href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+    <div class = assignment_container>
+        <a class = assignment href = "{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
         <p>Due Date: {{ assignment.due_date }}</p>
     </div>
     {% endfor %}

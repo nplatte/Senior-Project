@@ -6,10 +6,14 @@
 .banner{
     background-color: #ff8103;
     color:#fff;
-    border:5px #ff8103;
-    margin:5px 5px 5px 5px #ff8103;
+    margin:50px 5px 5px 5px #ff8103;
 }
 
 .banner-text{
     margin-left: 1%;
+    padding: 4px;
+}
+
+.title{
+    margin:5px;
 }

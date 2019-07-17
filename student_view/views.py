@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from Class.models import Course, Assignment
+from datetime import date
 
 def home_page(request):
     return render(request, 'home.html', )
@@ -10,7 +11,10 @@ def profile_page(request):
     course_list = Course.objects.filter(
         students__name=current_user.first_name + ' ' + current_user.last_name
         )
-    assignments = Assignment.objects.filter(course__in=course_list).order_by('-due_date')
+    assignments = Assignment.objects.filter(
+            course__in=course_list, 
+            due_date__gte=date.today()
+            ).order_by('-due_date')
     return render(
         request, 
         'student_profile.html', 

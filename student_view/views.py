@@ -29,11 +29,13 @@ def assignment_page(request, assignment_title):
 def course_page(request, course_title):
     course_list = _get_course_list(request)
     current_course = Course.objects.get(title=course_title)
+    course_assignments = Assignment.objects.filter(course = current_course)
     return render(
         request, 
         'course.html', 
         {'course':current_course,
-        'student_courses': course_list
+        'student_courses': course_list,
+        'courses_assignments': course_assignments
         })
 
 def grade_page(request):

@@ -4,3 +4,12 @@
 {% block title %}
 {{ course.title }}
 {% endblock %}
+
+{% block content %}
+<h3>{{ course.title }}</h3>
+{% for assignment in courses_assignments %}
+<div class = each_assignment>
+    <a href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+</div>
+{% endfor %}
+{% endblock %}

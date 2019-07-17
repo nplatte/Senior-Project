@@ -22,11 +22,23 @@ def profile_page(request):
         )
 
 def assignment_page(request, assignment_title):
-    print('\nAss\n')
+    
     current_assignment = Assignment.objects.get(title=assignment_title)
     return render(request, 'assignment.html', {'assignment':current_assignment})
 
 def course_page(request, course_title):
-    print('\nCourse\n')
+    course_list = _get_course_list(request)
     current_course = Course.objects.get(title=course_title)
-    return render(request, 'course.html', {'course':current_course})
+    return render(
+        request, 
+        'course.html', 
+        {'course':current_course,
+        
+        })
+
+def _get_course_list(request):
+    current_user = request.user
+    course_list = Course.objects.filter(
+        students__name=current_user.first_name + ' ' + current_user.last_name
+        )
+    return course_list 

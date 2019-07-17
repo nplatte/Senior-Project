@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.urls import resolve
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 
-from .views import home_page
+from .views import home_page, course_page
 
 
 class HomePageTest(TestCase):
@@ -11,13 +12,10 @@ class HomePageTest(TestCase):
         found = resolve('/')
         self.assertEqual(found.func, home_page)
 
-    def test_home_page_returns_correct_html(self):
-        request = HttpResponse()
-        response = home_page(request)
-        html = response.content.decode('utf8')
-        self.assertIn('<title>Student Profile</title>')
-        self.assertTrue(html.endswith('<html>'))
+class CoursePageTest(TestCase):
 
-    def test_fetches_queryset_of_assignments(self):
+    def setUp(self):
+        pass
+
+    def test_course_title_displayed(self):
         
-

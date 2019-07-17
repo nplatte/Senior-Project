@@ -11,17 +11,6 @@
 href="{% static 'student_view/sidebar.css' %}">   
 {% endblock %}
 
-{% block sidebar %}
-<div class=sidebar>
-    {% for course in student_courses %}
-    <div>
-        <a href="{% url 'view_course' course.title %}"> {{ course.title }} </a>
-    </div>
-    
-    {% endfor %}
-</div>
-{% endblock %}
-
 {% block content %}
     <div>
         <h1>Relevant Assignments</h1>

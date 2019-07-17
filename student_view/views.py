@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from Class.models import Course, Assignment
 
 def home_page(request):
-    return render(request, 'home.html')
+    return render(request, 'home.html', )
 
 def profile_page(request):
     current_user = request.user
@@ -22,9 +22,9 @@ def profile_page(request):
         )
 
 def assignment_page(request, assignment_title):
-    
+    course_list = _get_course_list(request)
     current_assignment = Assignment.objects.get(title=assignment_title)
-    return render(request, 'assignment.html', {'assignment':current_assignment})
+    return render(request, 'assignment.html', {'assignment':current_assignment, 'student_courses': course_list})
 
 def course_page(request, course_title):
     course_list = _get_course_list(request)
@@ -33,11 +33,12 @@ def course_page(request, course_title):
         request, 
         'course.html', 
         {'course':current_course,
-        
+        'student_courses': course_list
         })
 
 def grade_page(request):
-        return render(request, 'grades.html')
+        course_list = _get_course_list(request)
+        return render(request, 'grades.html', {'student_courses': course_list})
 
 def _get_course_list(request):
     current_user = request.user

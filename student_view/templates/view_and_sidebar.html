@@ -3,13 +3,16 @@
 
 {% block sidebar %}
 <div class=sidebar>
-        <a href = "{% url 'student_profile_view' %}"> Home </a>
+        <a href = "{% url 'student_profile_view' %}" class = sidebar_text> Home </a>
         {% for course in student_courses %}
         <div>
-        <a href = "{% url 'view_course' course.title %}"> {{ course.title }} </a>
+        <a href = "{% url 'view_course' course.title %}" class = sidebar_text> {{ course.title }} </a>
         
         </div>
         {% endfor %}
-        <a href = "{% url 'view_grades' %}"> Grades </a>
+        <div>
+        <a href = "{% url 'view_grades' %}" class = sidebar_text> Grades </a>       
+        </div>
+        
 </div>
 {% endblock %}

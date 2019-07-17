@@ -5,6 +5,8 @@
         <meta charset="utf-8">
         <link rel="stylesheet" type="text/css"
         href="{% static 'student_view/base_design.css' %}">
+        <link rel="stylesheet" type="text/css"
+        href="{% static 'student_view/sidebar.css' %}">
         {% block style %}
         {% endblock %}
         <title>
@@ -17,14 +19,10 @@
         <div class=banner>
             <h2 class=banner-text>Wartburg MCSP</h2>
         </div>
+        {% block sidebar %}
+        {% endblock %}
         
-        <div class=sidebar>
-            {% for course in student_courses %}
-            <div>
-            <a href="{% url 'view_course' course.title %}"> {{ course.title }} </a>
-            </div>
-            {% endfor %}
-        </div>
+
       {% block content %}
       {% endblock %}
     </body>

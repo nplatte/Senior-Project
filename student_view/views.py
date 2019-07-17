@@ -36,6 +36,9 @@ def course_page(request, course_title):
         
         })
 
+def grade_page(request):
+        return render(request, 'grades.html')
+
 def _get_course_list(request):
     current_user = request.user
     course_list = Course.objects.filter(

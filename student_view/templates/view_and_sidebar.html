@@ -1,0 +1,15 @@
+{% extends 'student_view_base.html' %}
+{% load static %}
+
+{% block sidebar %}
+<div class=sidebar>
+        <a href = "{% url 'student_profile_view' %}"> Home </a>
+        {% for course in student_courses %}
+        <div>
+        <a href = "{% url 'view_course' course.title %}"> {{ course.title }} </a>
+        
+        </div>
+        {% endfor %}
+        <a href = "{% url 'view_grades' %}"> Grades </a>
+</div>
+{% endblock %}

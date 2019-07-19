@@ -1,8 +1,8 @@
-from django.db import models
 from django import forms
+from django.db import models
 from django.conf import settings
-from html.parser import HTMLParser
 from django.contrib.auth.models import User
+from html.parser import HTMLParser
 import string
 import random
 from email.message import EmailMessage
@@ -20,7 +20,6 @@ def email_password(sender, recipiant, password):
     smtp_server.send_message(msg)
     smtp_server.quit()
     
-
 
 class Student(models.Model):
     
@@ -69,10 +68,6 @@ class MyHTMLParser(HTMLParser):
         f = ofile.readlines()
         for line in f:
             self.feed(line)
-
-    def print_data(self):
-        for student in self.data_list:
-            print(student)
 
     def sort_data_list(self, start_char='\t\t\t', stop_char='\t\t'):
         # Sorts the data list compiling all of the data for each student into sperate lists

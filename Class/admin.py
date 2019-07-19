@@ -6,8 +6,7 @@ from django.contrib.auth.models import User
 
 
 class AssignmentAdmin(admin.ModelAdmin):
-
-
+    
     list_display = ('title', 'course', 'due_date')
     ordering = ['course']
     list_filter = (('course', admin.RelatedOnlyFieldListFilter), 'due_date')
@@ -23,23 +22,22 @@ class AssignmentAdmin(admin.ModelAdmin):
             course_list = Course.objects.filter(course_instructor=request.user)
             kwargs["queryset"] = course_list
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-        
-        if db_field.name == "course_instructor":
-            staff_list = User.objects.filter(is_staff=True) 
 
     def get_queryset(self, request):
-        # Controls what assignments the logged in admin sees after viewing the assigmnet models
         qs = super().get_queryset(request)
         if request.user.is_superuser:
-            return qs
+            return qs 
         users_courses = Course.objects.filter(course_instructor=request.user)
         return qs.filter(course__in = users_courses)
 
 
 class CourseAdmin(admin.ModelAdmin):
 
+    # decides what rows are displayed when viewing courses
     list_display = ('title', 'code', 'term')
+    # filters all courses out that are not part of the logged in users courses
     list_filter = (('course_instructor', admin.RelatedOnlyFieldListFilter), 'term', 'code')
+    # Organizes Info into fields
     fieldsets = (
         ('Course Information', {
             'fields': ('Class_File', 'title', 'code', 'term', 'course_instructor')
@@ -49,6 +47,25 @@ class CourseAdmin(admin.ModelAdmin):
         })
     )
 
+    def get_fieldsets(self, request, obj=None):
+        # When creating a course you only see the file, when changing the course you see everything
+        if not obj:
+            fieldsets = (
+                ('Course Information', {
+                    'fields': ('Class_File',)
+                }),
+            )
+        else:
+            fieldsets = (
+                ('Course Information', {
+                    'fields': ('title', 'code', 'term', 'course_instructor')
+                }),
+                ('Student Information', {
+                'fields': ('students',)
+                }),
+            )
+        return fieldsets
+    
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
@@ -72,23 +89,6 @@ class CourseAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         obj.create()
 
-    def get_fieldsets(self, request, obj=None):
-        if not obj:
-            fieldsets = (
-                ('Course Information', {
-                    'fields': ('Class_File',)
-                }),
-            )
-        else:
-            fieldsets = (
-                ('Course Information', {
-                    'fields': ('title', 'code', 'term', 'course_instructor')
-                }),
-                ('Student Information', {
-                'fields': ('students',)
-                }),
-            )
-        return fieldsets
-        
+     
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Assignment, AssignmentAdmin)

@@ -3,7 +3,7 @@
 
 {% block style %}
 <link rel="stylesheet" type="text/css" 
- href="{% static 'student_view/assignments.css' %}"> 
+ href="{% static 'student_view/css/assignments.css' %}"> 
 {% endblock %}
 
 {% block title %}
@@ -15,6 +15,9 @@
     <h2 class = title>{{ assignment.title }}</h2>
     <p> Due Date: {{ assignment.due_date }} </p>
     <p>{{ assignment.description }}</p>
+</div>
+<div>
+    <input type="file">
 </div>
     
 {% endblock %}

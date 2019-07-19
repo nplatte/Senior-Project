@@ -10,7 +10,7 @@ class AssignmentAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'course', 'due_date')
     ordering = ['course']
-    list_filter = ('course', 'due_date')
+    list_filter = (('course', admin.RelatedOnlyFieldListFilter), 'due_date')
     fields = (
         'course',
         'due_date',
@@ -39,7 +39,7 @@ class AssignmentAdmin(admin.ModelAdmin):
 class CourseAdmin(admin.ModelAdmin):
 
     list_display = ('title', 'code', 'term')
-    list_filter = ('term', 'code')
+    list_filter = (('course_instructor', admin.RelatedOnlyFieldListFilter), 'term', 'code')
     fieldsets = (
         ('Course Information', {
             'fields': ('Class_File', 'title', 'code', 'term', 'course_instructor')

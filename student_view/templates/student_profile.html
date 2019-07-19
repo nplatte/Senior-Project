@@ -8,23 +8,30 @@
 
 {% block style %}
 <link rel = "stylesheet" type = "text/css" 
- href="{% static 'student_view/sidebar.css' %}">
+ href="{% static 'student_view/css/sidebar.css' %}">
 <link rel = "stylesheet" type = "text/css" 
- href = "{% static 'student_view/assignments.css' %}">      
+ href = "{% static 'student_view/css/assignments.css' %}">      
 {% endblock %}
 
 {% block content %}
     <div>
         <h2 class = title>Upcoming Assignments</h2>
     </div>
-    {% for assignment in course_assignments %}
-    <div class = assignment_container>
-        <a class = assignment href = "{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+    <div class = assignment_list>
+        {% for assignment in course_assignments %}
+        <div class = assignment_container>
+        <a class = "assignment" href = "{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
         <p>Due Date: {{ assignment.due_date }}</p>
-    </div>
+        </div>
     {% endfor %}
-    <h1>
+    </div>
+    
+    <h2>
         {{ user.first_name }} {{ user.last_name }} Information
-    </h1>
+    </h2>
     <h4>email: {{ user.email }}</h4>
+{% endblock %}
+
+{% block script %}
+<script type = "text/javascript" src = "{% static 'student_view/js/assignments.js' %}" ></script>
 {% endblock %}

@@ -96,21 +96,17 @@ class Course(models.Model):
     course_instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
 
     def create(self, file=None):
-        if file is None:
-            file = self.Class_File.path
-        Parser = MyHTMLParser()      
-        Parser.feed_file(file)
-        Parser.sort_data_list('\t\t\t', '\t\t')
-        course_info = Parser.data_list[0][1].split(' | ')
-        self.student_info = Parser.data_list[2:]
-        self.code = course_info[2]
-        self.term = course_info[0][11:]
-        self.title = course_info[3][:course_info[3].find(' (')]
-        self.save()
-        self.add_students()
-        self.save()
+        course_info = self.org_info(file)
+        if Course.objects.filter(code=course_info[2], term=course_info[0][11:], title=course_info[3][:course_info[3].find(' (')]).count() < 1:
+            self.add_info(course_info, self)
+        else:
 
-    def add_students(self):
+            course = Course.objects.filter(code=course_info[2], term=course_info[0][11:], title=course_info[3][:course_info[3].find(' (')]).first()
+            course.delete()
+            self.add_info(course_info, self)
+        
+
+    def add_students(self, Course_model):
         students_in_db = Student.objects.all()
         for info in self.student_info:
             student_in_db = students_in_db.filter(number=info[2])
@@ -120,7 +116,24 @@ class Course(models.Model):
                 new_student = Student()
                 new_student.add_info(info)
                 new_student.create_account()
-            self.students.add(new_student)
+            Course_model.students.add(new_student)
+
+    def org_info(self, file=None):
+        if file is None:
+            file = self.Class_File.path
+        self.Parser = MyHTMLParser()      
+        self.Parser.feed_file(file)
+        self.Parser.sort_data_list('\t\t\t', '\t\t')
+        return self.Parser.data_list[0][1].split(' | ')
+
+    def add_info(self, course_info, Course_model):
+        Course_model.student_info = self.Parser.data_list[2:]
+        Course_model.code = course_info[2]
+        Course_model.term = course_info[0][11:]
+        Course_model.title = course_info[3][:course_info[3].find(' (')]
+        Course_model.save()
+        Course_model.add_students(Course_model)
+        Course_model.save()
 
     def __str__(self):
         return self.title

@@ -8,9 +8,7 @@ def home_page(request):
 
 def profile_page(request):
     current_user = request.user
-    course_list = Course.objects.filter(
-        students__name=current_user.first_name + ' ' + current_user.last_name
-        )
+    course_list = _get_course_list(request)
     assignments = Assignment.objects.filter(
             course__in=course_list, 
             due_date__gte=date.today()
@@ -43,12 +41,20 @@ def course_page(request, course_title):
         })
 
 def grade_page(request):
-        course_list = _get_course_list(request)
-        return render(request, 'grades.html', {'student_courses': course_list})
+    course_list = _get_course_list(request)
+    return render(request, 'grades.html', {'student_courses': course_list})
+
+def handout_page(request):
+    course_list = _get_course_list(request)
+    return render(request, 'handouts.html', {'student_courses': course_list})
+
+def discussion_page(request):
+    course_list = _get_course_list(request)
+    return render(request, 'discussion.html', {'student_courses': course_list})
 
 def _get_course_list(request):
     current_user = request.user
     course_list = Course.objects.filter(
         students__name=current_user.first_name + ' ' + current_user.last_name
         )
-    return course_list 
+    return course_list

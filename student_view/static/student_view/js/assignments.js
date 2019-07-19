@@ -8,3 +8,10 @@ function AssignHandler(item, index, array){
         Assignments[index].click()
     })
 }
+
+const FakeButton = document.querySelector(".assignment_button")
+const RealButton = document.querySelector(".submit_assignment")
+
+FakeButton.addEventListener("click", function(){
+    RealButton.click()
+})

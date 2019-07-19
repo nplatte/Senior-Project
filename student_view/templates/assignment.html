@@ -18,6 +18,11 @@
     
 </div>
 <div>
-    <input type = "file">
+    <input class = submit_assignment type = "file" hidden=hidden>
+    <button class = assignment_button type="button">Submit File</button>
 </div>
+{% endblock %}
+
+{% block script %}
+<script type = "text/javascript" src = "{% static 'student_view/js/assignments.js' %}" ></script>
 {% endblock %}

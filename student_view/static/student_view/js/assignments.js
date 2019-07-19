@@ -1,9 +1,10 @@
-var EventHandler = document.querySelector(".assignment_list");
-EventHandler.addEventListener("click", ViewAssignment, false);
+var AssignmentList = document.querySelectorAll(".assignment_container");
+var Assignments = document.querySelectorAll(".assignment");
 
-function ViewAssignment(i) {
-    if (i.target !== i.currentTarget) {
-        var ClickedItem = i.target;
-    ClickedItem.assignment_container.assignment.click();
-    } 
+AssignmentList.forEach(AssignHandler);
+
+function AssignHandler(item, index, array){
+    item.addEventListener("click", function() {
+        Assignments[index].click()
+    })
 }

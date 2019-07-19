@@ -19,3 +19,22 @@
 .assignment_container:hover{
     background-color: rgb(200, 200, 200);
 }
+
+.assignment_title{
+    margin-top:10px;
+    border-bottom-style: solid;
+    border-width: 2px;
+    border-bottom-color:#ff8103;
+    padding-left: 60px;
+    padding-bottom: 5px;
+    
+    font-size:33px;
+}
+
+.assignment_description{
+    padding: 10px;
+    font-size: 20px;
+    border-bottom-style: solid;
+    border-bottom-color: #ff8103;
+    border-bottom-width: 2px;
+}

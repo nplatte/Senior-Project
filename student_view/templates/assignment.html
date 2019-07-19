@@ -12,12 +12,12 @@
 
 {% block content %}
 <div>
-    <h2 class = title>{{ assignment.title }}</h2>
-    <p> Due Date: {{ assignment.due_date }} </p>
-    <p>{{ assignment.description }}</p>
+    <h2 class = assignment_title>{{ assignment.title }} Description</h2>
+    <p class = assignment_description>{{ assignment.description|linebreaksbr }}</p>
+    <p class = assignment_due_date> Due Date: {{ assignment.due_date }} </p>
+    
 </div>
 <div>
-    <input type="file">
+    <input type = "file">
 </div>
-    
 {% endblock %}

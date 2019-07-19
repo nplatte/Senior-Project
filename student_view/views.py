@@ -14,7 +14,7 @@ def profile_page(request):
     assignments = Assignment.objects.filter(
             course__in=course_list, 
             due_date__gte=date.today()
-            ).order_by('-due_date')
+            ).order_by('-due_date').reverse()
     return render(
         request, 
         'student_profile.html', 

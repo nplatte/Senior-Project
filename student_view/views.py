@@ -4,7 +4,7 @@ from Class.models import Course, Assignment
 from datetime import date
 
 def home_page(request):
-    return render(request, 'home.html', )
+    return render(request, 'student_view/home.html', )
 
 def profile_page(request):
     current_user = request.user
@@ -15,7 +15,7 @@ def profile_page(request):
             ).order_by('-due_date').reverse()
     return render(
         request, 
-        'student_profile.html', 
+        'student_view/student_profile.html', 
         { 
         'user': current_user , 
         'student_courses': course_list ,
@@ -26,7 +26,7 @@ def profile_page(request):
 def assignment_page(request, assignment_title):
     course_list = _get_course_list(request)
     current_assignment = Assignment.objects.get(title=assignment_title)
-    return render(request, 'assignment.html', {'assignment':current_assignment, 'student_courses': course_list})
+    return render(request, 'student_view/assignment.html', {'assignment':current_assignment, 'student_courses': course_list})
 
 def course_page(request, course_title):
     course_list = _get_course_list(request)
@@ -34,7 +34,7 @@ def course_page(request, course_title):
     course_assignments = Assignment.objects.filter(course = current_course)
     return render(
         request, 
-        'course.html', 
+        'student_view/course.html', 
         {'course':current_course,
         'student_courses': course_list,
         'courses_assignments': course_assignments
@@ -42,15 +42,15 @@ def course_page(request, course_title):
 
 def grade_page(request):
     course_list = _get_course_list(request)
-    return render(request, 'grades.html', {'student_courses': course_list})
+    return render(request, 'student_view/grades.html', {'student_courses': course_list})
 
 def handout_page(request):
     course_list = _get_course_list(request)
-    return render(request, 'handouts.html', {'student_courses': course_list})
+    return render(request, 'student_view/handouts.html', {'student_courses': course_list})
 
 def discussion_page(request):
     course_list = _get_course_list(request)
-    return render(request, 'discussion.html', {'student_courses': course_list})
+    return render(request, 'student_view/discussion.html', {'student_courses': course_list})
 
 def _get_course_list(request):
     current_user = request.user

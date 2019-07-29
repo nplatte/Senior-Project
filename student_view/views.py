@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from Class.models import Course, Assignment
+from .models import HomeworkSubmission
 from datetime import date
 
 def home_page(request):
@@ -29,7 +30,8 @@ def profile_page(request):
 def assignment_page(request, assignment_title):
     course_list = _get_course_list(request)
     current_assignment = Assignment.objects.get(title=assignment_title)
-    _create_homework(request, request.user)
+    if request.method == "POST":
+        _create_homework(request, request.user, current_assignment)
     return render(request, 'student_view/assignment.html', {'assignment':current_assignment, 'student_courses': course_list})
 
 @login_required(login_url='/student/accounts/login/')
@@ -68,5 +70,9 @@ def _get_course_list(request):
         )
     return course_list
 
-def _create_homework(request, user):
-    pass
+def _create_homework(request, user, assignment_title):
+    new_assignment = HomeworkSubmission()
+    new_assignment.homework = request.FILES["document"]
+    new_assignment.student = user
+    new_assignment.course = assignment_title.course
+    new_assignment.save()

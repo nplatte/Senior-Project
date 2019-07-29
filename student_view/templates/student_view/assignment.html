@@ -17,13 +17,14 @@
     <p class = assignment_due_date> Due Date: {{ assignment.due_date }} </p>
     
 </div>
-<div>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
     <input class = hidden_button type = "file" hidden=hidden>
     <button class = assignment_button type="button">Select File</button>
     <span id=custom_text>Empty</span>
     <input class = submit_assignment type = "submit">
     
-</div>
+</form>
 {% endblock %}
 
 {% block script %}

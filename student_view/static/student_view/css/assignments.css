@@ -59,3 +59,7 @@
 .assignment_button:hover{
     background-color: #f5993d;
 }
+
+#custom_text{
+    font-size: 20px
+}

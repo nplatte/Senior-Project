@@ -2,8 +2,8 @@
 {% load static %}
 
 {% block style %}
-<link rel="stylesheet" type="text/css" 
- href="{% static 'student_view/css/assignments.css' %}"> 
+<link rel = "stylesheet" type="text/css" 
+ href = "{% static 'student_view/css/assignments.css' %}"> 
 {% endblock %}
 
 {% block title %}
@@ -19,9 +19,9 @@
 </div>
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <input class = hidden_button type = "file" hidden=hidden>
-    <button class = assignment_button type="button">Select File</button>
-    <span id=custom_text>Empty</span>
+    <input class = hidden_button type = "file" hidden = hidden name = document>
+    <button class = assignment_button type = "button">Select File</button>
+    <span id = custom_text>Empty</span>
     <input class = submit_assignment type = "submit">
     
 </form>

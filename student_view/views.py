@@ -29,6 +29,7 @@ def profile_page(request):
 def assignment_page(request, assignment_title):
     course_list = _get_course_list(request)
     current_assignment = Assignment.objects.get(title=assignment_title)
+    _create_homework(request, request.user)
     return render(request, 'student_view/assignment.html', {'assignment':current_assignment, 'student_courses': course_list})
 
 @login_required(login_url='/student/accounts/login/')
@@ -66,3 +67,6 @@ def _get_course_list(request):
         students__name=current_user.first_name + ' ' + current_user.last_name
         )
     return course_list
+
+def _create_homework(request, user):
+    pass

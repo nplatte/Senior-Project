@@ -7,6 +7,7 @@ import string
 import random
 from email.message import EmailMessage
 import smtplib
+import datetime
 
 
 def email_password(sender, recipiant, password):
@@ -146,6 +147,17 @@ class Assignment(models.Model):
     description = models.TextField(default='')
     due_date = models.DateTimeField(blank=True, null=True)
     #assignment_creator = models.CharField(default=request.user)
+
+    def __str__(self):
+        return self.title
+
+
+class Handout(models.Model):
+
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
+    title = models.CharField(max_length=25, default='')
+    handout = models.FileField()
+    post_date = models.DateTimeField(auto_now_add=True) 
 
     def __str__(self):
         return self.title

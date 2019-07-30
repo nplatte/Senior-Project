@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Assignment
+from .models import Course, Assignment, Handout
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -89,6 +89,23 @@ class CourseAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
         obj.create()
 
+
+class HandoutAdmin(admin.ModelAdmin):
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "course":
+            course_list = Course.objects.filter(course_instructor=request.user)
+            kwargs["queryset"] = course_list
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs 
+        users_courses = Course.objects.filter(course_instructor=request.user)
+        return qs.filter(course__in = users_courses)
+
      
 admin.site.register(Course, CourseAdmin)
 admin.site.register(Assignment, AssignmentAdmin)
+admin.site.register(Handout, HandoutAdmin)

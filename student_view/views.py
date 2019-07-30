@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from Class.models import Course, Assignment
+from Class.models import Course, Assignment, Handout
 from .models import HomeworkSubmission
-from datetime import date
+from datetime import date, timedelta, timezone
 
 def home_page(request):
     return render(request, 'student_view/home.html', )
@@ -13,9 +13,13 @@ def profile_page(request):
     current_user = request.user
     course_list = _get_course_list(request)
     assignments = Assignment.objects.filter(
-            course__in=course_list, 
-            due_date__gte=date.today()
-            ).order_by('-due_date').reverse()
+        course__in=course_list, 
+        due_date__gte=date.today()
+        ).order_by('-due_date').reverse()
+    handouts = Handout.objects.filter(
+        course__in=course_list,
+        post_date__lte=date.today() + timedelta(days=7),
+    )
     return render(
         request, 
         'student_view/student_profile.html', 
@@ -23,6 +27,7 @@ def profile_page(request):
         'user': current_user , 
         'student_courses': course_list ,
         'course_assignments': assignments,
+        'handouts': handouts
         }
         )
 

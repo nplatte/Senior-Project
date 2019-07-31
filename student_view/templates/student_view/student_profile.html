@@ -32,7 +32,7 @@
         <h2 class=title>Recent Handouts</h2>
         {% for handout in handouts %}
         <div class = handout_container>
-        <a class = "handout" href = "{{ handout.handout }}" _target=blank> {{ handout.title }}</a>
+        <a class = "handout" href = "{{ handout.handout.path }}" download~> {{ handout.title }}</a>
         <p>{{ handout.course }}</p>
         </div>
         {% endfor %}

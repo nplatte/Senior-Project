@@ -11,6 +11,9 @@ def home_page(request):
 @login_required(login_url='/student/accounts/login/')
 def profile_page(request):
     current_user = request.user
+    if current_user.is_staff:
+        return render(request, 'teacher_view/home.html')
+        
     course_list = _get_course_list(request)
     assignments = Assignment.objects.filter(
         course__in=course_list, 

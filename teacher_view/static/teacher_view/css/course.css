@@ -1,0 +1,19 @@
+.class_button{
+    margin:10px;
+    border:solid black 1px;
+    border-radius: 5px;
+    padding:5px;
+    background-color: #ff8103;
+    color: black;
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif;
+    cursor: pointer;
+}
+
+.class_button:hover{
+    background-color: #f5993d;
+}
+
+#custom_text{
+    font-size: 20px
+}

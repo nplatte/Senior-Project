@@ -15,10 +15,11 @@
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="staff course create">Add Course</a>
+        <a href="{% url 'staff_course_create' %}">Add Course</a>
         {% for course in current_courses %}
         <a href="{% url 'course_page' course.title %}">{{ course.title }}</a>
         {% endfor %}
+        <a href="{% url 'past_course_page' %}">Past Courses</a>
       </div>
     </div> 
   </div>

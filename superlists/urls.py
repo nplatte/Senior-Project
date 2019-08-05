@@ -26,5 +26,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'Class/', include(class_urls)),
     url(r'student/', include(student_urls)),
+    url(r'teacher/', include(teacher_urls)),
     url(r'accounts/profile', student_views.profile_page, name='student_profile_view')
 ]

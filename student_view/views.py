@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from Class.models import Course, Assignment, Handout
 from .models import HomeworkSubmission
 from datetime import date, timedelta, timezone
+import teacher_view
 
 def home_page(request):
     return render(request, 'student_view/home.html', )

@@ -18,6 +18,7 @@ from django.urls import path
 from django.contrib import admin
 from Class import urls as class_urls
 from student_view import urls as student_urls
+from teacher_view import urls as teacher_urls
 from student_view import views as student_views
 
 urlpatterns = [

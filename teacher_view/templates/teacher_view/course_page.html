@@ -1,1 +1,19 @@
 {% extends 'teacher_view/navbar.html' %}
+
+{% block content %}
+<h2>{{ current_course.title }}</h2>
+<h2>Upcoming Assingments</h2>
+{% for assignment in upcoming_assignments %}
+<div class = assignment_container>
+    <a class = assignment href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+    <p>Due Date: {{ assignment.due_date }}</p>
+</div>
+{% endfor %}
+<h2>Past Assignments</h2>
+{% for assignment in past_assignments %}
+<div class = assignment_container>
+    <a class = assignment href="{% url 'view_assignment' assignment.title %}"> {{ assignment.title }}</a>
+    <p>Due Date: {{ assignment.due_date }}</p>
+</div>
+{% endfor %}
+{% endblock %}

@@ -23,8 +23,8 @@ urlpatterns = [
     url(r'accounts/', include('django.contrib.auth.urls')),
     path('assignment/<assignment_title>/', assignment_page, name='view_assignment'),
     path('course/<course_title>/', course_page, name='view_course'),
-    path('grades/', grade_page, name = 'view_grades'),
-    path('handouts/', handout_page, name = 'view_handouts'),
-    path('discussion/', discussion_page, name = 'view_discussion'),
+    path('grades/', grade_page, name='view_grades'),
+    path('handouts/', handout_page, name='view_handouts'),
+    path('discussion/', discussion_page, name='view_discussion'),
     path('handout/<handout_title>/', handout_page, name='view_handout'),
 ]

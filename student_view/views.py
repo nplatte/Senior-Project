@@ -13,7 +13,11 @@ def home_page(request):
 def profile_page(request):
     current_user = request.user
     if current_user.is_staff:
-        return render(request, 'teacher_view/home.html')
+        current_classes = get_staff_classes(current_user)
+        return render(request, 'teacher_view/home.html',
+        {'current_courses' : current_classes,
+        }
+        )
         
     course_list = _get_course_list(request)
     assignments = Assignment.objects.filter(
@@ -85,3 +89,7 @@ def _create_homework(request, user, assignment_title):
     new_assignment.student = user
     new_assignment.course = assignment_title.course
     new_assignment.save()
+
+def get_staff_classes(user):
+    user_courses = Course.objects.filter(course_instructor=user)
+    return user_courses

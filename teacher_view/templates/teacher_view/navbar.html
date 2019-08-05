@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="navbar">
-    <a href="teacher profile">Home</a>
+    <a href="{% url 'staff_profile' %}">Home</a>
     <a href="staff course create">News</a>
     <div class="dropdown">
       <button class="dropbtn">Courses 
@@ -16,8 +16,9 @@
       </button>
       <div class="dropdown-content">
         <a href="staff course create">Add Course</a>
-        <a href="#">Link 2</a>
-        <a href="#">Link 3</a>
+        {% for course in current_courses %}
+        <a href="{% url 'course_page' course.title %}">{{ course.title }}</a>
+        {% endfor %}
       </div>
     </div> 
   </div>

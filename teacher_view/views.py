@@ -52,6 +52,12 @@ def add_assignment_page(request, course_title):
     {'current_courses' : current_classes,
     })
 
+def edit_assignment_page(request, assignment_title):
+    current_classes = get_staff_classes(request.user)
+    return render(request, 'teacher_view/edit_assignment.html',
+    {'current_courses' : current_classes,
+    })
+
 def get_staff_classes(user):
     user_courses = Course.objects.filter(course_instructor=user)
     return user_courses

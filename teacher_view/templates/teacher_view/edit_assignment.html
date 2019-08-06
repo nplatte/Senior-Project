@@ -11,4 +11,11 @@
     <input name=due_date value={{ assignment.due_date }} type="datetime-local">
     <input type="submit">
 </form>
+
+<div class=student_homework>
+    <h2>Homework Submissions</h2>
+    {% for homework in student_homework %}
+    <p>{{ homework.student }}</p>
+    {% endfor %}
+</div>
 {% endblock %}

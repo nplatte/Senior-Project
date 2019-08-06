@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from Class.models import Course, Assignment, Student
+from student_view.models import HomeworkSubmission
 from datetime import date, timedelta, timezone
 from time import sleep
 
@@ -57,10 +58,11 @@ def edit_assignment_page(request, assignment_title):
     if request.method == 'POST':
         _edit_assignment(request, editable_assignment)
     current_classes = get_staff_classes(request.user)
-    
+    assignment_homework = HomeworkSubmission.objects.filter(assignment=editable_assignment)
     return render(request, 'teacher_view/edit_assignment.html',
     {'current_courses' : current_classes,
     'assignment' : editable_assignment,
+    'student_homework' : assignment_homework,
     })
 
 def get_staff_classes(user):

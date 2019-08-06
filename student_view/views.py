@@ -83,12 +83,13 @@ def _get_course_list(request):
         )
     return course_list
 
-def _create_homework(request, user, assignment_title):
-    new_assignment = HomeworkSubmission()
-    new_assignment.homework = request.FILES["document"]
-    new_assignment.student = user
-    new_assignment.course = assignment_title.course
-    new_assignment.save()
+def _create_homework(request, user, assignment):
+    new_homework = HomeworkSubmission()
+    new_homework.homework = request.FILES["document"]
+    new_homework.student = user
+    new_homework.course = assignment.course
+    new_homework.assignment = assignment
+    new_homework.save()
 
 def get_staff_classes(user):
     user_courses = Course.objects.filter(course_instructor=user)

@@ -29,13 +29,13 @@ def course_page(request, course_title):
         course=current_course, 
         due_date__lte=date.today()
         ).order_by('-due_date').reverse()
-    
+    course_students = Student.objects.filter(enrolled_students=current_course)
     return render(request, 'teacher_view/course_page.html', 
     {'current_courses' : current_classes,
     'current_course' : current_course,
     'upcoming_assignments' : new_assignments,
     'past_assignments' : past_assignments,
-    
+    'students' : course_students,
         })
 
 def past_courses_page(request):

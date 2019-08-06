@@ -53,9 +53,14 @@ def add_assignment_page(request, course_title):
     })
 
 def edit_assignment_page(request, assignment_title):
+    editable_assignment = Assignment.objects.get(instructor=request.user, title=assignment_title)
+    if request.method == 'POST':
+        _edit_assignment(request, editable_assignment)
     current_classes = get_staff_classes(request.user)
+    
     return render(request, 'teacher_view/edit_assignment.html',
     {'current_courses' : current_classes,
+    'assignment' : editable_assignment,
     })
 
 def get_staff_classes(user):
@@ -75,4 +80,11 @@ def _create_assignment(request, course_title):
     new_assignment.description = request.POST['description']
     new_assignment.due_date = request.POST['due_date']
     new_assignment.course = get_staff_classes(request.user).get(title=course_title)
+    new_assignment.instructor = request.user
     new_assignment.save()
+
+def _edit_assignment(request, assignment):
+    assignment.title = request.POST['title']
+    assignment.description = request.POST['description']
+    assignment.due_date = request.POST['due_date']
+    assignment.save()

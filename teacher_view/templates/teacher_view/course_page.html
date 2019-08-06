@@ -17,6 +17,15 @@
     <p>Due Date: {{ assignment.due_date }}</p>
 </div>
 {% endfor %}
+<div class = assignment_container>
+    <a class = assignment href="{% url 'create_assignment' current_course.title %}"> Create Assignment</a>
+    <p>Due Date: {{ assignment.due_date }}</p>
+</div>
+
+<h2>Students</h2>
+{% for student in students %}
+<p>{{student}}</p>
+{% endfor %}
 {% endblock %}
 
 {% block style %}

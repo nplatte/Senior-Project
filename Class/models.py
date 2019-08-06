@@ -10,6 +10,7 @@ import smtplib
 import datetime
 
 
+
 def email_password(sender, recipiant, password):
     msg = EmailMessage()
     msg.set_content(password)

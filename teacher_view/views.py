@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from Class.models import Course, Assignment
 from datetime import date, timedelta, timezone
+from time import sleep
 
 
 def profile_page(request):
@@ -11,6 +12,8 @@ def profile_page(request):
 
 def add_course_page(request):
     current_classes = get_staff_classes(request.user)
+    if request.method == 'POST':
+        _create_course(request)
     return render(request, 'teacher_view/create_class.html', 
     {'current_courses' : current_classes,
         })
@@ -42,3 +45,10 @@ def past_courses_page(request):
 def get_staff_classes(user):
     user_courses = Course.objects.filter(course_instructor=user)
     return user_courses
+
+def _create_course(request):
+    new_course = Course()
+    new_course.Class_File = request.FILES["class_file"]
+    new_course.save()
+    new_course.course_instructor = request.user
+    new_course.create()

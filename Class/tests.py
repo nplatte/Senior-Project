@@ -94,21 +94,20 @@ class TestCourseModel(TestCase):
     
     def test_course_has_info(self):
         self.assertEqual(self.test_class.code, 'CS 260 01')
-        self.assertEqual(self.test_class.term, 'May Term')
-        self.assertEqual(self.test_class.year, '2019')
+        self.assertEqual(self.test_class.term, '2019 May Term')
         self.assertEqual(self.test_class.title, 'Introduction to Computer Graphics')
 
     def test_Course_uses_database(self):
         course = Course.objects.all().first()
         self.assertEqual(course.title, 'Introduction to Computer Graphics')
-        self.assertEqual(course.term, 'May Term')
+        self.assertEqual(course.term, '2019 May Term')
         self.assertEqual(course.code, 'CS 260 01')
 
     def test_Course_correctly_pulls_different_course_info(self):
         new_class = Course()
         new_class.create('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
         self.assertEqual(new_class.code, 'CS 220 01')
-        self.assertEqual(new_class.term, 'Winter Term')
+        self.assertEqual(new_class.term, '2019 Winter Term')
         self.assertEqual(new_class.title, 'Obj-Orient Prog & Intro Data Struct')
 
     def test_Course_does_not_duplicate_students(self):

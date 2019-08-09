@@ -69,16 +69,22 @@ def edit_assignment_page(request, assignment_title):
     })
 
 def get_staff_classes(user):
-    user_courses = Course.objects.filter(course_instructor=user)
     today = date.today()
-    terms = find_terms(today.month, today.year)
-    return user_courses
+    year = today.year
+    month = today.month
+    terms = find_terms(month, year)
+    current_courses = Course.objects.filter(course_instructor=user, term__in=terms)
+    print(current_courses)
+    return current_courses
+    
 
 def find_terms(month, year):
-    if month < 6:
-        pass
-    elif month > 8:
-        pass
+    if month < 7:
+        terms = [f'{year-1} Fall Term', f'{year} Winter Term', f'{year} May Term']
+        return terms
+    elif month > 6:
+        terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
+        return terms
 
 def _create_course(request):
     new_course = Course()

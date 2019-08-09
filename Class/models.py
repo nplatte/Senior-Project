@@ -89,12 +89,10 @@ class MyHTMLParser(HTMLParser):
 
 
 class Course(models.Model):
-    
     Class_File = models.FileField(upload_to='class_htmls')
     code = models.CharField(default='', max_length=20, blank=True)
     title = models.CharField(default='', max_length=50, blank=True)
     term = models.CharField(default='', max_length=60, blank=True)
-    year = models.CharField(default='', max_length=5)
     students = models.ManyToManyField(Student, related_name='enrolled_students')
     course_instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
 
@@ -132,9 +130,7 @@ class Course(models.Model):
     def add_info(self, course_info, Course_model):
         Course_model.student_info = self.Parser.data_list[2:]
         Course_model.code = course_info[2]
-        term = course_info[0][11:].split()
-        Course_model.term = term[1] + ' ' + term[-1]
-        Course_model.year = term[0]
+        Course_model.term = course_info[0][11:]
         Course_model.title = course_info[3][:course_info[3].find(' (')]
         Course_model.save()
         Course_model.add_students(Course_model)

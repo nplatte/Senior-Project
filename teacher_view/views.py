@@ -70,7 +70,15 @@ def edit_assignment_page(request, assignment_title):
 
 def get_staff_classes(user):
     user_courses = Course.objects.filter(course_instructor=user)
+    today = date.today()
+    terms = find_terms(today.month, today.year)
     return user_courses
+
+def find_terms(month, year):
+    if month < 6:
+        pass
+    elif month > 8:
+        pass
 
 def _create_course(request):
     new_course = Course()

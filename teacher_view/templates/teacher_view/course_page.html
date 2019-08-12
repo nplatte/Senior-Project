@@ -26,6 +26,11 @@
 {% for student in students %}
 <p>{{student}}</p>
 {% endfor %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" name=student_id>
+    <button type="submit">Add Student</button>
+</form>
 {% endblock %}
 
 {% block style %}

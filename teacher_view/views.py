@@ -42,8 +42,11 @@ def course_page(request, course_title):
 def past_courses_page(request):
     current_classes = get_staff_classes(request.user)
     terms = get_all_past_terms(request)
+    past_courses = [Course.objects.filter(term=term) for term in terms]
+    print(past_courses)
     return render(request, 'teacher_view/past_courses.html', 
     {'current_courses' : current_classes,
+    'past_courses' : past_courses
         })
 
 def add_assignment_page(request, course_title):
@@ -114,9 +117,8 @@ def get_all_past_terms(request):
     month = today.month
     terms = find_terms(month, year)
     user_courses = Course.objects.filter(course_instructor=request.user).exclude(term__in=terms).values('term')
-    all_terms = set( val for dic in user_courses for val in dic.values())
-    print(all_terms)
-    return all_terms
+    past_terms = set( val for dic in user_courses for val in dic.values())
+    return past_terms
     
 
 

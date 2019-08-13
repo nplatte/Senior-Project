@@ -24,7 +24,9 @@
 
 <h2>Students</h2>
 {% for student in students %}
-<p>{{student}}</p>
+<div class = student_container>
+    <p class = student> {{ student.name }}: {{ student.number }}</p>
+</div>
 {% endfor %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
@@ -39,6 +41,8 @@
 href="{% static 'teacher_view/css/navbar.css' %}">
 <link rel="stylesheet" type="text/css"
 href="{% static 'student_view/css/assignments.css' %}">
+<link rel="stylesheet" type="text/css"
+href="{% static 'teacher_view/css/students.css' %}">
 {% endblock %}
 
 {% block script %}

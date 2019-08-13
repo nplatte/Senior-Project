@@ -76,6 +76,12 @@ def past_courses_page(request):
     'past_courses' : past_courses
         })
 
+def grade_course_page(request, course_title):
+    current_classes = get_staff_classes(request.user)
+    return render(request, 'teacher_view/grade_course.html',
+    {'current_courses' : current_classes,
+    })
+
 def add_assignment_page(request, course_title):
     if request.method == 'POST':
         _create_assignment(request, course_title)

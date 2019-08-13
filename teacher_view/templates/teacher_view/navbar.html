@@ -9,7 +9,18 @@
 {% block navbar %}
 <div class="navbar">
     <a href="{% url 'staff_profile' %}">Home</a>
-    <a href="staff course create">Grades</a>
+
+    <div class="dropdown">
+        <button class="dropbtn">Grades
+          <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+          {% for course in current_courses %}
+          <a href="{% url 'course_grade_page' course.title %}">{{ course.title }}</a>
+          {% endfor %}
+        </div>
+    </div>
+
     <div class="dropdown">
       <button class="dropbtn">Courses 
         <i class="fa fa-caret-down"></i>

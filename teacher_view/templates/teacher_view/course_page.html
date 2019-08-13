@@ -30,7 +30,7 @@
 {% endfor %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="text" name=student_id default="Student ID Number">
+    <input type="text" name=student_id placeholder="Student ID Number">
     <input type="submit" name=submit value="Add Student">
     <input type="submit" name="delete" value="Delete Student">
 </form>

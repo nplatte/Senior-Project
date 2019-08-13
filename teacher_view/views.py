@@ -22,9 +22,13 @@ def add_course_page(request):
 def course_page(request, course_title):
     current_classes = get_staff_classes(request.user)
     current_course = current_classes.get(title=course_title)
-    if request.method == "POST":
+    if request.POST.get('submit',):
         new_student = Student.objects.get(number=request.POST.get('student_id'))
         current_course.students.add(new_student)
+        current_course.save()
+    elif request.POST.get('delete',):
+        deleted_student = Student.objects.get(number=request.POST.get('student_id'))
+        current_course.students.remove(deleted_student)
         current_course.save()
     new_assignments =  Assignment.objects.filter(
         course=current_course, 

@@ -79,7 +79,7 @@ def past_courses_page(request):
 
 def grade_course_page(request, course_title):
     if request.method == 'POST':
-        update_grades()
+        update_grades(request, course_title)
     current_classes = get_staff_classes(request.user)
     return render(request, 'teacher_view/grade_course.html',
     {'current_courses' : current_classes,
@@ -112,7 +112,6 @@ def get_staff_classes(user):
     terms = find_terms()
     current_courses = Course.objects.filter(course_instructor=user, term__in=terms)
     return current_courses
-    
 
 def find_terms():
     today = date.today()
@@ -153,5 +152,7 @@ def get_all_past_terms(request):
     past_terms = set( val for dic in user_courses for val in dic.values())
     return past_terms
 
-def update_grades():
-    pass
+def update_grades(request, title):
+    terms = find_terms()
+    current_course = Course.objects.get(title=title, term__in=terms)
+    

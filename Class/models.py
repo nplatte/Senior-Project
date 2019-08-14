@@ -3,25 +3,9 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import User
 from html.parser import HTMLParser
-import string
-import random
-from email.message import EmailMessage
-import smtplib
-import datetime
+from teacher_view.models import Grade
+import string, random, datetime
 
-
-
-def email_password(sender, recipiant, password):
-    msg = EmailMessage()
-    msg.set_content(password)
-    msg['From'] = sender
-    msg['To'] = recipiant
-    msg['Subject'] = 'Password for Socrates'
-
-    smtp_server = smtplib.SMTP('localhost')
-    smtp_server.send_message(msg)
-    smtp_server.quit()
-    
 
 class Student(models.Model):
     

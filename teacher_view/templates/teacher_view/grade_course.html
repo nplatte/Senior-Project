@@ -6,6 +6,11 @@
     {% csrf_token %}
     <input class = hidden_button type = "file" hidden = hidden name = grade_file>
     <button class = grade_button type = "button">Select File</button>
+    <span id = custom_text>Empty</span>    
     <input class = submit_grade type = "submit">
 </form>
+{% endblock %}
+
+{% block script %}
+<script type = "text/javascript" src = "{% static 'teacher_view/js/grade.js' %}" ></script>
 {% endblock %}

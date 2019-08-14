@@ -156,13 +156,25 @@ def get_all_past_terms(request):
 def update_grades(request, title):
     terms = find_terms()
     current_course = Course.objects.get(title=title, term__in=terms)
-    parse_grade_file(request.FILES["grade_file"])
+    parsed_file = parse_grade_file(request.FILES["grade_file"])
+    for grade_set in parsed_file[1:-2]:
+        new_grade = Grade()
+        new_grade.student = Student.objects.get(number=grade_set[0])
+        tab = '\\t'
+        new_grade.student_scores = tab.join(grade_set)
+        new_grade.course = current_course
+        new_grade.catagories = tab.join(parsed_file[0])
+        new_grade.points_possible = tab.join(parsed_file[-1])
+        new_grade.letter_grade = grade_set[-1]
+        new_grade.save()
 
 def parse_grade_file(file):
     content_list = str(file.read()).split('\\n')
     content_list = [group.split('\\t') for group in content_list]
-    char_remove = ['',"b'", ' ']
+    char_remove = ['','b"', ' ']
     for group in content_list:
         for entry in group:
             if entry in char_remove:
                 group.remove(entry)
+    print(content_list)
+    return content_list[:-1]

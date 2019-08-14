@@ -9,5 +9,5 @@ class Grade(models.Model):
     points_possible = models.CharField(default='', max_length=200)
     letter_grade = models.CharField(default='', max_length=5)
 
-    def parse_file(self):
-        pass
+    def __str__(self):
+        return self.student

@@ -1,1 +1,11 @@
 {% extends 'teacher_view/navbar.html' %}
+{% load static %}
+
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input class = hidden_button type = "file" hidden = hidden name = grade_file>
+    <button class = grade_button type = "button">Select File</button>
+    <input class = submit_grade type = "submit">
+</form>
+{% endblock %}

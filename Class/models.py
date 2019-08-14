@@ -72,7 +72,6 @@ class MyHTMLParser(HTMLParser):
             self.feed(line)
 
     def sort_data_list(self, start_char='\t\t\t', stop_char='\t\t'):
-        # Sorts the data list compiling all of the data for each student into sperate lists
         new_data_list = []
         will_append = False
         for entry in self.data_list:
@@ -101,12 +100,10 @@ class Course(models.Model):
         if Course.objects.filter(code=course_info[2], term=course_info[0][11:], title=course_info[3][:course_info[3].find(' (')]).count() < 1:
             self.add_info(course_info, self)
         else:
-
             course = Course.objects.filter(code=course_info[2], term=course_info[0][11:], title=course_info[3][:course_info[3].find(' (')]).first()
             course.delete()
             self.add_info(course_info, self)
         
-
     def add_students(self, Course_model):
         students_in_db = Student.objects.all()
         for info in self.student_info:

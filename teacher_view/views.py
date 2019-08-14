@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from Class.models import Course, Assignment, Student
 from student_view.models import HomeworkSubmission
+from .models import Grade
 from datetime import date, timedelta, timezone
 from time import sleep
 
@@ -77,6 +78,8 @@ def past_courses_page(request):
         })
 
 def grade_course_page(request, course_title):
+    if request.method == 'POST':
+        update_grades()
     current_classes = get_staff_classes(request.user)
     return render(request, 'teacher_view/grade_course.html',
     {'current_courses' : current_classes,
@@ -106,15 +109,15 @@ def edit_assignment_page(request, assignment_title):
     })
 
 def get_staff_classes(user):
-    today = date.today()
-    year = today.year
-    month = today.month
-    terms = find_terms(month, year)
+    terms = find_terms()
     current_courses = Course.objects.filter(course_instructor=user, term__in=terms)
     return current_courses
     
 
-def find_terms(month, year):
+def find_terms():
+    today = date.today()
+    year = today.year
+    month = today.month
     if month < 7:
         terms = [f'{year-1} Fall Term', f'{year} Winter Term', f'{year} May Term']
         return terms
@@ -145,13 +148,10 @@ def _edit_assignment(request, assignment):
     assignment.save()
 
 def get_all_past_terms(request):
-    today = date.today()
-    year = today.year
-    month = today.month
-    terms = find_terms(month, year)
+    terms = find_terms()
     user_courses = Course.objects.filter(course_instructor=request.user).exclude(term__in=terms).values('term')
     past_terms = set( val for dic in user_courses for val in dic.values())
     return past_terms
-    
 
-
+def update_grades():
+    pass

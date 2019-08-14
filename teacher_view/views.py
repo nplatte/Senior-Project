@@ -4,6 +4,7 @@ from student_view.models import HomeworkSubmission
 from .models import Grade
 from datetime import date, timedelta, timezone
 from time import sleep
+import re
 
 
 def profile_page(request):
@@ -155,4 +156,13 @@ def get_all_past_terms(request):
 def update_grades(request, title):
     terms = find_terms()
     current_course = Course.objects.get(title=title, term__in=terms)
-    
+    parse_grade_file(request.FILES["grade_file"])
+
+def parse_grade_file(file):
+    content_list = str(file.read()).split('\\n')
+    content_list = [group.split('\\t') for group in content_list]
+    char_remove = ['',"b'", ' ']
+    for group in content_list:
+        for entry in group:
+            if entry in char_remove:
+                group.remove(entry)

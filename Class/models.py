@@ -108,14 +108,14 @@ class Course(models.Model):
         self.Parser.sort_data_list('\t\t\t', '\t\t')
         return self.Parser.data_list[0][1].split(' | ')
 
-    def add_info(self, course_info, Course_model):
-        Course_model.student_info = self.Parser.data_list[2:]
-        Course_model.code = course_info[2]
-        Course_model.term = course_info[0][11:]
-        Course_model.title = course_info[3][:course_info[3].find(' (')]
-        Course_model.save()
-        Course_model.add_students(Course_model)
-        Course_model.save()
+    def add_info(self, course_info, course):
+        course.student_info = self.Parser.data_list[2:]
+        course.code = course_info[2]
+        course.term = course_info[0][11:]
+        course.title = course_info[3][:course_info[3].find(' (')]
+        course.save()
+        course.add_students(course)
+        course.save()
 
     def __str__(self):
         return self.title

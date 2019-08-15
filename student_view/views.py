@@ -14,7 +14,7 @@ def home_page(request):
 def profile_page(request):
     current_user = request.user
     if current_user.is_staff:
-        current_classes = get_staff_classes(current_user)
+        current_classes = teacher_view.views.get_staff_classes(current_user)
         return render(request, 'teacher_view/home.html',
         {'current_courses' : current_classes,
         }

@@ -58,7 +58,7 @@ def past_course_page(request, course_title, term):
         ).order_by('-due_date').reverse()
     past_assignments =  Assignment.objects.filter(
         course=current_course, 
-        due_date__lte=date.today()
+        due_date__lt=date.today()
         ).order_by('-due_date').reverse()
     course_students = Student.objects.filter(enrolled_students=current_course)
     return render(request, 'teacher_view/course_page.html', 
@@ -72,7 +72,7 @@ def past_course_page(request, course_title, term):
 def past_courses_page(request):
     current_classes = get_staff_classes(request.user)
     terms = get_all_past_terms(request)
-    past_courses = [Course.objects.filter(term=term) for term in terms]
+    past_courses = [Course.objects.filter(term=term, course_instructor=request.user) for term in terms]
     return render(request, 'teacher_view/past_courses.html', 
     {'current_courses' : current_classes,
     'past_courses' : past_courses

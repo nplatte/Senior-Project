@@ -5,7 +5,7 @@
 <p>{{ term.first.term }}</p>
 {% for course in term %}
 <div class = course_container>
-    <a class = course href="{% url 'past_course_page' course.title course.term %}"> {{ course.title }}</a>
+    <p> {{ course.title }}</p>
     <p>Professor: {{ course.course_instructor }}</p>
 </div>
 {% endfor %}

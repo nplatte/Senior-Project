@@ -14,7 +14,7 @@ def home_page(request):
 def profile_page(request):
     current_user = request.user
     if current_user.is_staff:
-        current_classes = teacher_view.views.get_staff_classes(current_user)
+        current_classes = get_staff_classes(current_user)
         return render(request, 'teacher_view/home.html',
         {'current_courses' : current_classes,
         }
@@ -62,6 +62,13 @@ def course_page(request, course_title):
         'student_courses': course_list,
         'courses_assignments': course_assignments,
         'grade' : grade,
+        })
+
+@login_required(login_url='/student/accounts/login/')
+def past_course_page(request, course_title, term):
+    course_list = _get_course_list(request)
+    return render(request, 'teacher_view/home.html',
+        {'current_courses' : current_classes,
         })
 
 @login_required(login_url='/student/accounts/login/')

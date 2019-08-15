@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from .views import course_page, assignment_page, grade_page, handout_page, discussion_page
+from .views import *
 from django.urls import path
 
 
@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'accounts/', include('django.contrib.auth.urls')),
     path('assignment/<assignment_title>/', assignment_page, name='view_assignment'),
     path('course/<course_title>/', course_page, name='view_course'),
+    path('course/previous', past_courses_page, name='view_past_courses'),
     path('grades/', grade_page, name='view_grades'),
     path('handouts/', handout_page, name='view_handouts'),
     path('discussion/', discussion_page, name='view_discussion'),

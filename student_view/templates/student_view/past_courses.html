@@ -1,0 +1,13 @@
+{% extends 'student_view/view_and_sidebar.html' %}
+
+{% block content %}
+{% for term in past_courses %}
+<p>{{ term.first.term }}</p>
+{% for course in term %}
+<div class = course_container>
+    <a class = course href="{% url 'past_course_page' course.title course.term %}"> {{ course.title }}</a>
+    <p>Due Date: {{ course.course_instructor }}</p>
+</div>
+{% endfor %}
+{% endfor %}
+{% endblock %}

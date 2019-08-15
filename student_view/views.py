@@ -82,11 +82,24 @@ def discussion_page(request):
 @login_required(login_url='/student/accounts/login/')
 def _get_course_list(request):
     current_user = request.user
+    terms = find_terms()
     course_list = Course.objects.filter(
-        students__name=current_user.first_name + ' ' + current_user.last_name
+        students__name=current_user.first_name + ' ' + current_user.last_name,
+        term__in=terms
         )
     return course_list
 
+@login_required(login_url='/student/accounts/login/')
+def past_courses_page(request):
+    course_list = _get_course_list(request)
+    terms = get_all_past_terms(request)
+    past_courses = [Course.objects.filter(term=term) for term in terms]
+    return render(request, 'student_view/past_courses.html', 
+    {'student_courses': course_list,
+    'past_courses' : past_courses
+        })
+
+@login_required(login_url='/student/accounts/login/')
 def _create_homework(request, user, assignment):
     new_homework = HomeworkSubmission()
     new_homework.homework = request.FILES["document"]
@@ -98,3 +111,20 @@ def _create_homework(request, user, assignment):
 def get_staff_classes(user):
     user_courses = Course.objects.filter(course_instructor=user)
     return user_courses
+
+def get_all_past_terms(request):
+    terms = find_terms()
+    user_courses = Course.objects.filter(course_instructor=request.user).exclude(term__in=terms).values('term')
+    past_terms = set( val for dic in user_courses for val in dic.values())
+    return past_terms
+
+def find_terms():
+    today = date.today()
+    year = today.year
+    month = today.month
+    if month < 7:
+        terms = [f'{year-1} Fall Term', f'{year} Winter Term', f'{year} May Term']
+        return terms
+    elif month > 6:
+        terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
+        return terms

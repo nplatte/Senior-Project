@@ -51,7 +51,7 @@ def assignment_page(request, assignment_title):
 @login_required(login_url='/student/accounts/login/')
 def course_page(request, course_title):
     course_list = _get_course_list(request)
-    current_course = Course.objects.get(title=course_title)
+    current_course = course_list.get(title=course_title)
     course_assignments = Assignment.objects.filter(course = current_course)
     current_student = Student.objects.get(name=request.user.first_name + ' ' + request.user.last_name)
     grade = Grade.objects.get(student=current_student, course=current_course)
@@ -109,12 +109,14 @@ def _create_homework(request, user, assignment):
     new_homework.save()
 
 def get_staff_classes(user):
-    user_courses = Course.objects.filter(course_instructor=user)
+    user_courses = Course.objects.filter(students=user)
     return user_courses
 
 def get_all_past_terms(request):
     terms = find_terms()
-    user_courses = Course.objects.filter(course_instructor=request.user).exclude(term__in=terms).values('term')
+    student = Student.objects.get(name=request.user.first_name + ' ' + request.user.last_name)
+    user_courses = Course.objects.filter(students=student).exclude(term__in=terms).values('term')
+    print(user_courses)
     past_terms = set( val for dic in user_courses for val in dic.values())
     return past_terms
 

@@ -11,9 +11,11 @@
 </form>
 
 <h2>Student Grades</h2>
+<p>{{ student_grades.first.catagories }}</p>
 {% for grade in student_grades %}
-<p>{{grade.student_scores}}</p>
+<p>{{ grade.student_scores }}</p>
 {% endfor %}
+<p>{{ student_grades.first.points_possible }}</p>
 {% endblock %}
 
 {% block script %}

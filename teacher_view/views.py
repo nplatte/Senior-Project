@@ -166,10 +166,10 @@ def update_grades(request, title):
         new_grade = Grade()
         new_grade.student = Student.objects.get(number=grade_set[0])
         tab = '   '
-        new_grade.student_scores = tab.join(grade_set)
+        new_grade.student_scores = tab.join(grade_set)[:-2]
         new_grade.course = current_course
-        new_grade.catagories = tab.join(parsed_file[0])
-        new_grade.points_possible = tab.join(parsed_file[-1])
+        new_grade.catagories = tab.join(parsed_file[0])[:-2]
+        new_grade.points_possible = tab.join(parsed_file[-1])[:-3]
         new_grade.letter_grade = grade_set[-1]
         new_grade.save()
 
@@ -181,4 +181,5 @@ def parse_grade_file(file):
         for entry in group:
             if entry in char_remove:
                 group.remove(entry)
+        print(group)
     return content_list[:-1]

@@ -10,4 +10,4 @@ class Grade(models.Model):
     letter_grade = models.CharField(default='', max_length=5)
 
     def __str__(self):
-        return self.student
+        return self.student.name

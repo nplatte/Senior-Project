@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from Class.models import Course, Assignment, Handout
+from Class.models import Course, Assignment, Handout, Student
+from teacher_view.models import Grade
 from .models import HomeworkSubmission
 from datetime import date, timedelta, timezone
 import teacher_view
@@ -52,12 +53,15 @@ def course_page(request, course_title):
     course_list = _get_course_list(request)
     current_course = Course.objects.get(title=course_title)
     course_assignments = Assignment.objects.filter(course = current_course)
+    current_student = Student.objects.get(name=request.user.first_name + ' ' + request.user.last_name)
+    grade = Grade.objects.get(student=current_student, course=current_course)
     return render(
         request, 
         'student_view/course.html', 
         {'course':current_course,
         'student_courses': course_list,
-        'courses_assignments': course_assignments
+        'courses_assignments': course_assignments,
+        'grade' : grade,
         })
 
 @login_required(login_url='/student/accounts/login/')

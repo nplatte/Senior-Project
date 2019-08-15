@@ -170,7 +170,7 @@ def update_grades(request, title):
         new_grade.course = current_course
         new_grade.catagories = tab.join(parsed_file[0])[:-2]
         new_grade.points_possible = tab.join(parsed_file[-1])[:-3]
-        new_grade.letter_grade = grade_set[-1]
+        new_grade.letter_grade = grade_set[-1][:-2]
         new_grade.save()
 
 def parse_grade_file(file):

@@ -9,6 +9,11 @@
     <span id = custom_text>Empty</span>    
     <input class = submit_grade type = "submit">
 </form>
+
+<h2>Student Grades</h2>
+{% for grade in student_grades %}
+<p>{{grade.student_scores}}</p>
+{% endfor %}
 {% endblock %}
 
 {% block script %}

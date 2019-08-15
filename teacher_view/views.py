@@ -82,8 +82,11 @@ def grade_course_page(request, course_title):
     if request.method == 'POST':
         update_grades(request, course_title)
     current_classes = get_staff_classes(request.user)
+    current_course = current_classes.get(title=course_title)
+    course_grades = Grade.objects.filter(course=current_course)
     return render(request, 'teacher_view/grade_course.html',
     {'current_courses' : current_classes,
+    'student_grades' : course_grades, 
     })
 
 def add_assignment_page(request, course_title):
@@ -157,10 +160,12 @@ def update_grades(request, title):
     terms = find_terms()
     current_course = Course.objects.get(title=title, term__in=terms)
     parsed_file = parse_grade_file(request.FILES["grade_file"])
+    for grade_object in Grade.objects.filter(course=current_course):
+        grade_object.delete()
     for grade_set in parsed_file[1:-2]:
         new_grade = Grade()
         new_grade.student = Student.objects.get(number=grade_set[0])
-        tab = '\\t'
+        tab = '   '
         new_grade.student_scores = tab.join(grade_set)
         new_grade.course = current_course
         new_grade.catagories = tab.join(parsed_file[0])
@@ -176,5 +181,4 @@ def parse_grade_file(file):
         for entry in group:
             if entry in char_remove:
                 group.remove(entry)
-    print(content_list)
     return content_list[:-1]

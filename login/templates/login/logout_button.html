@@ -1,0 +1,9 @@
+{% extends 'month_view/base.html' %}
+
+{% block 'logout' %}
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" id="logout_button" name="logout">Log Out</button>
+</form>
+
+{% endblock %}

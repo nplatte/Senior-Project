@@ -20,8 +20,10 @@ from Class import urls as class_urls
 from student_view import urls as student_urls
 from teacher_view import urls as teacher_urls
 from student_view import views as student_views
+from login import urls as login_urls
 
 urlpatterns = [
+    path('login/', include(login_urls)),
     path('', student_views.home_page, name='home'),
     path('admin/', admin.site.urls),
     path(r'Class/', include(class_urls)),

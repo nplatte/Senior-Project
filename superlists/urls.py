@@ -13,8 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
-from django.urls import path
+#from django.conf.urls import url, include
+from django.urls import path, include
 from django.contrib import admin
 from Class import urls as class_urls
 from student_view import urls as student_urls
@@ -23,9 +23,9 @@ from student_view import views as student_views
 
 urlpatterns = [
     path('', student_views.home_page, name='home'),
-    url(r'^admin/', admin.site.urls),
-    url(r'Class/', include(class_urls)),
-    url(r'student/', include(student_urls)),
-    url(r'teacher/', include(teacher_urls)),
-    url(r'accounts/profile', student_views.profile_page, name='student_profile_view')
+    path(r'^admin/', admin.site.urls),
+    path(r'Class/', include(class_urls)),
+    path(r'student/', include(student_urls)),
+    path('teacher/', include(teacher_urls)),
+    path(r'accounts/profile', student_views.profile_page, name='student_profile_view')
 ]

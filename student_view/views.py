@@ -7,10 +7,12 @@ from .models import HomeworkSubmission
 from datetime import date, timedelta, timezone
 import teacher_view
 
+
+@login_required()
 def home_page(request):
     return render(request, 'student_view/home.html', )
 
-@login_required(login_url='//login/')
+@login_required()
 def profile_page(request):
     current_user = request.user
     if current_user.is_staff:
@@ -40,7 +42,7 @@ def profile_page(request):
         }
         )
 
-@login_required(login_url='/login/')
+@login_required()
 def assignment_page(request, assignment_title):
     course_list = _get_course_list(request)
     current_assignment = Assignment.objects.get(title=assignment_title)

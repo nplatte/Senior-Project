@@ -16,5 +16,5 @@ def login_page(request):
             elif user.groups.filter(name='student').exists():
                 return redirect(reverse('student_home_page'))
         else:
-            return redirect('/login/')
+            return redirect(login_page)
     return render(request, 'login/login.html')

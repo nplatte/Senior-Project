@@ -6,6 +6,8 @@ from datetime import date, timedelta, timezone
 from time import sleep
 import re
 
+def home_page(request):
+    return render(request, 'teacher_view/home.html')
 
 def profile_page(request):
     current_classes = get_staff_classes(request.user)

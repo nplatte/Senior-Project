@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.urls import reverse
 
 from datetime import datetime
 
@@ -8,10 +9,9 @@ def login_page(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        if user is not None:
+        if user.groups.filter(name='staff').extists():
             login(request, user)
-            now = datetime.now()
-            return redirect(f'month_view/{now.month}-{now.year}/')
+            return redirect(reverse('staff_home_page'))
         else:
             return redirect('/')
     return render(request, 'login/login.html')

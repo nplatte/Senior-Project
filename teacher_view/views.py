@@ -7,7 +7,7 @@ from time import sleep
 import re
 from django.contrib.auth.decorators import login_required
 
-@login_required()
+@login_required(login_url='/login/')
 def home_page(request):
     return render(request, 'teacher_view/home.html')
 

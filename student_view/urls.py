@@ -21,6 +21,7 @@ from django.urls import path
 
 urlpatterns = [
     #url(r'accounts/', include('django.contrib.auth.urls')),
+    path('home/', home_page, name='student_home_page'),
     path('assignment/<assignment_title>/', assignment_page, name='view_assignment'),
     path('course/<course_title>/', course_page, name='view_course'),
     path('course/previous', past_courses_page, name='view_past_courses'),

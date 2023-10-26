@@ -9,9 +9,12 @@ def login_page(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        if user.groups.filter(name='staff').exists():
+        if user:
             login(request, user)
-            return redirect(reverse('staff_home_page'))
+            if user.groups.filter(name='staff').exists():
+                return redirect(reverse('staff_home_page'))
+            elif user.groups.filter(name='student').exists():
+                return redirect(reverse('student_home_page'))
         else:
-            return redirect('/')
+            return redirect('/login/')
     return render(request, 'login/login.html')

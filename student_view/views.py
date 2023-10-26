@@ -10,7 +10,7 @@ import teacher_view
 def home_page(request):
     return render(request, 'student_view/home.html', )
 
-@login_required(login_url='/student/accounts/login/')
+@login_required(login_url='//login/')
 def profile_page(request):
     current_user = request.user
     if current_user.is_staff:
@@ -40,7 +40,7 @@ def profile_page(request):
         }
         )
 
-@login_required(login_url='/student/accounts/login/')
+@login_required(login_url='/login/')
 def assignment_page(request, assignment_title):
     course_list = _get_course_list(request)
     current_assignment = Assignment.objects.get(title=assignment_title)
@@ -48,7 +48,7 @@ def assignment_page(request, assignment_title):
         _create_homework(request, request.user, current_assignment)
     return render(request, 'student_view/assignment.html', {'assignment':current_assignment, 'student_courses': course_list})
 
-@login_required(login_url='/student/accounts/login/')
+@login_required(login_url='/login/')
 def course_page(request, course_title):
     course_list = _get_course_list(request)
     current_course = course_list.get(title=course_title)

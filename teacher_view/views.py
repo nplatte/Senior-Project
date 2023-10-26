@@ -5,7 +5,9 @@ from .models import Grade
 from datetime import date, timedelta, timezone
 from time import sleep
 import re
+from django.contrib.auth.decorators import login_required
 
+@login_required()
 def home_page(request):
     return render(request, 'teacher_view/home.html')
 

@@ -31,4 +31,4 @@ class TestLoginPage(LiveServerTestCase):
 
     def test_login_required_redirects_to_login_page(self):
         response = self.client.get(reverse('staff_home_page'))
-        self.assertTemplateUsed(response, 'login/login.html')
+        self.assertRedirects(response, '/login/?next=/teacher/')

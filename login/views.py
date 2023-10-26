@@ -9,7 +9,7 @@ def login_page(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        if user.groups.filter(name='staff').extists():
+        if user.groups.filter(name='staff').exists():
             login(request, user)
             return redirect(reverse('staff_home_page'))
         else:

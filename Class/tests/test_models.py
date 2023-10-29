@@ -24,12 +24,12 @@ class TestMyHTMLParser(TestCase):
         self.assertEqual(slist_key, self.parser.data_list)
 
     def test_list_has_course_info(self):
-        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_260.xls')
+        self.parser.feed_file(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.xls')
         self.parser.sort_data_list('\t\t\t', '\t\t')
         self.assertIn(['\t\t\t', 'Class List 2019 May Term | Undergraduate | CS 260 01 | Introduction to Computer Graphics (17 students)'], self.parser.data_list)
 
     def test_parses_other_courses(self):
-        self.parser.feed_file('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\CS_220.xls')
+        self.parser.feed_file(f'{self.base_path}\\Class\\test_class_htmls\\CS_220.xls')
         self.parser.sort_data_list()
         self.assertEqual(self.parser.data_list[0][1], 'Class List 2019 Winter Term | Undergraduate | CS 220 01 | Obj-Orient Prog & Intro Data Struct (23 students)')
 
@@ -60,10 +60,6 @@ class TestStudentModel(TestCase):
 
     def test_student_has_account(self):
         self.assertEqual(User.objects.all().count(), 17)
-
-    def test_student_password_emails(self):
-        email = 'nathan.platte@wartburg.edu'
-        email_password(email, email, 'password')
 
 
 class TestAssignmentModel(TestCase):

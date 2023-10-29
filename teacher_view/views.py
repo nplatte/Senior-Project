@@ -25,6 +25,9 @@ def add_course_page(request):
     {'current_courses' : current_classes,
         })
 
+def courses_page(request):
+    return render(request, 'teacher_view/courses.html')
+
 def course_page(request, course_title):
     current_classes = get_staff_classes(request.user)
     current_course = current_classes.get(title=course_title)

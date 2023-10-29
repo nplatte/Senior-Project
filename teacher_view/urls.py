@@ -4,6 +4,7 @@ from django.urls import path
 urlpatterns = [
     path('', teacher_views.home_page, name='staff_home_page'),
     path('accounts/profile', teacher_views.profile_page, name='staff_profile'),
+    path('course/', teacher_views.courses_page, name='staff_courses_page'),
     path('course/add', teacher_views.add_course_page, name='staff_course_create'),
     path('course/<course_title>/grade', teacher_views.grade_course_page, name='course_grade_page'),
     path('course/<course_title>/', teacher_views.course_page, name='course_page'),

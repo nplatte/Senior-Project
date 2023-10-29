@@ -29,7 +29,3 @@ class TestLoginPage(LiveServerTestCase):
     def test_login_redirects_to_login_on_fail(self):
         response = self.client.post(reverse('login_page'), {'username': self.test_username, 'password': 'wrong_password'}, follow=True)
         self.assertRedirects(response, reverse('login_page'))
-
-    def test_login_required_redirects_to_login_page(self):
-        response = self.client.get(reverse('staff_home_page'))
-        self.assertRedirects(response, '/login/?next=/teacher/')

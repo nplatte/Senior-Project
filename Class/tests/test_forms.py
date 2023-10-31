@@ -1,17 +1,34 @@
 from django.test import TestCase
 from Class.models import MyHTMLParser
+from Class.forms import CourseModelForm
+from Class.models import Course
 from os import getcwd
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 class TestCourseModelForm(TestCase):
 
     def setUp(self):
-        pass
+        self.test_form = CourseModelForm
+        self.base_path = getcwd()
 
     def test_successful_form_saves_to_database(self):
-        pass
+        courses = Course.objects.all()
+        self.assertEqual(len(courses), 0)
+        f = open(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.xls', 'r')
+        ofile = SimpleUploadedFile(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.xls', bytes(f.read(), 'utf-8'))
+        form = self.test_form({}, {'Class_File': ofile})
+        self.assertEqual(len(form.errors), 0) 
+        courses = Course.objects.all()
+        self.assertEqual(len(courses), 1)
 
     def test_form_file_type_is_xls(self):
-        pass
+        courses = Course.objects.all()
+        self.assertEqual(len(courses), 0)
+        f = open(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.txt', 'r')
+        ofile = SimpleUploadedFile(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.txt', bytes(f.read(), 'utf-8'))
+        form = self.test_form({}, {'Class_File': ofile})
+        print(form.errors)
+        self.assertEqual(len(form.errors), 1) 
 
 
 class TestMyHTMLParser(TestCase):

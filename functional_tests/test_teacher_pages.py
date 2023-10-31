@@ -2,7 +2,10 @@ from selenium import webdriver
 from django.test import LiveServerTestCase
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+from selenium.webdriver.common.action_chains import ActionChains
+
+from time import sleep
 
 class TestTeacherCreateNewClass(LiveServerTestCase):
 
@@ -14,24 +17,31 @@ class TestTeacherCreateNewClass(LiveServerTestCase):
         self.browser.quit()
 
     def teacher_login(self, username='new', password='password'):
-        username_input = self.browser.find_element_by_name('username')
+        username_input = self.browser.find_element(By.ID, 'username')
         username_input.send_keys(username)
-        password_input = self.browser.find_element_by_name('password')
+        password_input = self.browser.find_element(By.ID, 'password')
         password_input.send_keys(password)
         password_input.send_keys(Keys.ENTER)
 
     def test_teacher_can_create_new_class(self):
         # A teacher wants to log in to create a new class
         # they go to the Wartburg MCSP Website and see a log in page
-        User.objects.create_user('new', 'new@gmail.com', 'password')
+        test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
+        staff_group = Group.objects.create(name='staff')
+        staff_group.user_set.add(test_user)
         # They enter the log in information and are taken to the staff view of the website
+        self.assertIn('Log In', self.browser.title)
+        self.teacher_login()
+        sleep(1)
         self.assertIn('Wartburg MCSP Teachers', self.browser.title)
         # they see a nav bar on the top of the page, this displays a Home button, Courses button, an Assignments button, and a Grades Button
+        chain = ActionChains(self.browser)
         home_btn = self.browser.find_element(By.ID, 'nav-home')
         courses_btn = self.browser.find_element(By.ID, 'nav-courses')
-        assignments_btn = self.browser.find_element(By.ID, 'nav-assignments')
+        #assignments_btn = self.browser.find_element(By.ID, 'nav-assignments')
         grades_btn = self.browser.find_element(By.ID, 'nav-grades')
         # they click the courses Button
+        chain.move_to_element(courses_btn).perform()
         courses_btn.click()
         # This takes them to a new page where they see all the courses with a break down of students and recent activity
         courses = self.browser.find_elements(By.CLASS_NAME, 'course-title')
@@ -42,9 +52,9 @@ class TestTeacherCreateNewClass(LiveServerTestCase):
         # They click this button and a window pops up on screen asking for a file upload
         new_course_btn.click()
         # They select the course file from their computer and press enter
-        file_upload = self.browser.find_element_by_name('Class_File')
+        file_upload = self.browser.find_element(By.ID, 'Class_File')
         file_upload.send_keys('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\cs_220.xls')
-        save_course = self.browser.find_element_by_name('_save')
+        save_course = self.browser.find_element(By.ID, '_save')
         save_course.click()
         # the back end processes the file and generates a new course page from the file
         # they see the students in the course and navigate to courses and see the course listed after refreshing.

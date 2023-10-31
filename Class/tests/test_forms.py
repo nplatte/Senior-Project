@@ -27,8 +27,8 @@ class TestCourseModelForm(TestCase):
         f = open(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.txt', 'r')
         ofile = SimpleUploadedFile(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.txt', bytes(f.read(), 'utf-8'))
         form = self.test_form({}, {'Class_File': ofile})
-        print(form.errors)
-        self.assertEqual(len(form.errors), 1) 
+        self.assertEqual(len(form.errors), 1)
+        self.assertEqual('file is not .xls file', form.errors['Class_File'][0]) 
 
 
 class TestMyHTMLParser(TestCase):

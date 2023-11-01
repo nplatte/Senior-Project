@@ -3,7 +3,7 @@ from django.test import LiveServerTestCase
 from selenium.webdriver.common.keys import Keys
 from time import sleep
 from os import remove
-from Class.models import Course
+from teacher_view.models import Course
 
 
 class TestTeacherAssignmentPost(LiveServerTestCase):

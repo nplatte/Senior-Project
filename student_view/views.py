@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from Class.models import Course, Assignment, Handout, Student
+from teacher_view.models import Course, Assignment, Handout, Student
 from teacher_view.models import Grade
 from .models import HomeworkSubmission
 from datetime import date, timedelta, timezone

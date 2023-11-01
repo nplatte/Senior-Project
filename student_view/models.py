@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from Class.models import Course, Assignment
+from teacher_view.models import Course, Assignment
 
 class HomeworkSubmission(models.Model):
 

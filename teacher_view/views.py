@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from Class.models import Course, Assignment, Student
+from teacher_view.models import Course, Assignment, Student
 from student_view.models import HomeworkSubmission
 from .models import Grade
 from datetime import date, timedelta, timezone

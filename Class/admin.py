@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, Assignment, Handout
+from teacher_view.models import Course, Assignment, Handout
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User

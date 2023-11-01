@@ -8,7 +8,7 @@ class TestStudentModel(TestCase):
 
     def setUp(self):
         self.test_class = Course()
-        self.base_path = f'{getcwd()}\\Class\\test_class_htmls'
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
         self.test_class.create(f'{self.base_path}\\CS_260.xls')
 
     def test_student_has_name(self):
@@ -38,7 +38,7 @@ class TestAssignmentModel(TestCase):
     def setUp(self):
         self.test_assignment = Assignment()
         self.test_assignment.save()
-        self.base_path = f'{getcwd()}\\Class\\test_class_htmls'
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
 
     def tearDown(self):
         pass
@@ -60,7 +60,7 @@ class TestCourseModel(TestCase):
     
     def setUp(self):
         self.test_class = Course()
-        self.base_path = f'{getcwd()}\\Class\\test_class_htmls'
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
         self.test_class.create(f'{self.base_path}\\CS_260.xls')
     
     def test_course_has_info(self):

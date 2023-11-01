@@ -10,7 +10,7 @@ class TestCourseModelForm(TestCase):
     def setUp(self):
         self.test_form = CourseModelForm
         
-        self.base_path = f'{getcwd()}\\Class\\test_class_htmls'
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
 
     def test_successful_form_saves_to_database(self):
         courses = Course.objects.all()
@@ -36,7 +36,7 @@ class TestMyHTMLParser(TestCase):
 
     def setUp(self):
         self.parser = MyHTMLParser()
-        self.base_path = f'{getcwd()}\\Class\\test_class_htmls'
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
 
     def test_feed_full_file(self):
         self.parser.feed_file(f'{self.base_path}\\CS_260.xls')

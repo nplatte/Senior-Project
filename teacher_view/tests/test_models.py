@@ -8,8 +8,8 @@ class TestStudentModel(TestCase):
 
     def setUp(self):
         self.test_class = Course()
-        self.base_path = getcwd()
-        self.test_class.create(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.xls')
+        self.base_path = f'{getcwd()}\\Class\\test_class_htmls'
+        self.test_class.create(f'{self.base_path}\\CS_260.xls')
 
     def test_student_has_name(self):
         test_student = Student.objects.filter(number = 868019).first()
@@ -38,14 +38,14 @@ class TestAssignmentModel(TestCase):
     def setUp(self):
         self.test_assignment = Assignment()
         self.test_assignment.save()
-        self.base_path = getcwd()
+        self.base_path = f'{getcwd()}\\Class\\test_class_htmls'
 
     def tearDown(self):
         pass
 
     def test_assignment_has_course(self):
         cs_260 = Course()
-        cs_260.create(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.xls')
+        cs_260.create(f'{self.base_path}\\CS_260.xls')
         self.test_assignment.course = cs_260
         self.assertEqual(self.test_assignment.course, Course.objects.get(code='CS 260 01'))
 
@@ -60,8 +60,8 @@ class TestCourseModel(TestCase):
     
     def setUp(self):
         self.test_class = Course()
-        self.base_path = getcwd()
-        self.test_class.create(f'{self.base_path}\\Class\\test_class_htmls\\CS_260.xls')
+        self.base_path = f'{getcwd()}\\Class\\test_class_htmls'
+        self.test_class.create(f'{self.base_path}\\CS_260.xls')
     
     def test_course_has_info(self):
         self.assertEqual(self.test_class.code, 'CS 260 01')
@@ -76,16 +76,16 @@ class TestCourseModel(TestCase):
 
     def test_Course_correctly_pulls_different_course_info(self):
         new_class = Course()
-        new_class.create(f'{self.base_path}\\Class\\test_class_htmls\\CS_220.xls')
+        new_class.create(f'{self.base_path}\\CS_220.xls')
         self.assertEqual(new_class.code, 'CS 220 01')
         self.assertEqual(new_class.term, '2019 Winter Term')
         self.assertEqual(new_class.title, 'Obj-Orient Prog & Intro Data Struct')
 
     def test_Course_does_not_duplicate_students(self):
-        self.test_class.create(f'{self.base_path}\\Class\\test_class_htmls\\CS_260_extra_student.xls')
+        self.test_class.create(f'{self.base_path}\\CS_260_extra_student.xls')
         students = self.test_class.students.filter(number='868019')
         self.assertEqual(students.count(), 1)
 
     def test_Course_only_has_students_in_xls_file_listed(self):
         cs_220 = Course()
-        cs_220.create(f'{self.base_path}\\Class\\test_class_htmls\\CS_220.xls')
+        cs_220.create(f'{self.base_path}\\CS_220.xls')

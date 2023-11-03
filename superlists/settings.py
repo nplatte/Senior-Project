@@ -125,3 +125,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_URL = ''
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

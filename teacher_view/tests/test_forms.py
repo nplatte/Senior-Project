@@ -12,6 +12,12 @@ class TestCourseModelForm(TestCase):
         
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
 
+    def test_good_file_is_valid(self):
+        f = open(f'{self.base_path}\\CS_260.xls', 'r')
+        ofile = SimpleUploadedFile(f'{self.base_path}\\CS_260.xls', bytes(f.read(), 'utf-8'))
+        form = self.test_form({}, {'Class_File': ofile})
+        self.assertTrue(form.is_valid())
+
     def test_successful_form_saves_to_database(self):
         courses = Course.objects.all()
         self.assertEqual(len(courses), 0)

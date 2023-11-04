@@ -29,7 +29,7 @@
       </button>
       <div class="dropdown-content">
         <a href="{% url 'staff_courses_page' %}" id="nav-courses">Courses</a>
-        <a href="{% url 'staff_course_create' %}">Add Course</a>
+        <a href="{% url 'staff_add_course_page' %}">Add Course</a>
         {% for course in current_courses %}
         <a href="{% url 'course_page' course.title %}">{{ course.title }}</a>
         {% endfor %}

@@ -9,21 +9,18 @@ class TestCourseModelForm(TestCase):
 
     def setUp(self):
         self.test_form = CourseModelForm
-        
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
 
     def test_good_file_is_valid(self):
-        f = open(f'{self.base_path}\\CS_260.xls', 'r')
-        ofile = SimpleUploadedFile(f'{self.base_path}\\CS_260.xls', bytes(f.read(), 'utf-8'))
-        form = self.test_form({}, {'Class_File': ofile})
+        ofile = open(f'{self.base_path}\\CS_260.xls')
+        form = self.test_form({'Class_File': ofile})
         self.assertTrue(form.is_valid())
 
     def test_successful_form_saves_to_database(self):
         courses = Course.objects.all()
         self.assertEqual(len(courses), 0)
-        f = open(f'{self.base_path}\\CS_260.xls', 'r')
-        ofile = SimpleUploadedFile(f'{self.base_path}\\CS_260.xls', bytes(f.read(), 'utf-8'))
-        form = self.test_form({}, {'Class_File': ofile})
+        ofile = open(f'{self.base_path}\\CS_260.xls')
+        form = self.test_form({'Class_File': ofile})
         self.assertEqual(len(form.errors), 0) 
         courses = Course.objects.all()
         self.assertEqual(len(courses), 1)
@@ -31,10 +28,9 @@ class TestCourseModelForm(TestCase):
     def test_form_file_type_is_xls(self):
         courses = Course.objects.all()
         self.assertEqual(len(courses), 0)
-        f = open(f'{self.base_path}\\CS_260.txt', 'r')
-        ofile = SimpleUploadedFile(f'{self.base_path}\\CS_260.txt', bytes(f.read(), 'utf-8'))
-        form = self.test_form({}, {'Class_File': ofile})
-        self.assertEqual(len(form.errors), 1)
+        ofile = open(f'{self.base_path}\\CS_260.txt')
+        form = self.test_form({'Class_File': ofile})
+        self.assertEqual( len(form.errors), 1)
         self.assertEqual('file is not .xls file', form.errors['Class_File'][0]) 
 
 

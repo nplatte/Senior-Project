@@ -48,8 +48,9 @@ class TestTeacherCreateNewClass(LiveServerTestCase):
         curr_courses_btn.click()
         # uh oh! They don't see any
         curr_courses = self.browser.find_elements(By.ID, 'course_title')
-        self.assertEqual(curr_courses, 0)
+        self.assertEqual(len(curr_courses), 0)
         # they decide to fix this by adding a course
+        courses_btn = self.browser.find_element(By.ID, 'nav-courses')
         chain.move_to_element(courses_btn).perform()
         add_course_btn = self.browser.find_element(By.ID, 'add-course')
         add_course_btn.click()

@@ -40,19 +40,23 @@ class TestTeacherCreateNewClass(LiveServerTestCase):
         courses_btn = self.browser.find_element(By.ID, 'nav-courses')
         #assignments_btn = self.browser.find_element(By.ID, 'nav-assignments')
         grades_btn = self.browser.find_element(By.ID, 'nav-grades')
-        # they click the courses Button
+        # they move to the courses dropdown and reveal other options
         chain.move_to_element(courses_btn).perform()
-        courses_btn.click()
-        # This takes them to a new page where they see all the courses with a break down of students and recent activity
-        courses = self.browser.find_elements(By.CLASS_NAME, 'course-title')
-        self.assertEqual(len(courses), 0)
-        self.assertEqual('Courses', self.browser.title)
-        # At the top is a button for new courses
-        new_course_btn = self.browser.find_element(By.ID, 'new-course-btn')
-        # They click this button and a window pops up on screen asking for a file upload
-        new_course_btn.click()
+        add_course_btn = self.browser.find_element(By.ID, 'add-course')
+        curr_courses_btn = self.browser.find_element(By.ID, 'curr-courses')
+        # They move to see the current courses
+        curr_courses_btn.click()
+        # uh oh! They don't see any
+        curr_courses = self.browser.find_elements(By.ID, 'course_title')
+        self.assertEqual(curr_courses, 0)
+        # they decide to fix this by adding a course
+        chain.move_to_element(courses_btn).perform()
+        add_course_btn = self.browser.find_element(By.ID, 'add-course')
+        add_course_btn.click()
+        # This takes them to a new page where they see a form to make courses
+        # At the top is an upload for files
         # They select the course file from their computer and press enter
-        file_upload = self.browser.find_element(By.ID, 'Class_File')
+        file_upload = self.browser.find_element(By.ID, 'course_file_upload')
         file_upload.send_keys('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\cs_220.xls')
         save_course = self.browser.find_element(By.ID, '_save')
         save_course.click()

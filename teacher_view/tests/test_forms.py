@@ -1,6 +1,6 @@
 from django.test import TestCase
-from teacher_view.models import MyHTMLParser
-from teacher_view.forms import CourseModelForm
+#from teacher_view.models import MyHTMLParser
+from teacher_view.forms import CourseModelForm, MyHTMLParser
 from teacher_view.models import Course
 from os import getcwd
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -41,6 +41,7 @@ class TestMyHTMLParser(TestCase):
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
 
     def test_feed_full_file(self):
+        
         self.parser.feed_file(f'{self.base_path}\\CS_260.xls')
         first_data = '\t\t'
         last_data = '\t\t'

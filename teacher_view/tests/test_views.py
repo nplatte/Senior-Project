@@ -76,3 +76,20 @@ class TestAddCoursePage(TestCase):
         request = self.client.get(reverse('staff_add_course_page'))
         form = request.context['file_form']
         self.assertIsInstance(form, CourseModelForm)
+
+    def test_file_upload_form_redirects_to_new_course_page(self):
+        data = {
+
+        }
+        request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
+        self.assertRedirects(request, 'teacher_view/course.html')
+
+    def test_file_upload_creates_new_course(self):
+        courses = len(Course.objects.all())
+        self.assertEqual(0, courses)
+        data = {
+
+        }
+        request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
+        courses = len(Course.objects.all())
+        self.assertEqual(1, courses)

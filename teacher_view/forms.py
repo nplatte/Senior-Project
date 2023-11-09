@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from html.parser import HTMLParser
 
 
-class CourseModelForm(forms.ModelForm):  
+class CourseModelFileForm(forms.ModelForm):  
     class Meta:
         model = Course
         fields = ['source_file']

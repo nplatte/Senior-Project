@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User, Group
 from teacher_view.models import Course
 from datetime import date
-from teacher_view.forms import CourseModelForm
+from teacher_view.forms import CourseModelFileForm
 from os import getcwd
 
 
@@ -76,7 +76,7 @@ class TestAddCoursePage(TestCase):
     def test_file_upload_form_is_passed_to_page(self):
         request = self.client.get(reverse('staff_add_course_page'))
         form = request.context['file_form']
-        self.assertIsInstance(form, CourseModelForm)
+        self.assertIsInstance(form, CourseModelFileForm)
 
     def test_file_upload_form_redirects_to_new_course_page(self):
         pth = f'{getcwd()}\\class_htmls\\CS_220_May.xls'

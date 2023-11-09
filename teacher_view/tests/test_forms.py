@@ -1,6 +1,6 @@
 from django.test import TestCase
 #from teacher_view.models import MyHTMLParser
-from teacher_view.forms import CourseModelForm, MyHTMLParser
+from teacher_view.forms import CourseModelFileForm, MyHTMLParser
 from teacher_view.models import Course
 from os import getcwd
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -23,18 +23,18 @@ class TestCourseModelForm(TestCase):
         
 
     def test_good_file_is_valid(self): 
-        form = CourseModelForm(*self.test_data)
+        form = CourseModelFileForm(*self.test_data)
         self.assertTrue(form.is_valid())
         
 
-    '''def test_successful_form_saves_to_database(self):
+    def test_successful_form_saves_to_database(self):
         courses = Course.objects.all()
         self.assertEqual(len(courses), 0)
         ofile = open(f'{self.base_path}\\CS_260.xls')
-        form = self.test_form({'Class_File': ofile})
+        form = CourseModelFileForm({'Class_File': ofile})
         self.assertEqual(len(form.errors), 0) 
         courses = Course.objects.all()
-        self.assertEqual(len(courses), 1)'''
+        self.assertEqual(len(courses), 1)
 
     def test_form_file_type_is_xls(self):
         file = open(f'{self.base_path}\\CS_260.txt')
@@ -47,7 +47,7 @@ class TestCourseModelForm(TestCase):
             charset=None,
             content_type_extra={}
         )
-        form = CourseModelForm({}, {'source_file': imf})
+        form = CourseModelFileForm({}, {'source_file': imf})
         self.assertEqual(len(form.errors), 1)
         self.assertEqual('source file is not .xls file', form.errors['source_file'][0])
 

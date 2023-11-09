@@ -4,7 +4,7 @@ from student_view.models import HomeworkSubmission
 from .models import Grade
 from datetime import date, timedelta, timezone
 from time import sleep
-import re
+from teacher_view.forms import CourseModelForm
 from django.contrib.auth.decorators import login_required
 
 @login_required()
@@ -24,10 +24,14 @@ def profile_page(request):
 @login_required
 def add_course_page(request):
     current_classes = get_staff_classes(request.user)
+    
     if request.method == 'POST':
         _create_course(request)
+    else:
+        file_form = CourseModelForm()
     return render(request, 'teacher_view/create_class.html', 
     {'current_courses' : current_classes,
+     'file_form': file_form
         })
 
 def courses_page(request):

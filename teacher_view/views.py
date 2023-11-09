@@ -9,7 +9,10 @@ from django.contrib.auth.decorators import login_required
 
 @login_required()
 def home_page(request):
-    return render(request, 'teacher_view/home.html')
+    current_classes = get_staff_classes(request.user)
+    return render(request, 'teacher_view/home.html', 
+    {'current_courses' : current_classes,
+        })
 
 @login_required()
 def profile_page(request):
@@ -18,7 +21,7 @@ def profile_page(request):
     {'current_courses' : current_classes,
         })
 
-
+@login_required
 def add_course_page(request):
     current_classes = get_staff_classes(request.user)
     if request.method == 'POST':

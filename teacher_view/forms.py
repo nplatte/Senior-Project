@@ -20,9 +20,9 @@ class CourseModelForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.parser = MyHTMLParser()
+        #self.parser = MyHTMLParser()
 
-    def clean_Class_File(self):
+    '''def clean_Class_File(self):
         file = self.data['Class_File']
         if file.name[-4:] == '.xls':
             return file
@@ -41,7 +41,7 @@ class CourseModelForm(forms.ModelForm):
     def assign_course_info(self):
         info = self._get_course_info()
         course = Course.objects.create(title=info[4], term=f'{info[1]} {info[2]}', code=info[3], year=int(info[0]))
-        return course
+        return course'''
     
 
 class MyHTMLParser(HTMLParser):

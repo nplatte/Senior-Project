@@ -72,7 +72,7 @@ class MyHTMLParser(HTMLParser):
 
 
 class Course(models.Model):
-    Class_File = models.FileField(upload_to='class_htmls', blank=True, null=True)
+    Class_File = models.FileField(upload_to='class_htmls', default='')
     code = models.CharField(default='', max_length=20, blank=True)
     title = models.CharField(default='', max_length=50, blank=True)
     term = models.CharField(default='', max_length=60, blank=True)

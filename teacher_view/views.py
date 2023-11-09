@@ -25,8 +25,10 @@ def profile_page(request):
 def add_course_page(request):
     current_classes = get_staff_classes(request.user)
     if request.method == 'POST':
-        file_form = CourseModelForm(request.POST)
-        _create_course(request)
+        file = request.FILES['Class_File']
+        file_form = CourseModelForm(request.POST, request.FILES)
+        if file_form.is_valid():
+            print('here')
     else:
         file_form = CourseModelForm()
     return render(request, 'teacher_view/create_class.html', 

@@ -72,7 +72,7 @@ class MyHTMLParser(HTMLParser):
 
 
 class Course(models.Model):
-    Class_File = models.FileField(upload_to='class_htmls', default='')
+    source_file = models.FileField(upload_to='class_htmls', default='')
     code = models.CharField(default='', max_length=20, blank=True)
     title = models.CharField(default='', max_length=50, blank=True)
     term = models.CharField(default='', max_length=60, blank=True)
@@ -102,7 +102,7 @@ class Course(models.Model):
 
     def org_info(self, file=None):
         if file is None:
-            file = self.Class_File.path
+            file = self.source_file.path
         self.Parser = MyHTMLParser()      
         self.Parser.feed_file(file)
         self.Parser.sort_data_list('\t\t\t', '\t\t')

@@ -12,14 +12,14 @@ class TestCourseModelForm(TestCase):
         file = open(f'{self.base_path}\\CS_220_May.xls')
         imf = InMemoryUploadedFile(
             file=file,
-            field_name='Class_File',
+            field_name='source_file',
             name='CS_220_May.xls',
             content_type='application/vnd.ms-excel',
             size=14054,
             charset=None,
             content_type_extra={}
         )
-        self.test_data = ({}, {'Class_File': imf})
+        self.test_data = ({}, {'source_file': imf})
         
 
     def test_good_file_is_valid(self): 
@@ -40,16 +40,16 @@ class TestCourseModelForm(TestCase):
         file = open(f'{self.base_path}\\CS_260.txt')
         imf = InMemoryUploadedFile(
             file=file,
-            field_name='Class_File',
+            field_name='source_file',
             name='CS_260.txt',
             content_type='text/plain',
             size=14054,
             charset=None,
             content_type_extra={}
         )
-        form = CourseModelForm({}, {'Class_File': imf})
+        form = CourseModelForm({}, {'source_file': imf})
         self.assertEqual(len(form.errors), 1)
-        self.assertEqual('file is not .xls file', form.errors['Class_File'][0])
+        self.assertEqual('source file is not .xls file', form.errors['source_file'][0])
 
 
 class TestMyHTMLParser(TestCase):

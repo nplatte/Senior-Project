@@ -8,12 +8,12 @@ from html.parser import HTMLParser
 class CourseModelForm(forms.ModelForm):  
     class Meta:
         model = Course
-        fields = ['Class_File']
+        fields = ['source_file']
         widgets = {
-            'Class_File' : forms.FileInput(
+            'source_file' : forms.FileInput(
                 attrs={
                     'class' : 'file_upload',
-                    'id' : 'class_file'
+                    'id' : 'source_file_input'
                 }
             )
         }
@@ -22,11 +22,11 @@ class CourseModelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         #self.parser = MyHTMLParser()
 
-    def clean_Class_File(self):
-        file = self.cleaned_data['Class_File']
+    def clean_source_file(self):
+        file = self.cleaned_data['source_file']
         if file.name[-4:] == '.xls':
             return file
-        raise ValidationError('file is not .xls file')
+        raise ValidationError('source file is not .xls file')
     
 
     '''def _get_course_info(self):

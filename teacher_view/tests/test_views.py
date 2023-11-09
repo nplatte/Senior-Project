@@ -82,7 +82,7 @@ class TestAddCoursePage(TestCase):
         pth = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
         ofile = open(pth)
         data = {
-            'Class_File': ofile
+            'source_file': ofile
         }
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
         self.assertRedirects(request, 'teacher_view/course.html')
@@ -93,7 +93,7 @@ class TestAddCoursePage(TestCase):
         pth = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
         ofile = open(pth)
         data = {
-            'Class_File': ofile
+            'source_file': ofile
         }
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
         courses = len(Course.objects.all())
@@ -103,6 +103,6 @@ class TestAddCoursePage(TestCase):
         pth = f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_260.txt'
         ofile = open(pth)
         data = {
-            'Class_File': ofile
+            'source_file': ofile
         }
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)

@@ -21,11 +21,11 @@ def profile_page(request):
     {'current_courses' : current_classes,
         })
 
-@login_required
+@login_required()
 def add_course_page(request):
     current_classes = get_staff_classes(request.user)
-    
     if request.method == 'POST':
+        file_form = CourseModelForm(request.POST)
         _create_course(request)
     else:
         file_form = CourseModelForm()

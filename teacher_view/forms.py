@@ -4,7 +4,8 @@ from teacher_view.models import Course
 from django.core.exceptions import ValidationError
 from html.parser import HTMLParser
 
-class CourseModelForm(forms.ModelForm):
+
+class CourseModelForm(forms.ModelForm):  
     class Meta:
         model = Course
         fields = ['Class_File']
@@ -17,7 +18,8 @@ class CourseModelForm(forms.ModelForm):
             )
         }
     
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.parser = MyHTMLParser()
 
     def clean_Class_File(self):
@@ -38,7 +40,7 @@ class CourseModelForm(forms.ModelForm):
 
     def assign_course_info(self):
         info = self._get_course_info()
-        course = Class.objects.create(title=info[4], term=f'{info[1]} {info[2]}', code=info[3], year=int(info[0]))
+        course = Course.objects.create(title=info[4], term=f'{info[1]} {info[2]}', code=info[3], year=int(info[0]))
         return course
     
 

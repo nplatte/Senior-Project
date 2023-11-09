@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, Group
 from teacher_view.models import Course
 from datetime import date
 from teacher_view.forms import CourseModelForm
+from os import getcwd
 
 
 def _add_staff_user():
@@ -78,8 +79,10 @@ class TestAddCoursePage(TestCase):
         self.assertIsInstance(form, CourseModelForm)
 
     def test_file_upload_form_redirects_to_new_course_page(self):
+        pth = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
+        ofile = open(pth)
         data = {
-
+            'Class_File': ofile
         }
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
         self.assertRedirects(request, 'teacher_view/course.html')
@@ -87,8 +90,10 @@ class TestAddCoursePage(TestCase):
     def test_file_upload_creates_new_course(self):
         courses = len(Course.objects.all())
         self.assertEqual(0, courses)
+        pth = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
+        ofile = open(pth)
         data = {
-
+            'Class_File': ofile
         }
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
         courses = len(Course.objects.all())

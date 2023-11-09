@@ -8,13 +8,10 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 class TestCourseModelForm(TestCase):
 
     def setUp(self):
-        self.test_form = CourseModelForm
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
-
-    def test_good_file_is_valid(self):
-        f = open(f'{self.base_path}\\CS_220_May.xls')
+        file = open(f'{self.base_path}\\CS_220_May.xls')
         imf = InMemoryUploadedFile(
-            file=f,
+            file=file,
             field_name='Class_File',
             name='CS_220_May.xls',
             content_type='application/vnd.ms-excel',
@@ -22,7 +19,11 @@ class TestCourseModelForm(TestCase):
             charset=None,
             content_type_extra={}
         )
-        form = self.test_form({}, {'Class_File': imf})
+        self.test_data = ({}, {'Class_File': imf})
+        
+
+    def test_good_file_is_valid(self): 
+        form = CourseModelForm(*self.test_data)
         self.assertTrue(form.is_valid())
         
 
@@ -33,15 +34,22 @@ class TestCourseModelForm(TestCase):
         form = self.test_form({'Class_File': ofile})
         self.assertEqual(len(form.errors), 0) 
         courses = Course.objects.all()
-        self.assertEqual(len(courses), 1)
+        self.assertEqual(len(courses), 1)'''
 
     def test_form_file_type_is_xls(self):
-        courses = Course.objects.all()
-        self.assertEqual(len(courses), 0)
-        ofile = open(f'{self.base_path}\\CS_260.txt')
-        form = self.test_form({'Class_File': ofile})
-        self.assertEqual( len(form.errors), 1)
-        self.assertEqual('file is not .xls file', form.errors['Class_File'][0]) '''
+        file = open(f'{self.base_path}\\CS_260.txt')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='Class_File',
+            name='CS_260.txt',
+            content_type='text/plain',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        form = CourseModelForm({}, {'Class_File': imf})
+        self.assertEqual(len(form.errors), 1)
+        self.assertEqual('file is not .xls file', form.errors['Class_File'][0])
 
 
 class TestMyHTMLParser(TestCase):

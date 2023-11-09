@@ -22,14 +22,14 @@ class CourseModelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         #self.parser = MyHTMLParser()
 
-    '''def clean_Class_File(self):
-        file = self.data['Class_File']
+    def clean_Class_File(self):
+        file = self.cleaned_data['Class_File']
         if file.name[-4:] == '.xls':
             return file
         raise ValidationError('file is not .xls file')
     
 
-    def _get_course_info(self):
+    '''def _get_course_info(self):
         file = self.data['file']
         self.parser.feed_file(file)
         self.parser.sort_data_list('\t\t\t', '\t\t')

@@ -98,3 +98,11 @@ class TestAddCoursePage(TestCase):
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
         courses = len(Course.objects.all())
         self.assertEqual(1, courses)
+
+    def test_smoke(self):
+        pth = f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_260.txt'
+        ofile = open(pth)
+        data = {
+            'Class_File': ofile
+        }
+        request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)

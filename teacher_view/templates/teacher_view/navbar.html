@@ -31,7 +31,7 @@
         <a href="{% url 'staff_courses_page' %}" id="curr-courses">Courses</a>
         <a href="{% url 'staff_add_course_page' %}" id="add-course">Add Course</a>
         {% for course in current_courses %}
-        <a href="{% url 'course_page' course.title %}">{{ course.title }}</a>
+        <a href="{% url 'staff_course_page' course.title %}">{{ course.title }}</a>
         {% endfor %}
         <a href="{% url 'past_courses_page' %}">Past Courses</a>
       </div>

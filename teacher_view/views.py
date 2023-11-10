@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from teacher_view.models import Course, Assignment, Student
 from student_view.models import HomeworkSubmission
 from .models import Grade
@@ -27,7 +28,8 @@ def add_course_page(request):
     if request.method == 'POST':
         file_form = CourseModelFileForm(request.POST, request.FILES)
         if file_form.is_valid():
-            print('here')
+            new_course = file_form.save()
+            return redirect(course_page, course_id=new_course.pk)
     else:
         file_form = CourseModelFileForm()
     return render(request, 'teacher_view/create_class.html', 
@@ -38,9 +40,9 @@ def add_course_page(request):
 def courses_page(request):
     return render(request, 'teacher_view/courses.html')
 
-def course_page(request, course_title):
+def course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
-    current_course = current_classes.get(title=course_title)
+    current_course = Course.objects.get(pk=int(course_id))
     if request.POST.get('submit',):
         new_student = Student.objects.get(number=request.POST.get('student_id'))
         current_course.students.add(new_student)
@@ -198,5 +200,4 @@ def parse_grade_file(file):
         for entry in group:
             if entry in char_remove:
                 group.remove(entry)
-        print(group)
     return content_list[:-1]

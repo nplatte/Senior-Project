@@ -85,7 +85,7 @@ class TestAddCoursePage(TestCase):
             'source_file': ofile
         }
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
-        self.assertRedirects(request, 'teacher_view/course.html')
+        self.assertRedirects(request, '/teacher/course/1/')
 
     def test_file_upload_creates_new_course(self):
         courses = len(Course.objects.all())
@@ -98,11 +98,3 @@ class TestAddCoursePage(TestCase):
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
         courses = len(Course.objects.all())
         self.assertEqual(1, courses)
-
-    def test_smoke(self):
-        pth = f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_260.txt'
-        ofile = open(pth)
-        data = {
-            'source_file': ofile
-        }
-        request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)

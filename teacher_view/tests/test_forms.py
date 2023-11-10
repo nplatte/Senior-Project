@@ -51,6 +51,15 @@ class TestCourseModelFileForm(TestCase):
         self.assertEqual(len(form.errors), 1)
         self.assertEqual('source file is not .xls file', form.errors['source_file'][0])
 
+    def test_saving_form_assigns_course_info(self):
+        form = CourseModelFileForm(*self.test_data)
+        self.assertEqual(len(form.errors), 0)
+        new_course = form.save()
+
+        self.assertEqual(new_course.title, 'Obj-Orient Prog & Intro Data Struct')
+        self.assertEqual(new_course.code, 'CS 220 01')
+        self.assertEqual(new_course.term, 'May Term')
+
 
 class TestMyHTMLParser(TestCase):
 

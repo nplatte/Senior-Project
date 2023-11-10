@@ -3,6 +3,7 @@ from django import forms
 from teacher_view.models import Course
 from django.core.exceptions import ValidationError
 from html.parser import HTMLParser
+from os import getcwd
 
 
 class CourseModelFileForm(forms.ModelForm):  
@@ -20,7 +21,7 @@ class CourseModelFileForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #self.parser = MyHTMLParser()
+        self.parser = MyHTMLParser()
 
     def clean_source_file(self):
         file = self.cleaned_data['source_file']
@@ -28,20 +29,25 @@ class CourseModelFileForm(forms.ModelForm):
             return file
         raise ValidationError('source file is not .xls file')
     
+    def save(self, *args, **kwargs):
+        new_course = super().save(*args, **kwargs)
+        course_info = self._get_course_info(new_course)
+        new_course.title = course_info[4]
+        new_course.term = f'{course_info[1]} {course_info[2]}'
+        new_course.code = course_info[3]
+        new_course.year = int(course_info[0])
+        new_course.save()
+        return new_course
+    
 
-    '''def _get_course_info(self):
-        file = self.data['file']
-        self.parser.feed_file(file)
+    def _get_course_info(self, course):
+        file_path = f'{getcwd()}\\{course.source_file.name}'
+        self.parser.feed_file(file_path)
         self.parser.sort_data_list('\t\t\t', '\t\t')
         rough = self.parser.data_list[0][1].split(' | ')
         term = rough[0].split(' ')
         title = rough[-1].split(' (')
         return term[2:5] + [rough[2]] + [title[0]]
-
-    def assign_course_info(self):
-        info = self._get_course_info()
-        course = Course.objects.create(title=info[4], term=f'{info[1]} {info[2]}', code=info[3], year=int(info[0]))
-        return course'''
     
 
 class MyHTMLParser(HTMLParser):

@@ -5,7 +5,7 @@ from teacher_view.models import Course
 from os import getcwd
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
-class TestCourseModelForm(TestCase):
+class TestCourseModelFileForm(TestCase):
 
     def setUp(self):
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
@@ -30,11 +30,11 @@ class TestCourseModelForm(TestCase):
     def test_successful_form_saves_to_database(self):
         courses = Course.objects.all()
         self.assertEqual(len(courses), 0)
-        ofile = open(f'{self.base_path}\\CS_260.xls')
-        form = CourseModelFileForm({'Class_File': ofile})
-        self.assertEqual(len(form.errors), 0) 
+        form = CourseModelFileForm(*self.test_data)
+        self.assertEqual(len(form.errors), 0)
+        form.save() 
         courses = Course.objects.all()
-        self.assertEqual(len(courses), 1)
+        self.assertEqual(len(courses), 1)  
 
     def test_form_file_type_is_xls(self):
         file = open(f'{self.base_path}\\CS_260.txt')

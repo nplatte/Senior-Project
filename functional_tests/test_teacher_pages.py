@@ -4,6 +4,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from django.contrib.auth.models import User, Group
 from selenium.webdriver.common.action_chains import ActionChains
+from os import getcwd
+
+from teacher_view.models import Course
 
 from time import sleep
 
@@ -57,11 +60,11 @@ class TestTeacherCreateNewClass(LiveServerTestCase):
         # This takes them to a new page where they see a form to make courses
         # At the top is an upload for files
         # They select the course file from their computer and press enter
-        file_upload = self.browser.find_element(By.ID, 'course_file_upload')
-        file_upload.send_keys('C:\\Users\\nplat\\OneDrive\\Desktop\\Senior Project\\Class\\test_class_htmls\\cs_220.xls')
-        save_course = self.browser.find_element(By.ID, '_save')
+        file_upload = self.browser.find_element(By.ID, 'source_file_input')
+        file_upload.send_keys(f'{getcwd()}\\class_htmls\\CS_220.xls')
+        save_course = self.browser.find_element(By.ID, 'file-submit')
         save_course.click()
-        # the back end processes the file and generates a new course page from the file
-        # they see the students in the course and navigate to courses and see the course listed after refreshing.
-        courses = self.browser.find_elements(By.CLASS_NAME, 'course-title')
-        self.assertEqual(len(courses), 1)
+        # the teacher is automatically taken to a new course page where theysee the new course title and stuff
+        course = Course.objects.all()[0]
+        self.assertEqual(self.browser.title, course.title)
+        self.browser.find_element(By.ID, 'course-title')

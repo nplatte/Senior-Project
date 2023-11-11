@@ -4,15 +4,20 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from django.contrib.auth.models import User, Group
 from selenium.webdriver.common.action_chains import ActionChains
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from os import getcwd
 
 from teacher_view.models import Course
 
 from time import sleep
 
-class TestTeacherCreateNewClass(LiveServerTestCase):
+class TestTeacherClass(LiveServerTestCase):
 
     def setUp(self):
+        self.test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
+        staff_group = Group.objects.create(name='staff')
+        staff_group.user_set.add(self.test_user)
+
         self.browser = webdriver.Firefox()
         self.browser.get(self.live_server_url)
 
@@ -29,9 +34,6 @@ class TestTeacherCreateNewClass(LiveServerTestCase):
     def test_teacher_can_create_new_class(self):
         # A teacher wants to log in to create a new class
         # they go to the Wartburg MCSP Website and see a log in page
-        test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
-        staff_group = Group.objects.create(name='staff')
-        staff_group.user_set.add(test_user)
         # They enter the log in information and are taken to the staff view of the website
         self.assertIn('Log In', self.browser.title)
         self.teacher_login()
@@ -68,3 +70,55 @@ class TestTeacherCreateNewClass(LiveServerTestCase):
         course = Course.objects.all()[0]
         self.assertEqual(self.browser.title, course.title)
         self.browser.find_element(By.ID, 'course-title')
+
+    def test_teacher_can_edit_courses(self):
+        # the teacher logs into the website and edit the class they have previously made
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+        file = open(f'{self.base_path}\\CS_260.xls')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='source_file',
+            name='CS_260.xls',
+            content_type='application/vnd.ms-excel',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        c = Course.objects.create(
+            source_file=imf,
+            code='CS 260 01',
+            title='Introduction to Comp',
+            term='2024 May Term',
+            course_instructor=self.test_user
+        )
+        # they log in
+        self.teacher_login()
+        sleep(1)
+        # they see the nav bar and click the course in the course dropdown
+        chain = ActionChains(self.browser)
+        courses_btn = self.browser.find_element(By.ID, 'nav-courses')
+        chain.move_to_element(courses_btn).perform()
+        # they see the button for the course in the dropdown
+        course_link = self.browser.find_element(By.ID, f'course-{c.pk}-link')
+        course_link.click()
+        # they are taken to the course page
+        self.assertEqual(self.browser.title, 'Introduction to Comp')
+        # They notice the spelling error and go to correct it
+        # they click the edit course info button and are taken to a page with the form info
+        # each field has all the course information
+        title_edit = self.browser.find_element(By.ID, 'edit-course-title')
+        self.assertEqual(title_edit.text, 'Introduction to Comp')
+        term_edit = self.browser.find_element(By.ID, 'edit-course-term')
+        self.assertEqual(term_edit.text, '2024 May Term')
+        code_edit = self.browser.find_element(By.ID, 'edit-course-code')
+        self.assertEqual(code_edit.text, 'CS 260 01')
+        # the techer clicks the title edit, clears it and sends the right title in
+        title_edit.clear()
+        title_edit.send_keys('Introduction to Computer Graphics')
+        # The teacher is satisfied and clicks the submit button
+        btn = self.browser.find_element(By.ID, 'edit-course-submit')
+        btn.click()
+        # the teacher is taken back to the view course page 
+        self.assertEqual(self.browser.title, 'Introduction to Compupter Graphics')
+
+

@@ -34,6 +34,13 @@ class ProfilePageView(TeacherView):
 
 
 @login_required()
+def edit_course_page(request, course_id):
+    current_classes = get_staff_classes(request.user)
+    return render(request, 'teacher_view/edit_course.html', {
+        'current_courses': current_classes
+    })
+
+@login_required()
 def add_course_page(request):
     current_classes = get_staff_classes(request.user)
     if request.method == 'POST':
@@ -53,8 +60,6 @@ def courses_page(request):
 
 def course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
-    print(Course.objects.all())
-    print(course_id)
     current_course = Course.objects.get(pk=int(course_id))
     if request.POST.get('submit',):
         new_student = Student.objects.get(number=request.POST.get('student_id'))

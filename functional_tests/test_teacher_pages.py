@@ -105,6 +105,8 @@ class TestTeacherClass(LiveServerTestCase):
         self.assertEqual(self.browser.title, 'Introduction to Comp')
         # They notice the spelling error and go to correct it
         # they click the edit course info button and are taken to a page with the form info
+        link = self.browser.find_element(By.ID, 'edit-course-link')
+        link.click() 
         # each field has all the course information
         title_edit = self.browser.find_element(By.ID, 'edit-course-title')
         self.assertEqual(title_edit.text, 'Introduction to Comp')

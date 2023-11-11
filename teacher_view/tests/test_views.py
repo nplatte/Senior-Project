@@ -4,6 +4,7 @@ from django.contrib.auth.models import User, Group
 from teacher_view.models import Course
 from datetime import date
 from teacher_view.forms import CourseModelFileForm
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from os import getcwd
 
 
@@ -98,3 +99,32 @@ class TestAddCoursePage(TestCase):
         request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
         courses = len(Course.objects.all())
         self.assertEqual(1, courses)
+
+
+class TestEditEventPage(TestCase):
+
+    def setUp(self):
+        self.test_user = _add_staff_user()
+        self.client.force_login(self.test_user)
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+        file = open(f'{self.base_path}\\CS_260.xls')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='source_file',
+            name='CS_260.xls',
+            content_type='application/vnd.ms-excel',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        c = Course.objects.create(
+            source_file=imf,
+            code='CS 260 01',
+            title='Introduction to Comp',
+            term='2024 May Term',
+            course_instructor=self.test_user
+        )
+
+    def test_returns_right_html_page(self):
+        request = self.client.get(reverse('staff_edit_course', kwargs={'course_id': 1}))
+        self.assertTemplateUsed(request, 'teacher_view/edit_course.html')

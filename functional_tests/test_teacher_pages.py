@@ -101,7 +101,7 @@ class TestTeacherClass(LiveServerTestCase):
         # they see the button for the course in the dropdown
         course_link = self.browser.find_element(By.ID, f'course-{c.pk}-link')
         course_link.click()
-        # they are taken to the course page
+        # they are taken to the course page  
         self.assertEqual(self.browser.title, 'Introduction to Comp')
         # They notice the spelling error and go to correct it
         # they click the edit course info button and are taken to a page with the form info

@@ -53,6 +53,8 @@ def courses_page(request):
 
 def course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
+    print(Course.objects.all())
+    print(course_id)
     current_course = Course.objects.get(pk=int(course_id))
     if request.POST.get('submit',):
         new_student = Student.objects.get(number=request.POST.get('student_id'))

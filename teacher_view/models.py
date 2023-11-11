@@ -46,7 +46,7 @@ class Course(models.Model):
     course_instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
 
     def get_absolute_url(self):
-        return reverse('staff_course_page', kwargs={'course_id': 1})
+        return reverse('staff_course_page', kwargs={'course_id': self.pk})
 
     '''def create(self, file=None):
         course_info = self.org_info(file)

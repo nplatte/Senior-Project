@@ -7,20 +7,31 @@ from datetime import date, timedelta, timezone
 from time import sleep
 from teacher_view.forms import CourseModelFileForm
 from django.contrib.auth.decorators import login_required
+from django import views
+from django.utils.decorators import method_decorator
 
-@login_required()
-def home_page(request):
-    current_classes = get_staff_classes(request.user)
-    return render(request, 'teacher_view/home.html', 
-    {'current_courses' : current_classes,
+
+@method_decorator(login_required, 'dispatch')
+class TeacherView(views.View):
+
+    template = ''
+
+    def get(self, request):
+        current_classes = get_staff_classes(request.user)
+        return render(request, self.template, {
+            'current_courses': current_classes
         })
 
-@login_required()
-def profile_page(request):
-    current_classes = get_staff_classes(request.user)
-    return render(request, "teacher_view/profile.html", 
-    {'current_courses' : current_classes,
-        })
+
+class HomePageView(TeacherView):
+
+    template = 'teacher_view/home.html'
+    
+
+class ProfilePageView(TeacherView):
+
+    template = "teacher_view/profile.html"
+
 
 @login_required()
 def add_course_page(request):

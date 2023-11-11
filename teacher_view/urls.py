@@ -2,8 +2,8 @@ from teacher_view import views as teacher_views
 from django.urls import path
 
 urlpatterns = [
-    path('', teacher_views.home_page, name='staff_home_page'),
-    path('accounts/profile', teacher_views.profile_page, name='staff_profile_page'),
+    path('', teacher_views.HomePageView.as_view(), name='staff_home_page'),
+    path('accounts/profile', teacher_views.ProfilePageView.as_view(), name='staff_profile_page'),
     path('course/', teacher_views.courses_page, name='staff_courses_page'),
     path('course/add', teacher_views.add_course_page, name='staff_add_course_page'),
     path('course/<course_title>/grade', teacher_views.grade_course_page, name='course_grade_page'),

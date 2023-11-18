@@ -5,7 +5,7 @@ from student_view.models import HomeworkSubmission
 from .models import Grade
 from datetime import date, timedelta, timezone
 from time import sleep
-from teacher_view.forms import CourseModelFileForm
+from teacher_view.forms import CourseModelFileForm, EditCourseForm
 from django.contrib.auth.decorators import login_required
 from django import views
 from django.utils.decorators import method_decorator
@@ -37,7 +37,8 @@ class ProfilePageView(TeacherView):
 def edit_course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
     return render(request, 'teacher_view/edit_course.html', {
-        'current_courses': current_classes
+        'current_courses': current_classes,
+        'edit_form': EditCourseForm()
     })
 
 @login_required()

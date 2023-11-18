@@ -50,6 +50,12 @@ class CourseModelFileForm(forms.ModelForm):
         return term[2:5] + [rough[2]] + [title[0]]
     
 
+class EditCourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        fields = ['title', 'code', 'term']
+
+
 class MyHTMLParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)

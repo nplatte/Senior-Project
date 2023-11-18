@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User, Group
 from teacher_view.models import Course
 from datetime import date
-from teacher_view.forms import CourseModelFileForm
+from teacher_view.forms import CourseModelFileForm, EditCourseForm
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from os import getcwd
 
@@ -101,7 +101,7 @@ class TestAddCoursePage(TestCase):
         self.assertEqual(1, courses)
 
 
-class TestEditEventPage(TestCase):
+class TestEditCoursePage(TestCase):
 
     def setUp(self):
         self.test_user = _add_staff_user()
@@ -128,3 +128,13 @@ class TestEditEventPage(TestCase):
     def test_returns_right_html_page(self):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
         self.assertTemplateUsed(request, 'teacher_view/edit_course.html')
+
+    def test_pass_current_courses_to_navbar(self):
+        request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
+        curr_courses = request.context['current_courses']
+        self.assertEqual(len(curr_courses), 1)
+
+    def test_course_uses_right_form_for_editing(self):
+        request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
+        edit_form = request.context['edit_form']
+        self.assertIsInstance(edit_form, EditCourseForm)

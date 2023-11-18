@@ -63,7 +63,7 @@ class TestTeacherClass(LiveServerTestCase):
         # At the top is an upload for files
         # They select the course file from their computer and press enter
         file_upload = self.browser.find_element(By.ID, 'source_file_input')
-        file_upload.send_keys(f'{getcwd()}\\class_htmls\\CS_220.xls')
+        file_upload.send_keys(f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_220.xls')
         save_course = self.browser.find_element(By.ID, 'file-submit')
         save_course.click()
         # the teacher is automatically taken to a new course page where theysee the new course title and stuff

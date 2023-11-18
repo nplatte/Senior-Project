@@ -126,5 +126,5 @@ class TestEditEventPage(TestCase):
         )
 
     def test_returns_right_html_page(self):
-        request = self.client.get(reverse('staff_edit_course', kwargs={'course_id': 1}))
+        request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
         self.assertTemplateUsed(request, 'teacher_view/edit_course.html')

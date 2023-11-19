@@ -166,13 +166,6 @@ def find_terms():
         terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
         return terms
 
-def _create_course(request):
-    new_course = Course()
-    new_course.Class_File = request.FILES["class_file"]
-    new_course.save()
-    new_course.course_instructor = request.user
-    new_course.create()
-
 def _create_assignment(request, course_title):
     new_assignment = Assignment()
     new_assignment.title = request.POST['title']

@@ -5,7 +5,7 @@ from teacher_view.models import Course
 from datetime import date
 from teacher_view.forms import CourseModelFileForm, EditCourseForm
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from os import getcwd
+from os import getcwd, remove, path
 
 
 def _add_staff_user():
@@ -124,6 +124,14 @@ class TestEditCoursePage(TestCase):
             term='2024 May Term',
             course_instructor=self.test_user
         )
+    
+    def tearDown(self) -> None:
+        upload_dir = f'{getcwd()}\\class_htmls'
+        if path.exists(f'{upload_dir}\\CS_260.xls'):
+            remove(f'{upload_dir}\\CS_260.xls')
+        return super().tearDown()
+    
+    
 
     def test_returns_right_html_page(self):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
@@ -138,3 +146,8 @@ class TestEditCoursePage(TestCase):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
         edit_form = request.context['edit_form']
         self.assertIsInstance(edit_form, EditCourseForm)
+
+    def test_form_has_existing_course_info(self):
+        request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
+        edit_form = request.context['edit_form']
+        self.assertTrue(edit_form.is_bound)

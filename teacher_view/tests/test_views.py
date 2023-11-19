@@ -59,6 +59,12 @@ class TestAddCoursePage(TestCase):
         self.test_user = _add_staff_user()
         self.client.force_login(self.test_user)
 
+    def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
+
     def test_add_course_login_required(self):
         self.client.logout()
         request = self.client.get(reverse('staff_add_course_page'), follow=True)
@@ -80,7 +86,7 @@ class TestAddCoursePage(TestCase):
         self.assertIsInstance(form, CourseModelFileForm)
 
     def test_file_upload_form_redirects_to_new_course_page(self):
-        pth = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
+        pth = f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_220_May.xls'
         ofile = open(pth)
         data = {
             'source_file': ofile
@@ -91,7 +97,7 @@ class TestAddCoursePage(TestCase):
     def test_file_upload_creates_new_course(self):
         courses = len(Course.objects.all())
         self.assertEqual(0, courses)
-        pth = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
+        pth = f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_220_May.xls'
         ofile = open(pth)
         data = {
             'source_file': ofile

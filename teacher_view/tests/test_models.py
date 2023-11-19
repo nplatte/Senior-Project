@@ -1,6 +1,6 @@
 from django.test import TestCase
 from teacher_view.models import Course, Assignment, Student
-from os import getcwd
+from os import getcwd, path, remove
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.urls import reverse
@@ -86,6 +86,12 @@ class TestCourseModel(TestCase):
             title='Introduction to Computer Graphics',
             term='2019 May Term'
         )
+
+    def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
     
     def test_course_has_info(self):
         self.assertEqual(self.test_class.code, 'CS 260 01')

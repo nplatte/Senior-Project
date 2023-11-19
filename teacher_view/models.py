@@ -48,44 +48,6 @@ class Course(models.Model):
     def get_absolute_url(self):
         return reverse('staff_course_page', kwargs={'course_id': self.pk})
 
-    '''def create(self, file=None):
-        course_info = self.org_info(file)
-        if Course.objects.filter(code=course_info[2], term=course_info[0][11:], title=course_info[3][:course_info[3].find(' (')]).count() < 1:
-            self.add_info(course_info, self)
-        else:
-            course = Course.objects.filter(code=course_info[2], term=course_info[0][11:], title=course_info[3][:course_info[3].find(' (')]).first()
-            course.delete()
-            self.add_info(course_info, self)
-        
-    def add_students(self, Course_model):
-        students_in_db = Student.objects.all()
-        for info in self.student_info:
-            student_in_db = students_in_db.filter(number=info[2])
-            if student_in_db.count() == 1:
-                new_student = student_in_db.first()
-            elif student_in_db.count() == 0:
-                new_student = Student()
-                new_student.add_info(info)
-                new_student.create_account()
-            Course_model.students.add(new_student)
-
-    def org_info(self, file=None):
-        if file is None:
-            file = self.source_file.path
-        self.Parser = MyHTMLParser()      
-        self.Parser.feed_file(file)
-        self.Parser.sort_data_list('\t\t\t', '\t\t')
-        return self.Parser.data_list[0][1].split(' | ')
-
-    def add_info(self, course_info, course):
-        course.student_info = self.Parser.data_list[2:]
-        course.code = course_info[2]
-        course.term = course_info[0][11:]
-        course.title = course_info[3][:course_info[3].find(' (')]
-        course.save()
-        course.add_students(course)
-        course.save()'''
-
     def __str__(self):
         return self.title
 

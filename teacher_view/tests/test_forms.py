@@ -2,7 +2,7 @@ from django.test import TestCase
 #from teacher_view.models import MyHTMLParser
 from teacher_view.forms import CourseModelFileForm, MyHTMLParser
 from teacher_view.models import Course
-from os import getcwd
+from os import getcwd, remove, path
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 class TestCourseModelFileForm(TestCase):
@@ -20,6 +20,12 @@ class TestCourseModelFileForm(TestCase):
             content_type_extra={}
         )
         self.test_data = ({}, {'source_file': imf})
+
+    def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
         
 
     def test_good_file_is_valid(self): 
@@ -66,6 +72,12 @@ class TestMyHTMLParser(TestCase):
     def setUp(self):
         self.parser = MyHTMLParser()
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+
+    def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
 
     def test_feed_full_file(self):
         

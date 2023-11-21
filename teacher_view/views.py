@@ -36,9 +36,10 @@ class ProfilePageView(TeacherView):
 @login_required()
 def edit_course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
+    course = Course.objects.get(pk=course_id)
     return render(request, 'teacher_view/edit_course.html', {
         'current_courses': current_classes,
-        'edit_form': EditCourseForm()
+        'edit_form': EditCourseForm(instance=course)
     })
 
 @login_required()

@@ -155,5 +155,6 @@ class TestEditCoursePage(TestCase):
 
     def test_form_has_existing_course_info(self):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
-        edit_form = request.context['edit_form']
-        self.assertTrue(edit_form.is_bound)
+        edit_form = request.context['edit_form'].as_p()
+        self.assertIn('Introduction to Comp', edit_form)
+        self.assertIn('CS 260 01', edit_form)

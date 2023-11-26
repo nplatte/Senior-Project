@@ -37,6 +37,10 @@ class ProfilePageView(TeacherView):
 def edit_course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
     course = Course.objects.get(pk=course_id)
+    if request.method == 'POST':
+        form = EditCourseForm(request.POST)
+        if form.is_valid():
+            return redirect(reverse('staff_course_page', kwargs={'course_id': course.pk}))
     return render(request, 'teacher_view/edit_course.html', {
         'current_courses': current_classes,
         'edit_form': EditCourseForm(instance=course)

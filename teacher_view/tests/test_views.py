@@ -135,9 +135,7 @@ class TestEditCoursePage(TestCase):
         upload_dir = f'{getcwd()}\\class_htmls'
         if path.exists(f'{upload_dir}\\CS_260.xls'):
             remove(f'{upload_dir}\\CS_260.xls')
-        return super().tearDown()
-    
-    
+        return super().tearDown()  
 
     def test_returns_right_html_page(self):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
@@ -158,3 +156,20 @@ class TestEditCoursePage(TestCase):
         edit_form = request.context['edit_form'].as_p()
         self.assertIn('Introduction to Comp', edit_form)
         self.assertIn('CS 260 01', edit_form)
+
+    def test_successful_POST_redirects_to_course_page(self):
+        data = {
+            'title': 'Weird',
+            'code': '1234',
+            'term': 'May 2024'
+        }
+        request = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': 1}), data=data)
+        self.assertRedirects(request, reverse('staff_course_page', kwargs={'course_id': 1}))
+
+    def test_unseccessful_POST_does_not_redirect(self):
+        data = {
+            'title': 'Weird',
+            'term': 'May 2024'
+        }
+        request = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': 1}), data=data)
+        self.assertRedirects(request, reverse('staff_course_page', kwargs={'course_id': 1}))

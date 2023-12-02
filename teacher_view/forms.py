@@ -37,8 +37,7 @@ class CourseModelFileForm(forms.ModelForm):
         new_course.code = course_info[3]
         new_course.year = int(course_info[0])
         new_course.save()
-        return new_course
-    
+        return new_course 
 
     def _get_course_info(self, course):
         file_path = f'{getcwd()}\\{course.source_file.name}'
@@ -54,6 +53,23 @@ class EditCourseForm(forms.ModelForm):
     class Meta:
         model = Course
         fields = ['title', 'code', 'term']
+        widgets = {
+            'title': forms.TextInput(
+                attrs={
+                    'id': 'edit-course-title'
+                }
+            ),
+            'code': forms.TextInput(
+                attrs={
+                    'id': 'edit-course-code'
+                }
+            ),
+            'term': forms.TextInput(
+                attrs={
+                    'id': 'edit-course-term'
+                }
+            )
+        }
 
 
 class MyHTMLParser(HTMLParser):

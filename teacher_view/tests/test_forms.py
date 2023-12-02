@@ -106,6 +106,13 @@ class TestEditCourseForm(TestCase):
         self.assertEqual(new_title, data['title'])
         self.assertEqual(new_code, data['code'])
         self.assertEqual(new_term, data['term'])
+
+    def test_form_attributes(self):
+        form = EditCourseForm()
+        f_as_p = form.as_p()
+        self.assertIn('id="edit-course-title"', f_as_p)
+        self.assertIn('id="edit-course-code"', f_as_p)
+        self.assertIn('id="edit-course-term"', f_as_p)
         
 
 

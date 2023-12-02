@@ -1,9 +1,10 @@
 from django.test import TestCase
 #from teacher_view.models import MyHTMLParser
-from teacher_view.forms import CourseModelFileForm, MyHTMLParser
+from teacher_view.forms import CourseModelFileForm, MyHTMLParser, EditCourseForm
 from teacher_view.models import Course
 from os import getcwd, remove, path
 from django.core.files.uploadedfile import InMemoryUploadedFile
+from django.contrib.auth.models import User
 
 class TestCourseModelFileForm(TestCase):
 
@@ -65,6 +66,47 @@ class TestCourseModelFileForm(TestCase):
         self.assertEqual(new_course.title, 'Obj-Orient Prog & Intro Data Struct')
         self.assertEqual(new_course.code, 'CS 220 01')
         self.assertEqual(new_course.term, 'May Term')
+
+
+class TestEditCourseForm(TestCase):
+
+    def setUp(self):
+        instr = User.objects.create_user('test', 'test@test.com', 'p@ssword')
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+        file = open(f'{self.base_path}\\CS_260.xls')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='source_file',
+            name='CS_260.xls',
+            content_type='application/vnd.ms-excel',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        self.c = Course.objects.create(
+            source_file=imf,
+            code='CS 260 01',
+            title='Introduction to Comp',
+            term='2024 May Term',
+            course_instructor=instr
+        )
+
+    def test_good_form_success(self):
+        data = {
+            'title': 'Intro to Graphics',
+            'code': 'CS 250 01',
+            'term': '2025 May Term'
+        }
+        form = EditCourseForm(data=data, instance=self.c)
+        self.assertTrue(form.is_valid())
+        form.save()
+        new_title = self.c.title
+        new_code = self.c.code
+        new_term = self.c.term
+        self.assertEqual(new_title, data['title'])
+        self.assertEqual(new_code, data['code'])
+        self.assertEqual(new_term, data['term'])
+        
 
 
 class TestMyHTMLParser(TestCase):

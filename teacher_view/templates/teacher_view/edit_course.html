@@ -1,0 +1,14 @@
+{% extends 'teacher_view/navbar.html' %}
+
+{% block title %}
+<title>Edit {{ course.title }}</title>
+{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% csrf_token %}
+    {{ edit_form }}
+    <button type="submit" id="edit-course-submit">Submit Changes</button>
+</form>
+{% endblock %}
+

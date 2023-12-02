@@ -109,18 +109,17 @@ class TestTeacherClass(LiveServerTestCase):
         link.click() 
         # each field has all the course information
         title_edit = self.browser.find_element(By.ID, 'edit-course-title')
-        self.assertEqual(title_edit.text, 'Introduction to Comp')
+        self.assertEqual(title_edit.get_attribute('value'), c.title)
         term_edit = self.browser.find_element(By.ID, 'edit-course-term')
-        self.assertEqual(term_edit.text, '2024 May Term')
+        self.assertEqual(term_edit.get_attribute('value'), c.term)
         code_edit = self.browser.find_element(By.ID, 'edit-course-code')
-        self.assertEqual(code_edit.text, 'CS 260 01')
+        self.assertEqual(code_edit.get_attribute('value'), c.code)
         # the techer clicks the title edit, clears it and sends the right title in
         title_edit.clear()
         title_edit.send_keys('Introduction to Computer Graphics')
         # The teacher is satisfied and clicks the submit button
         btn = self.browser.find_element(By.ID, 'edit-course-submit')
         btn.click()
-        print(c.title)
         # the teacher is taken back to the view course page 
         self.assertEqual(self.browser.title, 'Introduction to Compupter Graphics')
 

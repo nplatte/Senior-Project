@@ -1,36 +1,72 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from teacher_view.models import Course, Assignment, Student
 from student_view.models import HomeworkSubmission
 from .models import Grade
 from datetime import date, timedelta, timezone
 from time import sleep
-import re
+from teacher_view.forms import CourseModelFileForm, EditCourseForm
 from django.contrib.auth.decorators import login_required
+from django import views
+from django.utils.decorators import method_decorator
 
-@login_required(login_url='/login/')
-def home_page(request):
-    return render(request, 'teacher_view/home.html')
 
-def profile_page(request):
-    current_classes = get_staff_classes(request.user)
-    return render(request, "teacher_view/profile.html", 
-    {'current_courses' : current_classes,
+@method_decorator(login_required, 'dispatch')
+class TeacherView(views.View):
+
+    template = ''
+
+    def get(self, request):
+        current_classes = get_staff_classes(request.user)
+        return render(request, self.template, {
+            'current_courses': current_classes
         })
 
+
+class HomePageView(TeacherView):
+
+    template = 'teacher_view/home.html'
+    
+
+class ProfilePageView(TeacherView):
+
+    template = "teacher_view/profile.html"
+
+
+@login_required()
+def edit_course_page(request, course_id):
+    current_classes = get_staff_classes(request.user)
+    course = Course.objects.get(pk=course_id)
+    if request.method == 'POST':
+        form = EditCourseForm(request.POST)
+        if form.is_valid():
+            return redirect(reverse('staff_course_page', kwargs={'course_id': course.pk}))
+    return render(request, 'teacher_view/edit_course.html', {
+        'current_courses': current_classes,
+        'edit_form': EditCourseForm(instance=course)
+    })
+
+@login_required()
 def add_course_page(request):
     current_classes = get_staff_classes(request.user)
     if request.method == 'POST':
-        _create_course(request)
+        file_form = CourseModelFileForm(request.POST, request.FILES)
+        if file_form.is_valid():
+            new_course = file_form.save()
+            return redirect(course_page, course_id=new_course.pk)
+    else:
+        file_form = CourseModelFileForm()
     return render(request, 'teacher_view/create_class.html', 
     {'current_courses' : current_classes,
+     'file_form': file_form
         })
 
 def courses_page(request):
     return render(request, 'teacher_view/courses.html')
 
-def course_page(request, course_title):
+def course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
-    current_course = current_classes.get(title=course_title)
+    current_course = Course.objects.get(pk=int(course_id))
     if request.POST.get('submit',):
         new_student = Student.objects.get(number=request.POST.get('student_id'))
         current_course.students.add(new_student)
@@ -135,13 +171,6 @@ def find_terms():
         terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
         return terms
 
-def _create_course(request):
-    new_course = Course()
-    new_course.Class_File = request.FILES["class_file"]
-    new_course.save()
-    new_course.course_instructor = request.user
-    new_course.create()
-
 def _create_assignment(request, course_title):
     new_assignment = Assignment()
     new_assignment.title = request.POST['title']
@@ -188,5 +217,4 @@ def parse_grade_file(file):
         for entry in group:
             if entry in char_remove:
                 group.remove(entry)
-        print(group)
     return content_list[:-1]

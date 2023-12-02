@@ -11,10 +11,12 @@
 {% block content %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <input class = hidden_button type = "file" hidden = hidden name = class_file>
+    <!--<input class = hidden_button type = "file" hidden = hidden name = class_file>
     <button class = class_button type = "button">Select File</button>
-    <span id = custom_text>Empty</span>
-    <input class = submit_assignment type = "submit">
+    <span id = custom_text>Empty</span>-->
+    {{ file_form }}
+    <!--<input class = submit_assignment type = "submit">-->
+    <button type="submit" name="file-submit" id="file-submit">Submit</button>
 </form>
 {% endblock %}
 

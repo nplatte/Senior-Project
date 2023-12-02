@@ -54,6 +54,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 ROOT_URLCONF = 'superlists.urls'
 
 TEMPLATES = [
@@ -124,6 +126,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-LOGIN_URL = ''
-
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+LOGIN_URL = 'login_page'

@@ -1,8 +1,13 @@
 {% extends 'teacher_view/navbar.html' %}
 {% load static %}
 
+{% block title %}
+<title>{{ current_course.title }}</title>
+{% endblock %}
+
 {% block content %}
-<h2>{{ current_course.title }}</h2>
+<a href="{% url 'staff_edit_course_page' course_id=current_course.pk %}" id="edit-course-link">Edit Course</a>
+<h2 id="course-title">{{ current_course.title }}</h2>
 <h2>Upcoming Assingments</h2>
 {% for assignment in upcoming_assignments %}
 <div class = assignment_container>

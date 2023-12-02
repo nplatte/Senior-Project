@@ -18,4 +18,4 @@ class CoursePageTest(TestCase):
         pass
 
     def test_course_title_displayed(self):
-        
+        pass

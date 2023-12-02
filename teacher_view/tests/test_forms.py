@@ -1,35 +1,70 @@
 from django.test import TestCase
-from teacher_view.models import MyHTMLParser
-from teacher_view.forms import CourseModelForm
+#from teacher_view.models import MyHTMLParser
+from teacher_view.forms import CourseModelFileForm, MyHTMLParser
 from teacher_view.models import Course
-from os import getcwd
-from django.core.files.uploadedfile import SimpleUploadedFile
+from os import getcwd, remove, path
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
-class TestCourseModelForm(TestCase):
+class TestCourseModelFileForm(TestCase):
 
     def setUp(self):
-        self.test_form = CourseModelForm
-        
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+        file = open(f'{self.base_path}\\CS_220_May.xls')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='source_file',
+            name='CS_220_May.xls',
+            content_type='application/vnd.ms-excel',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        self.test_data = ({}, {'source_file': imf})
+
+    def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
+        
+
+    def test_good_file_is_valid(self): 
+        form = CourseModelFileForm(*self.test_data)
+        self.assertTrue(form.is_valid())
+        
 
     def test_successful_form_saves_to_database(self):
         courses = Course.objects.all()
         self.assertEqual(len(courses), 0)
-        f = open(f'{self.base_path}\\CS_260.xls', 'r')
-        ofile = SimpleUploadedFile(f'{self.base_path}\\CS_260.xls', bytes(f.read(), 'utf-8'))
-        form = self.test_form({}, {'Class_File': ofile})
-        self.assertEqual(len(form.errors), 0) 
+        form = CourseModelFileForm(*self.test_data)
+        self.assertEqual(len(form.errors), 0)
+        form.save() 
         courses = Course.objects.all()
-        self.assertEqual(len(courses), 1)
+        self.assertEqual(len(courses), 1)  
 
     def test_form_file_type_is_xls(self):
-        courses = Course.objects.all()
-        self.assertEqual(len(courses), 0)
-        f = open(f'{self.base_path}\\CS_260.txt', 'r')
-        ofile = SimpleUploadedFile(f'{self.base_path}\\CS_260.txt', bytes(f.read(), 'utf-8'))
-        form = self.test_form({}, {'Class_File': ofile})
+        file = open(f'{self.base_path}\\CS_260.txt')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='source_file',
+            name='CS_260.txt',
+            content_type='text/plain',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        form = CourseModelFileForm({}, {'source_file': imf})
         self.assertEqual(len(form.errors), 1)
-        self.assertEqual('file is not .xls file', form.errors['Class_File'][0]) 
+        self.assertEqual('source file is not .xls file', form.errors['source_file'][0])
+
+    def test_saving_form_assigns_course_info(self):
+        form = CourseModelFileForm(*self.test_data)
+        self.assertEqual(len(form.errors), 0)
+        new_course = form.save()
+
+        self.assertEqual(new_course.title, 'Obj-Orient Prog & Intro Data Struct')
+        self.assertEqual(new_course.code, 'CS 220 01')
+        self.assertEqual(new_course.term, 'May Term')
 
 
 class TestMyHTMLParser(TestCase):
@@ -38,7 +73,14 @@ class TestMyHTMLParser(TestCase):
         self.parser = MyHTMLParser()
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
 
+    def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
+
     def test_feed_full_file(self):
+        
         self.parser.feed_file(f'{self.base_path}\\CS_260.xls')
         first_data = '\t\t'
         last_data = '\t\t'

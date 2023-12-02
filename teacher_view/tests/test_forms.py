@@ -91,6 +91,12 @@ class TestEditCourseForm(TestCase):
             course_instructor=instr
         )
 
+    def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260_May.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
+
     def test_good_form_success(self):
         data = {
             'title': 'Intro to Graphics',

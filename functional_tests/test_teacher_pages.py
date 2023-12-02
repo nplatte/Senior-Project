@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from django.contrib.auth.models import User, Group
 from selenium.webdriver.common.action_chains import ActionChains
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from os import getcwd
+from os import getcwd, path, remove
 
 from teacher_view.models import Course
 
@@ -23,6 +23,10 @@ class TestTeacherClass(LiveServerTestCase):
 
     def tearDown(self):
         self.browser.quit()
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
 
     def teacher_login(self, username='new', password='password'):
         username_input = self.browser.find_element(By.ID, 'username')
@@ -63,7 +67,7 @@ class TestTeacherClass(LiveServerTestCase):
         # At the top is an upload for files
         # They select the course file from their computer and press enter
         file_upload = self.browser.find_element(By.ID, 'source_file_input')
-        file_upload.send_keys(f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_220.xls')
+        file_upload.send_keys(f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_260.xls')
         save_course = self.browser.find_element(By.ID, 'file-submit')
         save_course.click()
         # the teacher is automatically taken to a new course page where theysee the new course title and stuff

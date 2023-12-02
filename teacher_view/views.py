@@ -43,6 +43,7 @@ def edit_course_page(request, course_id):
             return redirect(reverse('staff_course_page', kwargs={'course_id': course.pk}))
     return render(request, 'teacher_view/edit_course.html', {
         'current_courses': current_classes,
+        'course': course,
         'edit_form': EditCourseForm(instance=course)
     })
 

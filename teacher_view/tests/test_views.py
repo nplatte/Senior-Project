@@ -144,7 +144,9 @@ class TestEditCoursePage(TestCase):
     def test_pass_current_courses_to_navbar(self):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
         curr_courses = request.context['current_courses']
+        edited_course = request.context['course']
         self.assertEqual(len(curr_courses), 1)
+        self.assertIsInstance(edited_course, Course)
 
     def test_course_uses_right_form_for_editing(self):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))

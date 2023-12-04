@@ -192,9 +192,9 @@ class TestCreateAssignmentPage(TestCase):
     
     def setUp(self) -> None:
         self.test_user = _add_staff_user()
-        _make_class(self.test_user)
+        self.c = _make_class(self.test_user)
         self.client.force_login(self.test_user)
-        self.response = self.client.get(reverse('add_assignment'))
+        self.response = self.client.get(reverse('add_assignment', kwargs={'course_id':self.c.pk}))
         return super().setUp()
 
     def tearDown(self) -> None:
@@ -237,9 +237,9 @@ class TestCreateAssignmentPOST(TestCase):
     def test_good_form_makes_new_assignment(self):
         a_list = Assignment.objects.all()
         self.assertEqual(len(a_list), 0)
-        self.client.post(reverse('add_assignment'), data=self.data)
+        self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data)
         self.assertEqual(len(a_list), 1)
 
     def test_bad_form_does_not_redirect(self):
-        response = self.client.post(reverse('add_assignment'), data=self.data)
+        response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data)
         self.assertTemplateUsed(response,'teacher_view/add_assignment.html')

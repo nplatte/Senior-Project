@@ -1,5 +1,10 @@
 {% extends 'teacher_view/navbar.html' %}
 
+{% block title %}
+<title>New Assignment</title>
+{% endblock %}
+
+
 {% block content %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}

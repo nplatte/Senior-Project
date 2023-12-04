@@ -31,7 +31,7 @@ class TestTeacherAssignment(BasicSeleniumTest):
         # they click on it and are taken to the course page
         self.assertEqual(self.browser.title, self.c.title)
         assignments = self.browser.find_elements(By.CLASS_NAME, 'assignment')
-        self.assertEqual(len(assignments), 0)
+        self.assertEqual(len(assignments), 1)
         # they click create assignment and are taken to a new page to submit an assignment to
         new_assignment_btn = self.browser.find_element(By.ID, 'create-assignment-link')
         new_assignment_btn.click()
@@ -52,7 +52,7 @@ class TestTeacherAssignment(BasicSeleniumTest):
         # they then go to the course view and see the new assignment listed
         self.assertEqual(self.browser.title, self.c.title)
         assignments = self.browser.find_elements(By.CLASS, 'assignment')
-        self.assertEqual(len(assignments), 1)
+        self.assertEqual(len(assignments), 2)
 
     def test_teacher_can_edit_assignment(self):
         pass

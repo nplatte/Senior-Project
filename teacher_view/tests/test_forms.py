@@ -138,6 +138,13 @@ class TestAddAssignmentForm(TestCase):
         form = AddAssignmentForm(self.data)
         self.assertTrue(form.is_valid())
 
+    def test_form_has_correct_ids(self):
+        form = AddAssignmentForm(self.data)
+        self.assertIn('id="a-title-input"', form.as_p())
+        self.assertIn('id="a-due-date-input"', form.as_p())
+        self.assertIn('id="a-description-input"', form.as_p())
+        self.assertIn('id="a-display-date-input"', form.as_p())
+
     def test_form_makes_assignment(self):
         form = AddAssignmentForm(self.data)
         a = form.save()

@@ -44,7 +44,7 @@ class TestTeacherAssignment(BasicSeleniumTest):
         # they add a display date
         due_date_input = self.browser.find_element(By.ID, 'a-due-date-input')
         # they add a discription
-        description_input = self.browser.find_element(By.ID, 'a-desc-input')
+        description_input = self.browser.find_element(By.ID, 'a-description-input')
         description_input.send_keys('google doesnt work, make a new one')
         # they then submit the assignment
         a_submit = self.browser.find_element(By.ID, 'a-submit-btn')

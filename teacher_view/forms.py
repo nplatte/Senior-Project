@@ -77,6 +77,28 @@ class AddAssignmentForm(forms.ModelForm):
     class Meta:
         model = Assignment
         fields = ['title', 'description', 'due_date', 'display_date']
+        widgets = {
+            'title': forms.TextInput(
+                attrs={
+                    'id': 'a-title-input'
+                }
+            ),
+            'description': forms.TextInput(
+                attrs={
+                    'id': 'a-description-input'
+                }
+            ),
+            'due_date': forms.DateTimeInput(
+                attrs={
+                    'id': 'a-due-date-input'
+                }
+            ),
+            'display_date': forms.DateTimeInput(
+                attrs={
+                    'id': 'a-display-date-input'
+                }
+            )
+        }
 
 
 class MyHTMLParser(HTMLParser):

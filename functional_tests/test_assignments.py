@@ -18,7 +18,9 @@ class TestTeacherAssignment(BasicSeleniumTest):
     
     def test_teacher_can_make_assignment(self):
         # the teacher logs on to the teacher portal and decides to create an assignment
-        self.teacher_login()
+        self.assertIn('Log In', self.browser.title)
+        self._teacher_login()
+        self.assertEqual(self.browser.title, 'Wartburg MCSP Teachers')
         # they see the course they want to add an assingment to
         chain = ActionChains(self.browser)
         courses_btn = self.browser.find_element(By.ID, 'nav-courses')
@@ -55,9 +57,4 @@ class TestTeacherAssignment(BasicSeleniumTest):
     def test_teacher_can_edit_assignment(self):
         pass
 
-    def teacher_login(self, username='new', password='password'):
-        username_input = self.browser.find_element(By.ID, 'username')
-        username_input.send_keys(username)
-        password_input = self.browser.find_element(By.ID, 'password')
-        password_input.send_keys(password)
-        password_input.send_keys(Keys.ENTER)
+    

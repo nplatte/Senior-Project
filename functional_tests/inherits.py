@@ -1,4 +1,7 @@
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+
 from django.test import LiveServerTestCase
 from django.contrib.auth.models import User, Group
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -22,6 +25,13 @@ class BasicSeleniumTest(LiveServerTestCase):
         if path.exists(upload_file):
             remove(upload_file)
         return super().tearDown()
+    
+    def _teacher_login(self, username='new', password='password'):
+        username_input = self.browser.find_element(By.ID, 'username')
+        username_input.send_keys(username)
+        password_input = self.browser.find_element(By.ID, 'password')
+        password_input.send_keys(password)
+        password_input.send_keys(Keys.ENTER)
     
     def _create_course(self, instructor=None):
         if not instructor:

@@ -1,7 +1,7 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from os import getcwd, path, remove
+from os import getcwd
 
 from teacher_view.models import Course
 from functional_tests.inherits import BasicSeleniumTest
@@ -18,19 +18,12 @@ class TestTeacherClass(BasicSeleniumTest):
         self.browser.quit()
         return super().tearDown()
 
-    def teacher_login(self, username='new', password='password'):
-        username_input = self.browser.find_element(By.ID, 'username')
-        username_input.send_keys(username)
-        password_input = self.browser.find_element(By.ID, 'password')
-        password_input.send_keys(password)
-        password_input.send_keys(Keys.ENTER)
-
     def test_teacher_can_create_new_class(self):
         # A teacher wants to log in to create a new class
         # they go to the Wartburg MCSP Website and see a log in page
         # They enter the log in information and are taken to the staff view of the website
         self.assertIn('Log In', self.browser.title)
-        self.teacher_login()
+        self._teacher_login()
         sleep(1)
         self.assertIn('Wartburg MCSP Teachers', self.browser.title)
         # they see a nav bar on the top of the page, this displays a Home button, Courses button, an Assignments button, and a Grades Button
@@ -69,7 +62,7 @@ class TestTeacherClass(BasicSeleniumTest):
         # the teacher logs into the website and edit the class they have previously made
         c = self._create_course(self.test_user)
         # they log in
-        self.teacher_login()
+        self._teacher_login()
         sleep(1)
         # they see the nav bar and click the course in the course dropdown
         chain = ActionChains(self.browser)

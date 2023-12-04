@@ -33,7 +33,6 @@
         {% for course in current_courses %}
         <a href="{{ course.get_absolute_url }}" id="course-{{ course.pk }}-link">{{ course.title }}</a>
         {% endfor %}
-        <a href="{% url 'past_courses_page' %}">Past Courses</a>
       </div>
     </div> 
   </div>

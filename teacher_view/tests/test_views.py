@@ -186,3 +186,7 @@ class TestEditCoursePage(TestCase):
         c = Course.objects.get(pk=self.c.pk)
         self.assertNotEqual('Introduction to Comp', c.title)
         self.assertEqual(data['title'], c.title)
+
+
+class TestCreateAssignmentPage(TestCase):
+    pass

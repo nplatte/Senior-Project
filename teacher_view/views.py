@@ -94,35 +94,6 @@ def course_page(request, course_id):
     'students' : course_students,
         })
 
-def past_course_page(request, course_title, term):
-    current_classes = get_staff_classes(request.user)
-    current_course = Course.objects.get(title=course_title, term=term)
-    new_assignments =  Assignment.objects.filter(
-        course=current_course, 
-        due_date__gte=date.today()
-        ).order_by('-due_date').reverse()
-    past_assignments =  Assignment.objects.filter(
-        course=current_course, 
-        due_date__lt=date.today()
-        ).order_by('-due_date').reverse()
-    course_students = Student.objects.filter(enrolled_students=current_course)
-    return render(request, 'teacher_view/course_page.html', 
-    {'current_courses' : current_classes,
-    'current_course' : current_course,
-    'upcoming_assignments' : new_assignments,
-    'past_assignments' : past_assignments,
-    'students' : course_students,
-        })
-
-def past_courses_page(request):
-    current_classes = get_staff_classes(request.user)
-    terms = get_all_past_terms(request)
-    past_courses = [Course.objects.filter(term=term, course_instructor=request.user) for term in terms]
-    return render(request, 'teacher_view/past_courses.html', 
-    {'current_courses' : current_classes,
-    'past_courses' : past_courses
-        })
-
 def grade_course_page(request, course_title):
     if request.method == 'POST':
         update_grades(request, course_title)

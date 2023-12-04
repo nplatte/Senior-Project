@@ -60,7 +60,9 @@ class TestTeacherClass(BasicSeleniumTest):
         # the teacher logs into the website and edit the class they have previously made
         c = self._create_course(self.test_user)
         # they log in
+        self.assertEqual('Log In', self.browser.title)
         self._teacher_login()
+        self.assertEqual('Wartburg MCSP Teachers', self.browser.title)
         # they see the nav bar and click the course in the course dropdown
         chain = ActionChains(self.browser)
         courses_btn = self.browser.find_element(By.ID, 'nav-courses')

@@ -8,12 +8,7 @@
 {% block content %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <h3>Assignment Title:</h3>
-    <input name=title type="text">
-    <h3>Assignment Description:</h3>
-    <textarea name=description rows="5" cols="80"></textarea>
-    <h3>Assignment Due Date:</h3>
-    <input name=due_date type="datetime-local">
-    <input type="submit">
+    {{ assignment_form }}
+    <input type="submit" id="a-submit-btn">
 </form>
 {% endblock %}

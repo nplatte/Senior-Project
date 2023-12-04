@@ -51,7 +51,7 @@ class TestTeacherAssignment(BasicSeleniumTest):
         a_submit.click()
         # they then go to the course view and see the new assignment listed
         self.assertEqual(self.browser.title, self.c.title)
-        assignments = self.browser.find_elements(By.CLASS, 'assignment')
+        assignments = self.browser.find_elements(By.CLASS_NAME, 'assignment')
         self.assertEqual(len(assignments), 2)
 
     def test_teacher_can_edit_assignment(self):

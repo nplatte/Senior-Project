@@ -33,7 +33,7 @@ class BasicSeleniumTest(LiveServerTestCase):
         password_input = self.browser.find_element(By.ID, 'password')
         password_input.send_keys(password)
         password_input.send_keys(Keys.ENTER)
-        sleep(1)
+        sleep(3)
     
     def _create_course(self, instructor=None):
         if not instructor:

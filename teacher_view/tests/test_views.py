@@ -1,8 +1,8 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User, Group
-from teacher_view.models import Course
-from datetime import date
+from teacher_view.models import Course, Assignment
+from datetime import datetime
 from teacher_view.forms import CourseModelFileForm, EditCourseForm, AddAssignmentForm
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from os import getcwd, remove, path
@@ -222,8 +222,8 @@ class TestCreateAssignmentPOST(TestCase):
         self.data = {
             'title': 'make Google',
             'description': 'make google please',
-            'due_date': '',
-            'display_date': ''
+            'due_date': datetime.now(),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0)
         }
         return super().setUp()
     
@@ -231,10 +231,15 @@ class TestCreateAssignmentPOST(TestCase):
         return super().tearDown()
 
     def test_good_form_redirects_to_course_page(self):
-        pass
+        response = self.client.post(reverse('add_assignment'), data=self.data)
+        self.assertRedirects(response, 'teacher/course/1')
 
     def test_good_form_makes_new_assignment(self):
-        pass
+        a_list = Assignment.objects.all()
+        self.assertEqual(len(a_list), 0)
+        self.client.post(reverse('add_assignment'), data=self.data)
+        self.assertEqual(len(a_list), 1)
 
     def test_bad_form_does_not_redirect(self):
-        pass
+        response = self.client.post(reverse('add_assignment'), data=self.data)
+        self.assertTemplateUsed(response,'teacher_view/add_assignment.html')

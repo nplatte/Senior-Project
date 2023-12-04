@@ -1,7 +1,5 @@
-from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-from django.contrib.auth.models import User, Group
 from selenium.webdriver.common.action_chains import ActionChains
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from os import getcwd, path, remove
@@ -15,12 +13,9 @@ from time import sleep
 class TestTeacherAssignment(BasicSeleniumTest):
 
     def setUp(self):
-        self.test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
-        staff_group = Group.objects.create(name='staff')
-        staff_group.user_set.add(self.test_user)
+        super().setUp()
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
         self.c = _create_course(self.test_user)
-        self.browser = webdriver.Firefox()
         self.browser.get(self.live_server_url)
 
     def tearDown(self) -> None:

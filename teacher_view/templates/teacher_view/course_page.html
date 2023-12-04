@@ -23,7 +23,7 @@
 </div>
 {% endfor %}
 <div class = assignment_container>
-    <a class = assignment href="{% url 'create_assignment' current_course.title %}" id="create-assignment-link"> Create Assignment</a>
+    <a class = assignment href="{% url 'add_assignment' %}" id="create-assignment-link"> Create Assignment</a>
     <p>Due Date: {{ assignment.due_date }}</p>
 </div>
 

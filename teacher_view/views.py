@@ -105,9 +105,7 @@ def grade_course_page(request, course_title):
     'student_grades' : course_grades, 
     })
 
-def add_assignment_page(request, course_title):
-    if request.method == 'POST':
-        _create_assignment(request, course_title)
+def add_assignment_page(request):
     current_classes = get_staff_classes(request.user)
     return render(request, 'teacher_view/create_assignment.html',
     {'current_courses' : current_classes,
@@ -143,15 +141,6 @@ def find_terms():
     elif month > 6:
         terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
         return terms
-
-def _create_assignment(request, course_title):
-    new_assignment = Assignment()
-    new_assignment.title = request.POST['title']
-    new_assignment.description = request.POST['description']
-    new_assignment.due_date = request.POST['due_date']
-    new_assignment.course = get_staff_classes(request.user).get(title=course_title)
-    new_assignment.instructor = request.user
-    new_assignment.save()
 
 def _edit_assignment(request, assignment):
     assignment.title = request.POST['title']

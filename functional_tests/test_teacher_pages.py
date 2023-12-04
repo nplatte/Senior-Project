@@ -118,8 +118,9 @@ class TestTeacherAssignment(LiveServerTestCase):
         staff_group = Group.objects.create(name='staff')
         staff_group.user_set.add(self.test_user)
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
-        self.test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
         self.c = _create_course(self.test_user)
+        self.browser = webdriver.Firefox()
+        self.browser.get(self.live_server_url)
 
     def tearDown(self) -> None:
         self.browser.quit()

@@ -5,7 +5,7 @@ from student_view.models import HomeworkSubmission
 from .models import Grade
 from datetime import date, timedelta, timezone
 from time import sleep
-from teacher_view.forms import CourseModelFileForm, EditCourseForm
+from teacher_view.forms import CourseModelFileForm, EditCourseForm, AddAssignmentForm
 from django.contrib.auth.decorators import login_required
 from django import views
 from django.utils.decorators import method_decorator
@@ -106,10 +106,16 @@ def grade_course_page(request, course_title):
     })
 
 def add_assignment_page(request):
+    form = AddAssignmentForm()
     current_classes = get_staff_classes(request.user)
-    return render(request, 'teacher_view/add_assignment.html',
-    {'current_courses' : current_classes,
-    })
+    context = {
+        'current_courses': current_classes,
+        'assignment_form': form
+    }
+    return render(
+        request, 'teacher_view/add_assignment.html',
+        context
+    )
 
 def edit_assignment_page(request, assignment_title):
     editable_assignment = Assignment.objects.get(instructor=request.user, title=assignment_title)

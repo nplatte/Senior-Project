@@ -77,24 +77,7 @@ class TestTeacherClass(LiveServerTestCase):
 
     def test_teacher_can_edit_courses(self):
         # the teacher logs into the website and edit the class they have previously made
-        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
-        file = open(f'{self.base_path}\\CS_260.xls')
-        imf = InMemoryUploadedFile(
-            file=file,
-            field_name='source_file',
-            name='CS_260.xls',
-            content_type='application/vnd.ms-excel',
-            size=14054,
-            charset=None,
-            content_type_extra={}
-        )
-        c = Course.objects.create(
-            source_file=imf,
-            code='CS 260 01',
-            title='Introduction to Comp',
-            term='2024 May Term',
-            course_instructor=self.test_user
-        )
+        c = _create_course(self.test_user)
         # they log in
         self.teacher_login()
         sleep(1)
@@ -128,3 +111,37 @@ class TestTeacherClass(LiveServerTestCase):
         self.assertEqual(self.browser.title, 'Introduction to Computer Graphics')
 
 
+class TestTeacherAssignment(LiveServerTestCase):
+
+    def setUp(self):
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+        self.test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
+        self.c = _create_course(self.test_user)
+
+    def tearDown(self) -> None:
+        self.browser.quit()
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
+    
+def _create_course(instructor):
+    base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+    file = open(f'{base_path}\\CS_260.xls')
+    imf = InMemoryUploadedFile(
+        file=file,
+        field_name='source_file',
+        name='CS_260.xls',
+        content_type='application/vnd.ms-excel',
+        size=14054,
+        charset=None,
+        content_type_extra={}
+    )
+    c = Course.objects.create(
+        source_file=imf,
+        code='CS 260 01',
+        title='Introduction to Comp',
+        term='2024 May Term',
+        course_instructor=instructor
+    )
+    return c

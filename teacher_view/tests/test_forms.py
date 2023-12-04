@@ -92,7 +92,7 @@ class TestEditCourseForm(TestCase):
         )
 
     def tearDown(self) -> None:
-        upload_file = f'{getcwd()}\\class_htmls\\CS_260_May.xls'
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
         if path.exists(upload_file):
             remove(upload_file)
         return super().tearDown()

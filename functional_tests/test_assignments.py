@@ -40,7 +40,7 @@ class TestTeacherAssignment(BasicSeleniumTest):
         title_input = self.browser.find_element(By.ID, 'a-title-input')
         title_input.send_keys('create google')
         # they add a due date
-        date_input = self.browser.find_element(By.ID, 'a-date-input')
+        display_date_input = self.browser.find_element(By.ID, 'a-display-date-input')
         # they add a display date
         due_date_input = self.browser.find_element(By.ID, 'a-due-date-input')
         # they add a discription

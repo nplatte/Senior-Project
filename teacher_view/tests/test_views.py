@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User, Group
 from teacher_view.models import Course
 from datetime import date
-from teacher_view.forms import CourseModelFileForm, EditCourseForm
+from teacher_view.forms import CourseModelFileForm, EditCourseForm, AddAssignmentForm
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from os import getcwd, remove, path
 
@@ -189,4 +189,49 @@ class TestEditCoursePage(TestCase):
 
 
 class TestCreateAssignmentPage(TestCase):
-    pass
+    
+    def setUp(self) -> None:
+        self.test_user = _add_staff_user()
+        _make_class(self.test_user)
+        self.client.force_login(self.test_user)
+        self.response = self.client.get(reverse('add_assignment'))
+        return super().setUp()
+
+    def tearDown(self) -> None:
+        return super().tearDown()
+
+    def test_uses_right_template(self):
+        self.assertTemplateUsed(self.response, 'teacher_view/add_assignment.html')
+
+    def test_sends_navbar_information(self):
+        c = Course.objects.get(pk=1)
+        courses = self.response.context['current_courses']
+        self.assertIn(c, courses)
+
+    def test_uses_right_form(self):
+        form = self.response.context['assignment_form']
+        self.assertIsInstance(form, AddAssignmentForm)
+
+
+class TestCreateAssignmentPOST(TestCase):
+
+    def setUp(self) -> None:
+        self.test_user = _add_staff_user()
+        self.client.force_login(self.test_user)
+        _make_class(self.test_user)
+        self.data = {
+            
+        }
+        return super().setUp()
+    
+    def tearDown(self) -> None:
+        return super().tearDown()
+
+    def test_good_form_redirects_to_course_page(self):
+        pass
+
+    def test_good_form_makes_new_assignment(self):
+        pass
+
+    def test_bad_form_does_not_redirect(self):
+        pass

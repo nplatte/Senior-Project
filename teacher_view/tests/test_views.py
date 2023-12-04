@@ -231,15 +231,21 @@ class TestCreateAssignmentPOST(TestCase):
         return super().tearDown()
 
     def test_good_form_redirects_to_course_page(self):
-        response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data)
+        response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data, follow=True)
         self.assertRedirects(response, '/teacher/course/1/')
 
     def test_good_form_makes_new_assignment(self):
         a_list = Assignment.objects.all()
         self.assertEqual(len(a_list), 0)
         self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data)
+        a_list = Assignment.objects.all()
         self.assertEqual(len(a_list), 1)
 
     def test_bad_form_does_not_redirect(self):
-        response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data)
+        self.data = {
+            'description': 'make google please',
+            'due_date': datetime.now(),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0)
+        }
+        response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data, follow=True)
         self.assertTemplateUsed(response,'teacher_view/add_assignment.html')

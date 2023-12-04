@@ -76,7 +76,7 @@ class AddAssignmentForm(forms.ModelForm):
 
     class Meta:
         model = Assignment
-        fields = ['title']
+        fields = ['title', 'description', 'due_date', 'display_date']
 
 
 class MyHTMLParser(HTMLParser):

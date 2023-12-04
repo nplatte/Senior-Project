@@ -1,6 +1,6 @@
 from django.test import TestCase
-#from teacher_view.models import MyHTMLParser
-from teacher_view.forms import CourseModelFileForm, MyHTMLParser, EditCourseForm
+from datetime import datetime
+from teacher_view.forms import CourseModelFileForm, MyHTMLParser, EditCourseForm, AddAssignmentForm
 from teacher_view.models import Course
 from os import getcwd, remove, path
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -32,7 +32,6 @@ class TestCourseModelFileForm(TestCase):
     def test_good_file_is_valid(self): 
         form = CourseModelFileForm(*self.test_data)
         self.assertTrue(form.is_valid())
-        
 
     def test_successful_form_saves_to_database(self):
         courses = Course.objects.all()
@@ -120,6 +119,32 @@ class TestEditCourseForm(TestCase):
         self.assertIn('id="edit-course-code"', f_as_p)
         self.assertIn('id="edit-course-term"', f_as_p)
         
+
+class TestAddAssignmentForm(TestCase):
+
+    def setUp(self) -> None:
+        self.data = {
+            'title': 'Test Assignment',
+            'description': 'this is bout the assignment',
+            'due_date': datetime(2024, 12, 30, 12, 12, 1),
+            'display_date': datetime(2024, 12, 23, 12, 12, 1)
+        }
+        return super().setUp()
+    
+    def tearDown(self) -> None:
+        return super().tearDown()
+    
+    def test_good_form_is_valid(self):
+        form = AddAssignmentForm(self.data)
+        self.assertTrue(form.is_valid())
+
+    def test_form_makes_assignment(self):
+        form = AddAssignmentForm(self.data)
+        a = form.save()
+        self.assertEqual(a.title, self.data['title'])
+        self.assertEqual(a.description, self.data['description'])
+        self.assertEqual(a.due_date, self.data['due_date'])
+        self.assertEqual(a.display_date, self.data['display_date'])
 
 
 class TestMyHTMLParser(TestCase):

@@ -58,10 +58,7 @@ class Assignment(models.Model):
     title = models.CharField(max_length=50, default='')
     description = models.TextField(default='')
     due_date = models.DateTimeField(blank=True, null=True)
-    instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True)
-
-    def __str__(self):
-        return self.title
+    display_date = models.DateTimeField(blank=True, null=True)
 
 
 class Handout(models.Model):

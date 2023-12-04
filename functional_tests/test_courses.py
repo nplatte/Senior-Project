@@ -6,7 +6,6 @@ from os import getcwd
 from teacher_view.models import Course
 from functional_tests.inherits import BasicSeleniumTest
 
-from time import sleep
 
 class TestTeacherClass(BasicSeleniumTest):
 
@@ -24,7 +23,6 @@ class TestTeacherClass(BasicSeleniumTest):
         # They enter the log in information and are taken to the staff view of the website
         self.assertIn('Log In', self.browser.title)
         self._teacher_login()
-        sleep(1)
         self.assertIn('Wartburg MCSP Teachers', self.browser.title)
         # they see a nav bar on the top of the page, this displays a Home button, Courses button, an Assignments button, and a Grades Button
         chain = ActionChains(self.browser)
@@ -63,7 +61,6 @@ class TestTeacherClass(BasicSeleniumTest):
         c = self._create_course(self.test_user)
         # they log in
         self._teacher_login()
-        sleep(1)
         # they see the nav bar and click the course in the course dropdown
         chain = ActionChains(self.browser)
         courses_btn = self.browser.find_element(By.ID, 'nav-courses')

@@ -8,6 +8,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 
 from teacher_view.models import Course
 from os import getcwd, path, remove
+from time import sleep
 
 
 class BasicSeleniumTest(LiveServerTestCase):
@@ -32,6 +33,7 @@ class BasicSeleniumTest(LiveServerTestCase):
         password_input = self.browser.find_element(By.ID, 'password')
         password_input.send_keys(password)
         password_input.send_keys(Keys.ENTER)
+        sleep(1)
     
     def _create_course(self, instructor=None):
         if not instructor:

@@ -107,7 +107,7 @@ def grade_course_page(request, course_title):
 
 def add_assignment_page(request):
     current_classes = get_staff_classes(request.user)
-    return render(request, 'teacher_view/create_assignment.html',
+    return render(request, 'teacher_view/add_assignment.html',
     {'current_courses' : current_classes,
     })
 

@@ -1,6 +1,11 @@
 from selenium import webdriver
 from django.test import LiveServerTestCase
 from django.contrib.auth.models import User, Group
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+from teacher_view.models import Course
+from os import getcwd, path, remove
+
 
 class BasicSeleniumTest(LiveServerTestCase):
 
@@ -9,4 +14,33 @@ class BasicSeleniumTest(LiveServerTestCase):
         staff_group = Group.objects.create(name='staff')
         staff_group.user_set.add(self.test_user)
         self.browser = webdriver.Firefox()
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
         return super().setUp()
+    
+    def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
+        return super().tearDown()
+    
+    def _create_course(self, instructor=None):
+        if not instructor:
+            instructor = self.test_user
+        file = open(f'{self.base_path}\\CS_260.xls')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='source_file',
+            name='CS_260.xls',
+            content_type='application/vnd.ms-excel',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        c = Course.objects.create(
+            source_file=imf,
+            code='CS 260 01',
+            title='Introduction to Comp',
+            term='2024 May Term',
+            course_instructor=instructor
+        )
+        return c

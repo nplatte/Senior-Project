@@ -1,7 +1,6 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from os import getcwd, path, remove
 
 from teacher_view.models import Course
@@ -17,9 +16,6 @@ class TestTeacherClass(BasicSeleniumTest):
 
     def tearDown(self):
         self.browser.quit()
-        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
-        if path.exists(upload_file):
-            remove(upload_file)
         return super().tearDown()
 
     def teacher_login(self, username='new', password='password'):
@@ -28,27 +24,6 @@ class TestTeacherClass(BasicSeleniumTest):
         password_input = self.browser.find_element(By.ID, 'password')
         password_input.send_keys(password)
         password_input.send_keys(Keys.ENTER)
-
-    def _create_course(self, instructor):
-        base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
-        file = open(f'{base_path}\\CS_260.xls')
-        imf = InMemoryUploadedFile(
-            file=file,
-            field_name='source_file',
-            name='CS_260.xls',
-            content_type='application/vnd.ms-excel',
-            size=14054,
-            charset=None,
-            content_type_extra={}
-        )
-        c = Course.objects.create(
-            source_file=imf,
-            code='CS 260 01',
-            title='Introduction to Comp',
-            term='2024 May Term',
-            course_instructor=instructor
-        )
-        return c
 
     def test_teacher_can_create_new_class(self):
         # A teacher wants to log in to create a new class

@@ -123,7 +123,7 @@ class TestEditCoursePage(TestCase):
             charset=None,
             content_type_extra={}
         )
-        c = Course.objects.create(
+        self.c = Course.objects.create(
             source_file=imf,
             code='CS 260 01',
             title='Introduction to Comp',
@@ -175,3 +175,14 @@ class TestEditCoursePage(TestCase):
         }
         request = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': 1}), data=data)
         self.assertRedirects(request, reverse('staff_course_page', kwargs={'course_id': 1}))
+
+    def test_successful_form_updates_course_info(self):
+        data = {
+            'title': 'Introduction Class',
+            'term': 'May 2024',
+            'code': '1234'
+        }
+        request = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': self.c.pk}), data=data)
+        c = Course.objects.get(pk=self.c.pk)
+        self.assertNotEqual('Introduction to Comp', c.title)
+        self.assertEqual(data['title'], c.title)

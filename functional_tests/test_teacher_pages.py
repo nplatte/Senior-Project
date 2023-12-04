@@ -125,6 +125,7 @@ class TestTeacherClass(LiveServerTestCase):
         btn = self.browser.find_element(By.ID, 'edit-course-submit')
         btn.click()
         # the teacher is taken back to the view course page 
-        self.assertEqual(self.browser.title, 'Introduction to Compupter Graphics')
+        print(f'\n{c.title}\n')
+        self.assertEqual(self.browser.title, 'Introduction to Computer Graphics')
 
 

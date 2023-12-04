@@ -1,6 +1,6 @@
 from django import forms
 from django import forms
-from teacher_view.models import Course
+from teacher_view.models import Course, Assignment
 from django.core.exceptions import ValidationError
 from html.parser import HTMLParser
 from os import getcwd
@@ -70,6 +70,13 @@ class EditCourseForm(forms.ModelForm):
                 }
             )
         }
+
+
+class AddAssignmentForm(forms.ModelForm):
+
+    class Meta:
+        model = Assignment
+        fields = ['title']
 
 
 class MyHTMLParser(HTMLParser):

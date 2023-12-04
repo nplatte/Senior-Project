@@ -105,7 +105,12 @@ def grade_course_page(request, course_title):
     'student_grades' : course_grades, 
     })
 
-def add_assignment_page(request):
+def add_assignment_page(request, course_id):
+    if request.method == 'POST':
+        form = AddAssignmentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect(course_page, course_id=course_id)
     form = AddAssignmentForm()
     current_classes = get_staff_classes(request.user)
     context = {

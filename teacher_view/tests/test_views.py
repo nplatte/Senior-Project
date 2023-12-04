@@ -218,7 +218,7 @@ class TestCreateAssignmentPOST(TestCase):
     def setUp(self) -> None:
         self.test_user = _add_staff_user()
         self.client.force_login(self.test_user)
-        _make_class(self.test_user)
+        self.c = _make_class(self.test_user)
         self.data = {
             'title': 'make Google',
             'description': 'make google please',
@@ -231,8 +231,8 @@ class TestCreateAssignmentPOST(TestCase):
         return super().tearDown()
 
     def test_good_form_redirects_to_course_page(self):
-        response = self.client.post(reverse('add_assignment'), data=self.data)
-        self.assertRedirects(response, 'teacher/course/1')
+        response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data)
+        self.assertRedirects(response, '/teacher/course/1/')
 
     def test_good_form_makes_new_assignment(self):
         a_list = Assignment.objects.all()

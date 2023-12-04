@@ -220,7 +220,10 @@ class TestCreateAssignmentPOST(TestCase):
         self.client.force_login(self.test_user)
         _make_class(self.test_user)
         self.data = {
-            
+            'title': 'make Google',
+            'description': 'make google please',
+            'due_date': '',
+            'display_date': ''
         }
         return super().setUp()
     

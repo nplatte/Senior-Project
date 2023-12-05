@@ -14,9 +14,9 @@ def _add_staff_user():
     staff_group.user_set.add(test_user)
     return test_user
 
-def _make_class(user):
+def _make_class(user, title='test course'):
     term = f'2023 Fall Term'
-    return Course.objects.create(title='test course', course_instructor = user, term=term)
+    return Course.objects.create(title=title, course_instructor = user, term=term)
 
 
 class TestHomePage(TestCase):
@@ -212,6 +212,40 @@ class TestCreateAssignmentPage(TestCase):
         form = self.response.context['assignment_form']
         self.assertIsInstance(form, AddAssignmentForm)
 
+    def test_passes_assignments(self):
+        Assignment.objects.create(
+            title='Make Google',
+            description='make google please',
+            due_date=datetime.now(),
+            display_date=datetime(2024, 12, 31, 12, 12, 0),
+            course=self.c
+        )
+        response = self.client.get(reverse('add_assignment', kwargs={'course_id':self.c.pk}))
+        a_list = response.context['assignments']
+        self.assertEqual(1, len(a_list))
+
+    def test_passes_correct_assignments_to_course_view(self):
+        c2 = _make_class('class 2')
+        d1 = {
+            'title': 'make Google',
+            'description': 'make google please',
+            'due_date': datetime.now(),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0),
+            'course': self.c
+        }
+        d2 = {
+            'title': 'make Google 2',
+            'description': 'make google please 2',
+            'due_date': datetime.now(),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0),
+            'course': c2
+        }
+        a1 = Assignment.objects.create(*d1)
+        a2 = Assignment.objects.create(*d2)
+        a_list = self.client.get(reverse('add_assignment', kwargs={'course_id':self.c.pk})).context['assignments']
+        self.assertIn(a1, a_list)
+        self.assertNotIn(a2, a_list)
+
 
 class TestCreateAssignmentPOST(TestCase):
 
@@ -249,3 +283,23 @@ class TestCreateAssignmentPOST(TestCase):
         }
         response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data, follow=True)
         self.assertTemplateUsed(response,'teacher_view/add_assignment.html')
+
+class TestViewCoursePage(TestCase):
+
+    def setUp(self) -> None:
+        return super().setUp()
+    
+    def tearDown(self) -> None:
+        return super().tearDown()
+    
+    def test_uses_right_template(self):
+        pass
+
+    def test_passes_navbar_information(self):
+        pass
+
+    def passes_correct_context(self):
+        pass
+
+    def test_does_not_pass_other_course_assignments(self):
+        pass

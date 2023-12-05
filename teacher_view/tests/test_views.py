@@ -212,40 +212,6 @@ class TestCreateAssignmentPage(TestCase):
         form = self.response.context['assignment_form']
         self.assertIsInstance(form, AddAssignmentForm)
 
-    def test_passes_assignments(self):
-        Assignment.objects.create(
-            title='Make Google',
-            description='make google please',
-            due_date=datetime.now(),
-            display_date=datetime(2024, 12, 31, 12, 12, 0),
-            course=self.c
-        )
-        response = self.client.get(reverse('add_assignment', kwargs={'course_id':self.c.pk}))
-        a_list = response.context['assignments']
-        self.assertEqual(1, len(a_list))
-
-    def test_passes_correct_assignments_to_course_view(self):
-        c2 = _make_class('class 2')
-        d1 = {
-            'title': 'make Google',
-            'description': 'make google please',
-            'due_date': datetime.now(),
-            'display_date': datetime(2024, 12, 31, 12, 12, 0),
-            'course': self.c
-        }
-        d2 = {
-            'title': 'make Google 2',
-            'description': 'make google please 2',
-            'due_date': datetime.now(),
-            'display_date': datetime(2024, 12, 31, 12, 12, 0),
-            'course': c2
-        }
-        a1 = Assignment.objects.create(*d1)
-        a2 = Assignment.objects.create(*d2)
-        a_list = self.client.get(reverse('add_assignment', kwargs={'course_id':self.c.pk})).context['assignments']
-        self.assertIn(a1, a_list)
-        self.assertNotIn(a2, a_list)
-
 
 class TestCreateAssignmentPOST(TestCase):
 
@@ -287,19 +253,53 @@ class TestCreateAssignmentPOST(TestCase):
 class TestViewCoursePage(TestCase):
 
     def setUp(self) -> None:
+        self.test_user = _add_staff_user()
+        self.client.force_login(self.test_user)
+        self.c = _make_class(self.test_user)
+        self.response = self.client.get(reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
         return super().setUp()
     
     def tearDown(self) -> None:
         return super().tearDown()
     
     def test_uses_right_template(self):
-        pass
+        self.assertTemplateUsed(self.response, 'teacher_view/course_page.hmtl')
 
     def test_passes_navbar_information(self):
-        pass
+        cc = self.response.context['current_courses']
+        self.assertEqual(len(cc), 1)
+        self.assertIn(self.c, cc)
 
     def passes_correct_context(self):
-        pass
+        c = self.response.context['course']
+        self.assertEqual(c, self.c)
+        assignments = self.response.context['assignments']
+        self.assertEqual(len(assignments), 0)
 
     def test_does_not_pass_other_course_assignments(self):
-        pass
+        c2 = _make_class(self.test_user, 'class 2')
+        a1 = Assignment.objects.create(
+            title='Make Google',
+            description='make Google please',
+            
+        )
+        d1 = {
+            'title': 'make Google',
+            'description': 'make google please',
+            'due_date': datetime.now(),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0),
+            'course': self.c
+        }
+        d2 = {
+            'title': 'make Google 2',
+            'description': 'make google please 2',
+            'due_date': datetime.now(),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0),
+            'course': c2
+        }
+        a1 = Assignment.objects.create(*d1)
+        a2 = Assignment.objects.create(*d2)
+        response = self.client.get(reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
+        a_list = response.context['assignments']
+        self.assertIn(a1, a_list)
+        self.assertNotIn(a2, a_list)

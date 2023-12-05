@@ -1,10 +1,11 @@
 from django.test import TestCase
-from datetime import datetime
+from django.utils.timezone import datetime
 from teacher_view.forms import CourseModelFileForm, MyHTMLParser, EditCourseForm, AddAssignmentForm
 from teacher_view.models import Course
 from os import getcwd, remove, path
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.contrib.auth.models import User
+import zoneinfo
 
 class TestCourseModelFileForm(TestCase):
 
@@ -28,7 +29,6 @@ class TestCourseModelFileForm(TestCase):
             remove(upload_file)
         return super().tearDown()
         
-
     def test_good_file_is_valid(self): 
         form = CourseModelFileForm(*self.test_data)
         self.assertTrue(form.is_valid())
@@ -126,8 +126,8 @@ class TestAddAssignmentForm(TestCase):
         self.data = {
             'title': 'Test Assignment',
             'description': 'this is bout the assignment',
-            'due_date': datetime(2024, 12, 30, 12, 12, 1),
-            'display_date': datetime(2024, 12, 23, 12, 12, 1)
+            'due_date': datetime(2024, 12, 30, 12, 12, 1, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            'display_date': datetime(2024, 12, 23, 12, 12, 1, tzinfo=zoneinfo.ZoneInfo(key='America/Panama'))
         }
         return super().setUp()
     

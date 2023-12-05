@@ -294,5 +294,5 @@ class TestViewCoursePage(TestCase):
         )
         response = self.client.get(reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
         a_list = response.context['assignments']
-        self.assertIn(a1, a_list[0])
-        self.assertNotIn(a2, a_list[0])
+        self.assertIn(a1, a_list)
+        self.assertNotIn(a2, a_list)

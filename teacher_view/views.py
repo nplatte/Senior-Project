@@ -77,19 +77,14 @@ def course_page(request, course_id):
         deleted_student = Student.objects.get(number=request.POST.get('student_id'))
         current_course.students.remove(deleted_student)
         current_course.save()
-    new_assignments =  Assignment.objects.filter(
+    assignments =  Assignment.objects.filter(
         course=current_course, 
-        due_date__gte=date.today()
-        ).order_by('-due_date').reverse()
-    past_assignments =  Assignment.objects.filter(
-        course=current_course, 
-        due_date__lte=date.today()
         ).order_by('-due_date').reverse()
     course_students = Student.objects.filter(enrolled_students=current_course)
     return render(request, 'teacher_view/course_page.html', 
     {'current_courses' : current_classes,
     'current_course' : current_course,
-    'assignments': (new_assignments, past_assignments),
+    'assignments': assignments,
     'students' : course_students,
         })
 

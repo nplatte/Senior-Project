@@ -281,25 +281,18 @@ class TestViewCoursePage(TestCase):
         a1 = Assignment.objects.create(
             title='Make Google',
             description='make Google please',
-            
+            due_date=datetime.now(),
+            display_date=datetime(2024, 12, 31, 12, 12, 0),
+            course=self.c
         )
-        d1 = {
-            'title': 'make Google',
-            'description': 'make google please',
-            'due_date': datetime.now(),
-            'display_date': datetime(2024, 12, 31, 12, 12, 0),
-            'course': self.c
-        }
-        d2 = {
-            'title': 'make Google 2',
-            'description': 'make google please 2',
-            'due_date': datetime.now(),
-            'display_date': datetime(2024, 12, 31, 12, 12, 0),
-            'course': c2
-        }
-        a1 = Assignment.objects.create(*d1)
-        a2 = Assignment.objects.create(*d2)
+        a2 = Assignment.objects.create(
+            title='Make Google 2',
+            description='make Google please 2',
+            due_date=datetime.now(),
+            display_date=datetime(2024, 12, 31, 12, 12, 0),
+            course=c2
+        )
         response = self.client.get(reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
         a_list = response.context['assignments']
-        self.assertIn(a1, a_list)
-        self.assertNotIn(a2, a_list)
+        self.assertIn(a1, a_list[0])
+        self.assertNotIn(a2, a_list[0])

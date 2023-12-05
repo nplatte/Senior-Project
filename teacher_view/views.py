@@ -89,8 +89,7 @@ def course_page(request, course_id):
     return render(request, 'teacher_view/course_page.html', 
     {'current_courses' : current_classes,
     'current_course' : current_course,
-    'upcoming_assignments' : new_assignments,
-    'past_assignments' : past_assignments,
+    'assignments': (new_assignments, past_assignments),
     'students' : course_students,
         })
 

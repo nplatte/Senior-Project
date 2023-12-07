@@ -76,7 +76,7 @@ class AddAssignmentForm(forms.ModelForm):
 
     class Meta:
         model = Assignment
-        fields = ['title', 'description', 'due_date', 'display_date']
+        fields = ['title', 'description', 'due_date', 'display_date', 'course']
         widgets = {
             'title': forms.TextInput(
                 attrs={
@@ -96,6 +96,11 @@ class AddAssignmentForm(forms.ModelForm):
             'display_date': forms.DateTimeInput(
                 attrs={
                     'id': 'a-display-date-input'
+                }
+            ),
+            'course': forms.Select(
+                attrs={
+                    'id': 'a-course-input'
                 }
             )
         }

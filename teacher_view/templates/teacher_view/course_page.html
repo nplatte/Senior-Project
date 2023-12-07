@@ -9,14 +9,7 @@
 <a href="{% url 'staff_edit_course_page' course_id=current_course.pk %}" id="edit-course-link">Edit Course</a>
 <h2 id="course-title">{{ current_course.title }}</h2>
 <h2>Upcoming Assingments</h2>
-{% for assignment in upcoming_assignments %}
-<div class = assignment_container>
-    <a class = assignment href="{% url 'edit_assignment' assignment.title %}"> {{ assignment.title }}</a>
-    <p>Due Date: {{ assignment.due_date }}</p>
-</div>
-{% endfor %}
-<h2>Past Assignments</h2>
-{% for assignment in past_assignments %}
+{% for assignment in assignments %}
 <div class = assignment_container>
     <a class = assignment href="{% url 'edit_assignment' assignment.title %}"> {{ assignment.title }}</a>
     <p>Due Date: {{ assignment.due_date }}</p>

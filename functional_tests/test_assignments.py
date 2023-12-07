@@ -1,8 +1,10 @@
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import Select
 
 from functional_tests.inherits import BasicSeleniumTest
+from time import sleep
 
 
 class TestTeacherAssignment(BasicSeleniumTest):
@@ -43,6 +45,9 @@ class TestTeacherAssignment(BasicSeleniumTest):
         display_date_input = self.browser.find_element(By.ID, 'a-display-date-input')
         # they add a display date
         due_date_input = self.browser.find_element(By.ID, 'a-due-date-input')
+        # they select the course
+        course_selector = Select(self.browser.find_element(By.ID, 'a-course-input'))
+        course_selector.select_by_visible_text(f'{self.c.title}')
         # they add a discription
         description_input = self.browser.find_element(By.ID, 'a-description-input')
         description_input.send_keys('google doesnt work, make a new one')

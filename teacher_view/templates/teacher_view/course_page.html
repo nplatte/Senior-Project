@@ -12,7 +12,7 @@
 {% for a in assignments %}
 <div class = assignment_container>
     <a class="assignment" id="assignment_{{ a.pk }}" href="{% url 'edit_assignment' a.title %}"> {{ a.title }}</a>
-    <p id="assignment_{{ a.pk }}_due_date">Due Date: {{ a.due_date }}</p>
+    <p id="assignment_{{ a.pk }}_due_date">Due Date: {{ a.due_date:"Y-m-d H:i:s" }}</p>
 </div>
 {% endfor %}
 <div class = assignment_container>

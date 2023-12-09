@@ -33,7 +33,7 @@ class TestViewCoursePage(TestCase):
         return super().tearDown()
     
     def test_uses_right_template(self):
-        self.assertTemplateUsed(self.response, 'teacher_view/course_page.hmtl')
+        self.assertTemplateUsed(self.response, 'teacher_view/course_page.html')
 
     def test_passes_navbar_information(self):
         cc = self.response.context['current_courses']

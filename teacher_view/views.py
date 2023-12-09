@@ -3,7 +3,7 @@ from django.urls import reverse
 from teacher_view.models import Course, Assignment, Student
 from .models import Grade
 from datetime import date
-from teacher_view.forms import CourseModelFileForm, EditCourseForm, AddAssignmentForm
+from teacher_view.forms import CourseModelFileForm, EditCourseForm, AssignmentForm
 from django.contrib.auth.decorators import login_required
 from django import views
 from django.utils.decorators import method_decorator
@@ -99,11 +99,11 @@ def grade_course_page(request, course_title):
 
 def add_assignment_page(request, course_id):
     if request.method == 'POST':
-        form = AddAssignmentForm(request.POST)
+        form = AssignmentForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect(course_page, course_id=course_id)
-    form = AddAssignmentForm()
+    form = AssignmentForm()
     current_classes = get_staff_classes(request.user)
     context = {
         'current_courses': current_classes,

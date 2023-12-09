@@ -72,7 +72,7 @@ class EditCourseForm(forms.ModelForm):
         }
 
 
-class AddAssignmentForm(forms.ModelForm):
+class AssignmentForm(forms.ModelForm):
 
     class Meta:
         model = Assignment

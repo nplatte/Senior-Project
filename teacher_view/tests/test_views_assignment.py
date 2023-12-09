@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, Group
 from teacher_view.models import Course, Assignment
 from django.utils.timezone import datetime
 import zoneinfo
-from teacher_view.forms import AddAssignmentForm
+from teacher_view.forms import AssignmentForm
 
 
 def _add_staff_user():
@@ -40,7 +40,7 @@ class TestCreateAssignmentPage(TestCase):
 
     def test_uses_right_form(self):
         form = self.response.context['assignment_form']
-        self.assertIsInstance(form, AddAssignmentForm)
+        self.assertIsInstance(form, AssignmentForm)
 
 
 class TestCreateAssignmentPOST(TestCase):
@@ -105,7 +105,7 @@ class TestEditAssignmentGET(TestCase):
 
     def test_uses_right_form(self):
         edit_assignment_form = self.response.context['form']
-        self.assertIsInstance(edit_assignment_form, AssignmentModelForm)
+        self.assertIsInstance(edit_assignment_form, AssignmentForm)
 
     def test_passes_courses_to_nav_bar(self):
         c = Course.objects.get(pk=1)

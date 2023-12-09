@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.utils.timezone import datetime
-from teacher_view.forms import CourseModelFileForm, MyHTMLParser, EditCourseForm, AddAssignmentForm
+from teacher_view.forms import CourseModelFileForm, MyHTMLParser, EditCourseForm, AssignmentForm
 from teacher_view.models import Course
 from os import getcwd, remove, path
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -120,7 +120,7 @@ class TestEditCourseForm(TestCase):
         self.assertIn('id="edit-course-term"', f_as_p)
         
 
-class TestAddAssignmentForm(TestCase):
+class TestAssignmentForm(TestCase):
 
     def setUp(self) -> None:
         self.data = {
@@ -135,18 +135,18 @@ class TestAddAssignmentForm(TestCase):
         return super().tearDown()
     
     def test_good_form_is_valid(self):
-        form = AddAssignmentForm(self.data)
+        form = AssignmentForm(self.data)
         self.assertTrue(form.is_valid())
 
     def test_form_has_correct_ids(self):
-        form = AddAssignmentForm(self.data)
+        form = AssignmentForm(self.data)
         self.assertIn('id="a-title-input"', form.as_p())
         self.assertIn('id="a-due-date-input"', form.as_p())
         self.assertIn('id="a-description-input"', form.as_p())
         self.assertIn('id="a-display-date-input"', form.as_p())
 
     def test_form_makes_assignment(self):
-        form = AddAssignmentForm(self.data)
+        form = AssignmentForm(self.data)
         a = form.save()
         self.assertEqual(a.title, self.data['title'])
         self.assertEqual(a.description, self.data['description'])

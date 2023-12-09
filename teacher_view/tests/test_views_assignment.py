@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User, Group
 from teacher_view.models import Course, Assignment
-from datetime import datetime
+from django.utils.timezone import datetime
+import zoneinfo
 from teacher_view.forms import AddAssignmentForm
 
 
@@ -78,3 +79,47 @@ class TestCreateAssignmentPOST(TestCase):
         }
         response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data, follow=True)
         self.assertTemplateUsed(response,'teacher_view/add_assignment.html')
+
+
+class TestEditAssignmentGET(TestCase):
+
+    def setUp(self) -> None:
+        self.test_user = _add_staff_user()
+        self.client.force_login(self.test_user)
+        self.c = _make_class(self.test_user)
+        self.a = Assignment.objects.create(
+            title='Make Goog',
+            description='make Google please',
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            course=self.c
+        )
+        self.response = self.client.get(reverse('staff_edit_assignment_page', kwargs={'assignment_id':self.a.pk}), follow=True)
+        return super().setUp()
+    
+    def tearDown(self) -> None:
+        return super().tearDown()
+    
+    def test_uses_right_template(self):
+        self.assertTemplateUsed(self.response, 'teacher_view/edit_assignment.html')
+
+    def test_uses_right_form(self):
+        edit_assignment_form = self.response.context['form']
+        self.assertIsInstance(edit_assignment_form, AssignmentModelForm)
+
+    def test_passes_courses_to_nav_bar(self):
+        c = Course.objects.get(pk=1)
+        courses = self.response.context['current_courses']
+        self.assertIn(c, courses)
+
+
+class TestEditAssignmentPOST(TestCase):
+
+    def setUp(self) -> None:
+        return super().setUp()
+    
+    def tearDown(self) -> None:
+        return super().tearDown()
+    
+    def test_edits_assignment_on_POST(self):
+        pass

@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from teacher_view.models import Course, Assignment, Student
-from student_view.models import HomeworkSubmission
 from .models import Grade
-from datetime import date, timedelta, timezone
-from time import sleep
+from datetime import date
 from teacher_view.forms import CourseModelFileForm, EditCourseForm, AddAssignmentForm
 from django.contrib.auth.decorators import login_required
 from django import views
@@ -116,10 +114,9 @@ def add_assignment_page(request, course_id):
         context
     )
 
-def edit_assignment_page(request, assignment_title):
-    editable_assignment = Assignment.objects.get(instructor=request.user, title=assignment_title)
+def edit_assignment_page(request, assignment_id):
+    editable_assignment = Assignment.objects.get(pk=assignment_id)
     current_classes = get_staff_classes(request.user)
-    assignment_homework = HomeworkSubmission.objects.filter(assignment=editable_assignment)
     if request.POST.get('submit',):
         _edit_assignment(request, editable_assignment)
     elif request.POST.get('delete',):
@@ -127,8 +124,7 @@ def edit_assignment_page(request, assignment_title):
         return render(request, "teacher_view/profile.html", {'current_courses' : current_classes,})
     return render(request, 'teacher_view/edit_assignment.html',
     {'current_courses' : current_classes,
-    'assignment' : editable_assignment,
-    'student_homework' : assignment_homework,
+    'assignment' : editable_assignment
     })
 
 def get_staff_classes(user):

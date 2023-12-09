@@ -84,7 +84,7 @@ class TestTeacherAssignment(BasicSeleniumTest):
         a_due_date = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}_due_date')
         self.assertEqual(a_due_date.text, f'Due Date: {self.test_a.due_date.strftime("%Y-%m-%d %I:%M:%S")}')
         # next to the assignment is an edit assignment button
-        edit_link = self.browser.find_element(By.ID, f'edit_addignment_{self.test_a.pk}')
+        edit_link = self.browser.find_element(By.ID, f'edit_assignment_{self.test_a.pk}')
         edit_link.click()
         # they click it and are taken to a new page
         self.assertEqual(f'Edit {self.test_a.title}', self.browser.title)

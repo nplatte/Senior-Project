@@ -60,6 +60,9 @@ class Assignment(models.Model):
     due_date = models.DateTimeField(blank=True, null=True)
     display_date = models.DateTimeField(blank=True, null=True)
 
+    def __repr__(self) -> str:
+        return str(self.title)
+
 
 class Handout(models.Model):
 

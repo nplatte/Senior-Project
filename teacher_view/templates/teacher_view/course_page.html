@@ -9,15 +9,14 @@
 <a href="{% url 'staff_edit_course_page' course_id=current_course.pk %}" id="edit-course-link">Edit Course</a>
 <h2 id="course-title">{{ current_course.title }}</h2>
 <h2>Upcoming Assingments</h2>
-{% for assignment in assignments %}
+{% for a in assignments %}
 <div class = assignment_container>
-    <a class = assignment href="{% url 'edit_assignment' assignment.title %}"> {{ assignment.title }}</a>
-    <p>Due Date: {{ assignment.due_date }}</p>
+    <a class="assignment" id="assignment_{{ a.pk }}" href="{% url 'edit_assignment' a.title %}"> {{ a.title }}</a>
+    <p id="assignment_{{ a.pk }}_due_date">Due Date: {{ a.due_date }}</p>
 </div>
 {% endfor %}
 <div class = assignment_container>
-    <a class = assignment href="{% url 'add_assignment' current_course.pk %}" id="create-assignment-link"> Create Assignment</a>
-    <p>Due Date: {{ assignment.due_date }}</p>
+    <a class="assignment" href="{% url 'add_assignment' current_course.pk %}" id="create-assignment-link"> Create Assignment</a>
 </div>
 
 <h2>Students</h2>

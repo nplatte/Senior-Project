@@ -15,13 +15,6 @@ class TestTeacherAssignment(BasicSeleniumTest):
         super().setUp()
         self.c = self._create_course()
         self.browser.get(f'{self.live_server_url}')
-        self.test_a = Assignment.objects.create(
-            title='Make Goog',
-            description='make Google please',
-            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            course=self.c
-        )
 
     def tearDown(self) -> None:
         self.browser.quit()
@@ -69,15 +62,27 @@ class TestTeacherAssignment(BasicSeleniumTest):
         self.assertEqual(len(assignments), 2)
 
     def test_teacher_can_edit_assignment(self):
+        self.test_a = Assignment.objects.create(
+            title='Make Goog',
+            description='make Google please',
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            course=self.c
+        )
         # the teacher logs on to the teacher portal and decides to edit an assignment title and due date
         self.assertIn('Log In', self.browser.title)
         self._teacher_login()
         self.assertEqual(self.browser.title, 'Wartburg MCSP Teachers')
-        # they navigate to the course and see the assignment in question
+        chain = ActionChains(self.browser)
+        courses_btn = self.browser.find_element(By.ID, 'nav-courses')
+        chain.move_to_element(courses_btn).perform()
+        # they see the button for the course in the dropdown
+        course_link = self.browser.find_element(By.ID, f'course-{self.c.pk}-link')
+        course_link.click()
         assignment =  self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}')
         self.assertEqual(assignment.text, self.test_a.title)
         a_due_date = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}_due_date')
-        self.assertEqual(a_due_date, self.test_a.due_date)
+        self.assertEqual(a_due_date.text, self.test_a.due_date)
         # next to the assignment is an edit assignment button
         edit_link = self.browser.find_element(By.ID, f'edit_addignment_{self.test_a.pk}')
         edit_link.click()

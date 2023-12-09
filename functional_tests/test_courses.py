@@ -11,7 +11,7 @@ class TestTeacherClass(BasicSeleniumTest):
 
     def setUp(self):
         super().setUp()
-        self.browser.get(self.live_server_url)
+        self.browser.get(f'{self.live_server_url}')
 
     def tearDown(self):
         self.browser.quit()

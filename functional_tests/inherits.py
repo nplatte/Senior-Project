@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
-from django.test import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User, Group
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
@@ -11,7 +11,7 @@ from os import getcwd, path, remove
 from time import sleep
 
 
-class BasicSeleniumTest(LiveServerTestCase):
+class BasicSeleniumTest(StaticLiveServerTestCase):
 
     def setUp(self) -> None:
         self.test_user = User.objects.create_user('new', 'new@gmail.com', 'password')

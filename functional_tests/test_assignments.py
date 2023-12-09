@@ -2,17 +2,26 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
+from teacher_view.models import Assignment
 
 from functional_tests.inherits import BasicSeleniumTest
 from time import sleep
-
+from django.utils.timezone import datetime
+import zoneinfo
 
 class TestTeacherAssignment(BasicSeleniumTest):
 
     def setUp(self):
         super().setUp()
         self.c = self._create_course()
-        self.browser.get(self.live_server_url)
+        self.browser.get(f'{self.live_server_url}')
+        self.test_a = Assignment.objects.create(
+            title='Make Goog',
+            description='make Google please',
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            course=self.c
+        )
 
     def tearDown(self) -> None:
         self.browser.quit()
@@ -60,6 +69,39 @@ class TestTeacherAssignment(BasicSeleniumTest):
         self.assertEqual(len(assignments), 2)
 
     def test_teacher_can_edit_assignment(self):
-        pass
+        # the teacher logs on to the teacher portal and decides to edit an assignment title and due date
+        self.assertIn('Log In', self.browser.title)
+        self._teacher_login()
+        self.assertEqual(self.browser.title, 'Wartburg MCSP Teachers')
+        # they navigate to the course and see the assignment in question
+        assignment =  self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}')
+        self.assertEqual(assignment.text, self.test_a.title)
+        a_due_date = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}_due_date')
+        self.assertEqual(a_due_date, self.test_a.due_date)
+        # next to the assignment is an edit assignment button
+        edit_link = self.browser.find_element(By.ID, f'edit_addignment_{self.test_a.pk}')
+        edit_link.click()
+        # they click it and are taken to a new page
+        self.assertEqual(f'Edit {self.test_a.title}', self.browser.title)
+        # they find the title box with the current assignment name already filled in
+        title_input = self.browser.find_element(By.ID, 'a-title-input')
+        # they change it to the right name
+        title_input.send_keys('Make Google')
+        # they change the date to next week
+        due_date_input = self.browser.find_element(By.ID, 'a-due-date-input')
+        d8 = datetime.now()
+        due_date_input.send_keys(f'{d8.year}-{d8.month}-{d8.day} 12:12:12')
+        # satisfied, they click submit
+        submit_btn = self.browser.find_element(By.ID, 'edit-a-submit')
+        submit_btn.click()
+        # they are taken back to the course view page where they see the assignment with its new title
+        self.assertEqual(self.browser.title, self.c.title)
+        edited_a = Assignment.objects.get(pk=self.test_a.pk)
+        new_a = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}')
+        self.assertEqual(assignment.text, edited_a)
+        # the due date is also updated to next week
+        a_due_date = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}_due_date')
+        self.assertEqual(a_due_date, edited_a.due_date)
+        # satisfied, they log off
 
     

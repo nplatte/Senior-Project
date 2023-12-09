@@ -4,8 +4,9 @@ from django.contrib.auth.models import User, Group
 from teacher_view.models import Course, Assignment
 from teacher_view.forms import CourseModelFileForm, EditCourseForm
 from django.core.files.uploadedfile import InMemoryUploadedFile
-from datetime import datetime
+from django.utils.timezone import datetime
 from os import getcwd, remove, path
+import zoneinfo
 
 
 def _add_staff_user():
@@ -50,15 +51,15 @@ class TestViewCoursePage(TestCase):
         a1 = Assignment.objects.create(
             title='Make Google',
             description='make Google please',
-            due_date=datetime.now(),
-            display_date=datetime(2024, 12, 31, 12, 12, 0),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
             course=self.c
         )
         a2 = Assignment.objects.create(
             title='Make Google 2',
             description='make Google please 2',
-            due_date=datetime.now(),
-            display_date=datetime(2024, 12, 31, 12, 12, 0),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
             course=c2
         )
         response = self.client.get(reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
@@ -160,6 +161,7 @@ class TestEditCoursePage(TestCase):
         curr_courses = request.context['current_courses']
         edited_course = request.context['course']
         self.assertEqual(len(curr_courses), 1)
+        self.assertEqual(self.c, edited_course)
         self.assertIsInstance(edited_course, Course)
 
     def test_course_uses_right_form_for_editing(self):

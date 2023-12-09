@@ -117,14 +117,11 @@ def add_assignment_page(request, course_id):
 def edit_assignment_page(request, assignment_id):
     editable_assignment = Assignment.objects.get(pk=assignment_id)
     current_classes = get_staff_classes(request.user)
-    if request.POST.get('submit',):
-        _edit_assignment(request, editable_assignment)
-    elif request.POST.get('delete',):
-        editable_assignment.delete()
-        return render(request, "teacher_view/profile.html", {'current_courses' : current_classes,})
+    form = AssignmentForm()
     return render(request, 'teacher_view/edit_assignment.html',
     {'current_courses' : current_classes,
-    'assignment' : editable_assignment
+    'assignment' : editable_assignment,
+    'form': form
     })
 
 def get_staff_classes(user):

@@ -202,3 +202,54 @@ class TestEditCoursePage(TestCase):
         c = Course.objects.get(pk=self.c.pk)
         self.assertNotEqual('Introduction to Comp', c.title)
         self.assertEqual(data['title'], c.title)
+
+
+class TestCoursesViewPage(TestCase):
+
+    def setUp(self) -> None:
+        self.test_user = _add_staff_user()
+        self.client.force_login(self.test_user)
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+        file = open(f'{self.base_path}\\CS_260.xls')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='source_file',
+            name='CS_260.xls',
+            content_type='application/vnd.ms-excel',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        self.c = Course.objects.create(
+            source_file=imf,
+            code='CS 260 01',
+            title='Introduction to Comp',
+            term='2024 May Term',
+            course_instructor=self.test_user
+        )
+        return super().setUp()
+    
+    def tearDown(self) -> None:
+        return super().tearDown()
+    
+    def test_uses_right_template(self):
+        response = self.client.get(reverse('staff_courses_page'))
+        self.assertTemplateUsed(response, 'teacher_view/courses.html')
+
+    def test_passes_navbar_courses(self):
+        request = self.client.get(reverse('staff_courses_page'))
+        curr_courses = request.context['current_courses']
+        self.assertEqual(len(curr_courses), 1)
+
+    def test_passes_logged_in_users_courses(self):
+        non_user_course = Course.objects.create(
+            code='CS 260 02',
+            title='Intro to Comp',
+            term='2023 May Term'
+        )
+        response = self.client.get(reverse('staff_courses_page'))
+        all_courses = response.context['all_courses']
+        self.assertEqual(1, len(all_courses))
+        self.assertNotIn(non_user_course, all_courses)
+        self.assertIn(self.c, all_courses)
+        

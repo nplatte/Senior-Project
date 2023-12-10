@@ -116,10 +116,35 @@ class TestEditAssignmentGET(TestCase):
 class TestEditAssignmentPOST(TestCase):
 
     def setUp(self) -> None:
+        self.test_user = _add_staff_user()
+        self.client.force_login(self.test_user)
+        self.c = _make_class(self.test_user)
+        self.a = Assignment.objects.create(
+            title='Make Goog',
+            description='make Google please',
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            course=self.c
+        )
+        self.data = {
+            'title': 'dont make Google',
+            'description': 'its evil',
+            'due_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            'course': self.c.title
+        }
         return super().setUp()
     
     def tearDown(self) -> None:
         return super().tearDown()
     
     def test_edits_assignment_on_POST(self):
-        pass
+        self.assertEqual(self.a.title, 'Make Goog')
+        self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
+        self.a = Assignment.objects.get(pk=self.a.pk)
+        self.assertEqual(self.a.title, 'dont make Google')
+        self.assertEqual(self.a.description, 'its evil')
+
+    def test_redirects_course_page_on_POST(self):
+        response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
+        self.assertRedirects(response, reverse('staff_course_page', kwargs={'course_id': self.c.pk}))

@@ -62,7 +62,12 @@ def add_course_page(request):
         })
 
 def courses_page(request):
-    return render(request, 'teacher_view/courses.html')
+    all_staff_courses = Course.objects.filter(course_instructor=request.user)
+    current_courses = get_staff_classes(request.user)
+    return render(request, 'teacher_view/courses.html', {
+        'all_courses': all_staff_courses,
+        'current_courses': current_courses
+    })
 
 def course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
@@ -115,12 +120,19 @@ def add_assignment_page(request, course_id):
     )
 
 def edit_assignment_page(request, assignment_id):
-    editable_assignment = Assignment.objects.get(pk=assignment_id)
+    edit_ass = Assignment.objects.get(pk=assignment_id)
     current_classes = get_staff_classes(request.user)
     form = AssignmentForm()
+    if request.method == 'POST':
+        form = AssignmentForm(request.POST, instance=edit_ass)
+        print([c for c in form.fields['course'].choices])
+        print(form.errors)
+        print(f'{request.POST["course"]}')
+        if form.is_valid():
+            form.save()
     return render(request, 'teacher_view/edit_assignment.html',
     {'current_courses' : current_classes,
-    'assignment' : editable_assignment,
+    'assignment' : edit_ass,
     'form': form
     })
 
@@ -139,12 +151,6 @@ def find_terms():
     elif month > 6:
         terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
         return terms
-
-def _edit_assignment(request, assignment):
-    assignment.title = request.POST['title']
-    assignment.description = request.POST['description']
-    assignment.due_date = request.POST['due_date']
-    assignment.save()
 
 def get_all_past_terms(request):
     terms = find_terms()

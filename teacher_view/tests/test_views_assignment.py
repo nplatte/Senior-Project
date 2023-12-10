@@ -131,7 +131,7 @@ class TestEditAssignmentPOST(TestCase):
             'description': 'its evil',
             'due_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
             'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            'course': self.c.title
+            'course': self.c.pk
         }
         return super().setUp()
     

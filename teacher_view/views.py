@@ -73,7 +73,7 @@ def course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
     current_course = Course.objects.get(pk=int(course_id))
     if request.POST.get('submit',):
-        new_student = Student.objects.get(number=request.POST.get('student_id'))
+        new_student = Student.objects.get(number=request.POST.get('student_id')) 
         current_course.students.add(new_student)
         current_course.save()
     elif request.POST.get('delete',):
@@ -122,14 +122,12 @@ def add_assignment_page(request, course_id):
 def edit_assignment_page(request, assignment_id):
     edit_ass = Assignment.objects.get(pk=assignment_id)
     current_classes = get_staff_classes(request.user)
-    form = AssignmentForm()
+    form = AssignmentForm(instance=edit_ass)
     if request.method == 'POST':
         form = AssignmentForm(request.POST, instance=edit_ass)
-        print([c for c in form.fields['course'].choices])
-        print(form.errors)
-        print(f'{request.POST["course"]}')
         if form.is_valid():
             form.save()
+            return redirect(reverse('staff_course_page', kwargs={'course_id':edit_ass.course.pk}))
     return render(request, 'teacher_view/edit_assignment.html',
     {'current_courses' : current_classes,
     'assignment' : edit_ass,

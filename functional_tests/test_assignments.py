@@ -90,12 +90,15 @@ class TestTeacherAssignment(BasicSeleniumTest):
         self.assertEqual(f'Edit {self.test_a.title}', self.browser.title)
         # they find the title box with the current assignment name already filled in
         title_input = self.browser.find_element(By.ID, 'a-title-input')
+        title_input.clear()
         # they change it to the right name
         title_input.send_keys('Make Google')
         # they change the date to next week
         due_date_input = self.browser.find_element(By.ID, 'a-due-date-input')
-        d8 = datetime.now()
-        due_date_input.send_keys(f'{d8.year}-{d8.month}-{d8.day} 12:12:12')
+        due_date_input.clear()
+        d8 = datetime(2023, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama'))  
+        new_date = d8.strftime("%Y-%m-%d %I:%M:%S")
+        due_date_input.send_keys(new_date)
         # satisfied, they click submit
         submit_btn = self.browser.find_element(By.ID, 'edit-a-submit')
         submit_btn.click()
@@ -103,10 +106,12 @@ class TestTeacherAssignment(BasicSeleniumTest):
         self.assertEqual(self.browser.title, self.c.title)
         edited_a = Assignment.objects.get(pk=self.test_a.pk)
         new_a = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}')
-        self.assertEqual(assignment.text, edited_a)
+        self.assertEqual(new_a.text, edited_a.title)
         # the due date is also updated to next week
         a_due_date = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}_due_date')
-        self.assertEqual(a_due_date, edited_a.due_date)
+        ass_due_date_string = edited_a.due_date.strftime("%Y-%m-%d %I:%M:%S")
+        self.assertEqual(new_date, ass_due_date_string)
+        self.assertEqual(a_due_date.text, ass_due_date_string)
         # satisfied, they log off
 
     

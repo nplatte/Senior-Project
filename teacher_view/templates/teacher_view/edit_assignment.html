@@ -1,6 +1,10 @@
 {% extends 'teacher_view/navbar.html' %}
 {% load static %}
 
+{% block title %}
+<title>Edit {{ assignment.title }}</title>
+{% endblock %}
+
 {% block style %}
 <link rel="stylesheet" type="text/css"
         href="{% static 'teacher_view/css/assignment.css' %}">
@@ -12,7 +16,7 @@
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" name="submit">
+    <input type="submit" name="submit" id="edit-a-submit">
     <input type="submit" name="delete" value="Delete Assignment">
 </form>
 

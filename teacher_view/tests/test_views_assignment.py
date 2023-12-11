@@ -129,7 +129,7 @@ class TestEditAssignmentPOST(TestCase):
         self.data = {
             'title': 'dont make Google',
             'description': 'its evil',
-            'due_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            'due_date': datetime(2024, 1, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
             'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
             'course': self.c.pk
         }
@@ -144,6 +144,7 @@ class TestEditAssignmentPOST(TestCase):
         self.a = Assignment.objects.get(pk=self.a.pk)
         self.assertEqual(self.a.title, 'dont make Google')
         self.assertEqual(self.a.description, 'its evil')
+        self.assertEqual(self.data['due_date'].strftime("%Y-%m-%d %I:%M:%S"), self.a.due_date.strftime("%Y-%m-%d %I:%M:%S"))
 
     def test_redirects_course_page_on_POST(self):
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)

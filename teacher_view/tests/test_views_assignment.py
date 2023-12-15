@@ -7,6 +7,9 @@ import zoneinfo
 from teacher_view.forms import AssignmentForm
 
 
+TZ = 'America/New_York'
+
+
 def _add_staff_user():
     test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
     staff_group = Group.objects.create(name='staff')
@@ -90,8 +93,8 @@ class TestEditAssignmentGET(TestCase):
         self.a = Assignment.objects.create(
             title='Make Goog',
             description='make Google please',
-            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
             course=self.c
         )
         self.response = self.client.get(reverse('staff_edit_assignment_page', kwargs={'assignment_id':self.a.pk}), follow=True)
@@ -122,15 +125,15 @@ class TestEditAssignmentPOST(TestCase):
         self.a = Assignment.objects.create(
             title='Make Goog',
             description='make Google please',
-            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
             course=self.c
         )
         self.data = {
             'title': 'dont make Google',
             'description': 'its evil',
-            'due_date': datetime(2024, 1, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            'due_date': datetime(2024, 1, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
             'course': self.c.pk
         }
         return super().setUp()
@@ -144,7 +147,8 @@ class TestEditAssignmentPOST(TestCase):
         self.a = Assignment.objects.get(pk=self.a.pk)
         self.assertEqual(self.a.title, 'dont make Google')
         self.assertEqual(self.a.description, 'its evil')
-        self.assertEqual(self.data['due_date'].strftime("%Y-%m-%d %I:%M:%S"), self.a.due_date.strftime("%Y-%m-%d %I:%M:%S"))
+        new_date = datetime(2024, 1, 31, 17, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC'))
+        self.assertEqual(new_date.strftime("%Y-%m-%d %H:%M:%S"), self.a.due_date.strftime("%Y-%m-%d %H:%M:%S"))
 
     def test_redirects_course_page_on_POST(self):
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
@@ -153,6 +157,7 @@ class TestEditAssignmentPOST(TestCase):
     def test_assignment_redirects_to_correct_course_page_on_POST(self):
         new_course = _make_class(self.test_user, 'Make Yahoo')
         self.data['course'] = new_course.pk
+        
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
         self.assertRedirects(response, reverse('staff_course_page', kwargs={'course_id': new_course.pk}))
 

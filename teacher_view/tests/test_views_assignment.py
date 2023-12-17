@@ -115,6 +115,12 @@ class TestEditAssignmentGET(TestCase):
         courses = self.response.context['current_courses']
         self.assertIn(c, courses)
 
+    def test_edit_assignment_uses_login_page(self):
+        self.client.logout()
+        response = self.client.get(reverse('staff_edit_assignment_page', kwargs={'assignment_id':self.a.pk}), follow=True)
+        self.assertTemplateNotUsed(response, 'teacher_view/edit_assignment.html')
+        self.assertTemplateUsed(response, 'login/login.html')
+
 
 class TestEditAssignmentPOST(TestCase):
 

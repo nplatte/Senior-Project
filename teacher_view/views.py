@@ -119,6 +119,7 @@ def add_assignment_page(request, course_id):
         context
     )
 
+@login_required()
 def edit_assignment_page(request, assignment_id):
     edit_ass = Assignment.objects.get(pk=assignment_id)
     current_classes = get_staff_classes(request.user)

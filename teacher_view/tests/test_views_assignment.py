@@ -153,8 +153,7 @@ class TestEditAssignmentPOST(TestCase):
         self.a = Assignment.objects.get(pk=self.a.pk)
         self.assertEqual(self.a.title, 'dont make Google')
         self.assertEqual(self.a.description, 'its evil')
-        new_date = datetime(2024, 1, 31, 17, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC'))
-        self.assertEqual(new_date.strftime("%Y-%m-%d %H:%M:%S"), self.a.due_date.strftime("%Y-%m-%d %H:%M:%S"))
+        self.assertEqual(1, len(Assignment.objects.all()))
 
     def test_redirects_course_page_on_POST(self):
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
@@ -167,3 +166,17 @@ class TestEditAssignmentPOST(TestCase):
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
         self.assertRedirects(response, reverse('staff_course_page', kwargs={'course_id': new_course.pk}))
 
+    def test_bad_post_does_not_redirect(self):
+        bad_data = {
+            'description': 'its evil',
+            'due_date': datetime(2024, 1, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            'course': self.c.pk
+        }
+        response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), bad_data)
+        self.assertTemplateUsed(response, 'teacher_view/edit_assignment.html')
+
+    def test_time_submitted_converted_to_UTC(self):
+        response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
+        utc_time = datetime(2024, 1, 31, 17, 12, 0)
+        self.assertEqual(utc_time.strftime("%Y-%m-%d %H:%M:%S"), self.a.due_date.strftime("%Y-%m-%d %H:%M:%S"))

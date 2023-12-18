@@ -10,6 +10,5 @@ urlpatterns = [
     path('course/<course_id>/edit', teacher_views.edit_course_page, name='staff_edit_course_page'), 
     path('course/<course_id>/', teacher_views.course_page, name='staff_course_page'),
     path('assignment/<course_id>/add', teacher_views.add_assignment_page, name='add_assignment'),
-    path('assignment/<assignment_id>/edit', teacher_views.edit_assignment_page, name='staff_edit_assignment_page'),
-    
+    path('assignment/<assignment_id>/edit', teacher_views.edit_assignment_page, name='staff_edit_assignment_page')    
 ]

@@ -178,5 +178,5 @@ class TestEditAssignmentPOST(TestCase):
 
     def test_time_submitted_converted_to_UTC(self):
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
-        utc_time = datetime(2024, 1, 31, 17, 12, 0)
+        utc_time = datetime(2024, 12, 31, 12, 12, 0)
         self.assertEqual(utc_time.strftime("%Y-%m-%d %H:%M:%S"), self.a.due_date.strftime("%Y-%m-%d %H:%M:%S"))

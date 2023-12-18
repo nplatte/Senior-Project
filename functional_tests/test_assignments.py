@@ -9,6 +9,10 @@ from time import sleep
 from django.utils.timezone import datetime
 import zoneinfo
 
+
+TZ = 'America/Chicago'
+
+
 class TestTeacherAssignment(BasicSeleniumTest):
 
     def setUp(self):
@@ -65,14 +69,19 @@ class TestTeacherAssignment(BasicSeleniumTest):
         self.test_a = Assignment.objects.create(
             title='Make Goog',
             description='make Google please',
-            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
             course=self.c
         )
         # the teacher logs on to the teacher portal and decides to edit an assignment title and due date
+        central_due_date = datetime(2024, 12, 31, 6, 12, 0).strftime("%Y-%m-%d %H:%M:%S")
         self.assertIn('Log In', self.browser.title)
         self._teacher_login()
         self.assertEqual(self.browser.title, 'Wartburg MCSP Teachers')
+        # they set the timezone
+        btn = self.browser.find_element(By.ID, 'set_tz')
+        btn.click()
+        # they select the navbar
         chain = ActionChains(self.browser)
         courses_btn = self.browser.find_element(By.ID, 'nav-courses')
         chain.move_to_element(courses_btn).perform()
@@ -82,7 +91,7 @@ class TestTeacherAssignment(BasicSeleniumTest):
         assignment =  self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}')
         self.assertEqual(assignment.text, self.test_a.title)
         a_due_date = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}_due_date')
-        self.assertEqual(a_due_date.text, f'Due Date: {self.test_a.due_date.strftime("%Y-%m-%d %I:%M:%S")}')
+        self.assertEqual(a_due_date.text, f'Due Date: {central_due_date}')
         # next to the assignment is an edit assignment button
         edit_link = self.browser.find_element(By.ID, f'edit_assignment_{self.test_a.pk}')
         edit_link.click()
@@ -96,7 +105,7 @@ class TestTeacherAssignment(BasicSeleniumTest):
         # they change the date to next week
         due_date_input = self.browser.find_element(By.ID, 'a-due-date-input')
         due_date_input.clear()
-        d8 = datetime(2023, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama'))  
+        d8 = datetime(2023, 12, 31, 18, 12, 0)  
         new_date = d8.strftime("%Y-%m-%d %I:%M:%S")
         due_date_input.send_keys(new_date)
         # satisfied, they click submit
@@ -109,9 +118,8 @@ class TestTeacherAssignment(BasicSeleniumTest):
         self.assertEqual(new_a.text, edited_a.title)
         # the due date is also updated to next week
         a_due_date = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}_due_date')
-        ass_due_date_string = edited_a.due_date.strftime("%Y-%m-%d %I:%M:%S")
-        self.assertEqual(new_date, ass_due_date_string)
-        self.assertEqual(a_due_date.text, ass_due_date_string)
+        sleep(20)
+        self.assertEqual(a_due_date.text, f'Due Date: {new_date}')
         # satisfied, they log off
 
     

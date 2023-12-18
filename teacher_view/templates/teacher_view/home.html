@@ -3,3 +3,18 @@
 {% block title %}
 <title>Wartburg MCSP Teachers</title>
 {% endblock %}
+
+{% block body %}
+{% load tz %}
+{% get_current_timezone as TIME_ZONE %}
+<form action="{% url 'staff_home_page' %}" method="POST">
+    {% csrf_token %}
+    <label for="timezone">Time zone:</label>
+    <select name="timezone">
+        {% for city, tz in timezones.items %}
+        <option value="{{ tz }}"{% if tz == TIME_ZONE %} selected{% endif %}>{{ city }}</option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Set" id="set_tz">
+</form>
+{% endblock %}

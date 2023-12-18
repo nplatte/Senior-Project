@@ -24,6 +24,21 @@ class TeacherView(views.View):
 class HomePageView(TeacherView):
 
     template = 'teacher_view/home.html'
+    common_timezones = {
+            "Chicago": "America/Chicago",
+            "New York": "America/New_York"
+        }
+    
+
+    def get(self, request, *args, **kwargs):
+        current_classes = get_staff_classes(request.user)
+        return render(request, self.template, {"timezones": self.common_timezones, 'current_courses': current_classes})
+
+    def post(self, request, *args, **kwargs):
+        current_classes = get_staff_classes(request.user)
+        request.session["django_timezone"] = request.POST["timezone"]
+        return render(request, self.template, {"timezones": self.common_timezones, 'current_courses': current_classes})
+
     
 
 class ProfilePageView(TeacherView):

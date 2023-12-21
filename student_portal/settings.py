@@ -57,7 +57,7 @@ MIDDLEWARE = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-ROOT_URLCONF = 'superlists.urls'
+ROOT_URLCONF = 'student_portal.urls'
 
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'superlists.wsgi.application'
+WSGI_APPLICATION = 'student_portal.wsgi.application'
 
 
 # Database

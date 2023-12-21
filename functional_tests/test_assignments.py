@@ -118,7 +118,6 @@ class TestTeacherAssignment(BasicSeleniumTest):
         self.assertEqual(new_a.text, edited_a.title)
         # the due date is also updated to next week
         a_due_date = self.browser.find_element(By.ID, f'assignment_{self.test_a.pk}_due_date')
-        sleep(20)
         self.assertEqual(a_due_date.text, f'Due Date: {new_date}')
         # satisfied, they log off
 

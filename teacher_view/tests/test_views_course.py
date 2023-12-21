@@ -33,7 +33,7 @@ class TestViewCoursePage(TestCase):
         return super().tearDown()
     
     def test_uses_right_template(self):
-        self.assertTemplateUsed(self.response, 'teacher_view/course_page.html')
+        self.assertTemplateUsed(self.response, 'teacher_view/course/view.html')
 
     def test_passes_navbar_information(self):
         cc = self.response.context['current_courses']
@@ -87,7 +87,7 @@ class TestAddCoursePage(TestCase):
 
     def test_page_uses_right_template(self):
         request = self.client.get(reverse('staff_add_course_page'), follow=True)
-        self.assertTemplateUsed(request, 'teacher_view/create_class.html')
+        self.assertTemplateUsed(request, 'teacher_view/course/create.html')
 
     def test_add_courses_passes_current_courses_to_navbar(self):
         new_course = _make_class(self.test_user)
@@ -154,7 +154,7 @@ class TestEditCoursePage(TestCase):
 
     def test_returns_right_html_page(self):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
-        self.assertTemplateUsed(request, 'teacher_view/edit_course.html')
+        self.assertTemplateUsed(request, 'teacher_view/course/edit.html')
 
     def test_pass_current_courses_to_navbar(self):
         request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
@@ -234,7 +234,7 @@ class TestCoursesViewPage(TestCase):
     
     def test_uses_right_template(self):
         response = self.client.get(reverse('staff_courses_page'))
-        self.assertTemplateUsed(response, 'teacher_view/courses.html')
+        self.assertTemplateUsed(response, 'teacher_view/course/courses.html')
 
     def test_passes_navbar_courses(self):
         request = self.client.get(reverse('staff_courses_page'))

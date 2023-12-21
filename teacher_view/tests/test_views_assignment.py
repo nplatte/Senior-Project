@@ -34,7 +34,7 @@ class TestCreateAssignmentPage(TestCase):
         return super().tearDown()
 
     def test_uses_right_template(self):
-        self.assertTemplateUsed(self.response, 'teacher_view/add_assignment.html')
+        self.assertTemplateUsed(self.response, 'teacher_view/assignment/create.html')
 
     def test_sends_navbar_information(self):
         c = Course.objects.get(pk=1)
@@ -81,7 +81,7 @@ class TestCreateAssignmentPOST(TestCase):
             'display_date': datetime(2024, 12, 31, 12, 12, 0)
         }
         response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data, follow=True)
-        self.assertTemplateUsed(response,'teacher_view/add_assignment.html')
+        self.assertTemplateUsed(response,'teacher_view/assignment/create.html')
 
 
 class TestEditAssignmentGET(TestCase):
@@ -104,7 +104,7 @@ class TestEditAssignmentGET(TestCase):
         return super().tearDown()
     
     def test_uses_right_template(self):
-        self.assertTemplateUsed(self.response, 'teacher_view/edit_assignment.html')
+        self.assertTemplateUsed(self.response, 'teacher_view/assignment/edit.html')
 
     def test_uses_right_form(self):
         edit_assignment_form = self.response.context['form']
@@ -118,7 +118,7 @@ class TestEditAssignmentGET(TestCase):
     def test_edit_assignment_uses_login_page(self):
         self.client.logout()
         response = self.client.get(reverse('staff_edit_assignment_page', kwargs={'assignment_id':self.a.pk}), follow=True)
-        self.assertTemplateNotUsed(response, 'teacher_view/edit_assignment.html')
+        self.assertTemplateNotUsed(response, 'teacher_view/assignment/edit.html')
         self.assertTemplateUsed(response, 'login/login.html')
 
 
@@ -174,7 +174,7 @@ class TestEditAssignmentPOST(TestCase):
             'course': self.c.pk
         }
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), bad_data)
-        self.assertTemplateUsed(response, 'teacher_view/edit_assignment.html')
+        self.assertTemplateUsed(response, 'teacher_view/assignment/edit.html')
 
     def test_time_submitted_converted_to_UTC(self):
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)

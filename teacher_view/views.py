@@ -55,7 +55,7 @@ def edit_course_page(request, course_id):
         if form.is_valid():
             form.save()
             return redirect(reverse('staff_course_page', kwargs={'course_id': course.pk}))
-    return render(request, 'teacher_view/edit_course.html', {
+    return render(request, 'teacher_view/course/edit.html', {
         'current_courses': current_classes,
         'course': course,
         'edit_form': EditCourseForm(instance=course)
@@ -71,7 +71,7 @@ def add_course_page(request):
             return redirect(course_page, course_id=new_course.pk)
     else:
         file_form = CourseModelFileForm()
-    return render(request, 'teacher_view/create_class.html', 
+    return render(request, 'teacher_view/course/create.html', 
     {'current_courses' : current_classes,
      'file_form': file_form
         })
@@ -79,7 +79,7 @@ def add_course_page(request):
 def courses_page(request):
     all_staff_courses = Course.objects.filter(course_instructor=request.user)
     current_courses = get_staff_classes(request.user)
-    return render(request, 'teacher_view/courses.html', {
+    return render(request, 'teacher_view/course/courses.html', {
         'all_courses': all_staff_courses,
         'current_courses': current_courses
     })
@@ -99,7 +99,7 @@ def course_page(request, course_id):
         course=current_course, 
         ).order_by('-due_date').reverse()
     course_students = Student.objects.filter(enrolled_students=current_course)
-    return render(request, 'teacher_view/course_page.html', 
+    return render(request, 'teacher_view/course/view.html', 
     {'current_courses' : current_classes,
     'current_course' : current_course,
     'assignments': assignments,
@@ -112,7 +112,7 @@ def grade_course_page(request, course_title):
     current_classes = get_staff_classes(request.user)
     current_course = current_classes.get(title=course_title)
     course_grades = Grade.objects.filter(course=current_course)
-    return render(request, 'teacher_view/grade_course.html',
+    return render(request, 'teacher_view/course/grade_course.html',
     {'current_courses' : current_classes,
     'student_grades' : course_grades, 
     })
@@ -130,7 +130,7 @@ def add_assignment_page(request, course_id):
         'assignment_form': form
     }
     return render(
-        request, 'teacher_view/add_assignment.html',
+        request, 'teacher_view/assignment/create.html',
         context
     )
 
@@ -144,7 +144,7 @@ def edit_assignment_page(request, assignment_id):
         if form.is_valid():
             form.save()
             return redirect(reverse('staff_course_page', kwargs={'course_id':edit_ass.course.pk}))
-    return render(request, 'teacher_view/edit_assignment.html',
+    return render(request, 'teacher_view/assignment/edit.html',
     {'current_courses' : current_classes,
     'assignment' : edit_ass,
     'form': form

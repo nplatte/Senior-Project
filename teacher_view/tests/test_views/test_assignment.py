@@ -47,7 +47,7 @@ class TestCreateAssignmentPOST(ViewTest):
 
     def test_good_form_redirects_to_course_page(self):
         response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data, follow=True)
-        self.assertRedirects(response, '/teacher/course/1/')
+        self.assertRedirects(response, f'/teacher/course/{self.c.pk}/')
 
     def test_good_form_makes_new_assignment(self):
         a_list = Assignment.objects.all()
@@ -153,6 +153,6 @@ class TestEditAssignmentPOST(ViewTest):
         self.assertTemplateUsed(response, 'teacher_view/assignment/edit.html')
 
     def test_time_submitted_converted_to_UTC(self):
-        response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
+        self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
         utc_time = datetime(2024, 12, 31, 12, 12, 0)
         self.assertEqual(utc_time.strftime("%Y-%m-%d %H:%M:%S"), self.a.due_date.strftime("%Y-%m-%d %H:%M:%S"))

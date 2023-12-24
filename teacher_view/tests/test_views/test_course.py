@@ -1,7 +1,6 @@
 from django.urls import reverse
 from teacher_view.models import Course, Assignment
 from teacher_view.forms import CourseModelFileForm, EditCourseForm
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.utils.timezone import datetime
 from os import getcwd, remove, path
 from zoneinfo import ZoneInfo
@@ -96,6 +95,9 @@ class TestAddCoursePagePOST(ViewTest):
         return super().setUp()
     
     def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
         return super().tearDown()
 
     def test_file_upload_form_redirects_to_new_course_page(self):

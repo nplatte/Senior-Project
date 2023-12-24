@@ -1,32 +1,19 @@
-from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User, Group
 from teacher_view.models import Course, Assignment
 from teacher_view.forms import CourseModelFileForm, EditCourseForm
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.utils.timezone import datetime
 from os import getcwd, remove, path
-import zoneinfo
-
-def _add_staff_user():
-    test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
-    staff_group = Group.objects.create(name='staff')
-    staff_group.user_set.add(test_user)
-    return test_user
-
-def _make_class(user, title='test course'):
-    term = f'2023 Fall Term'
-    return Course.objects.create(title=title, course_instructor = user, term=term)
+from zoneinfo import ZoneInfo
+from .inherit import ViewTest
 
 
-class TestViewCoursePage(TestCase):
+
+class TestViewCoursePage(ViewTest):
 
     def setUp(self) -> None:
-        self.test_user = _add_staff_user()
-        self.client.force_login(self.test_user)
-        self.c = _make_class(self.test_user)
+        super().setUp()
         self.response = self.client.get(reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
-        return super().setUp()
     
     def tearDown(self) -> None:
         return super().tearDown()
@@ -46,19 +33,19 @@ class TestViewCoursePage(TestCase):
         self.assertEqual(len(assignments), 0)
 
     def test_does_not_pass_other_course_assignments(self):
-        c2 = _make_class(self.test_user, 'class 2')
+        c2 = self._make_course(self.test_user, 'class 2')
         a1 = Assignment.objects.create(
             title='Make Google',
             description='make Google please',
-            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key='America/Panama')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key='America/Panama')),
             course=self.c
         )
         a2 = Assignment.objects.create(
             title='Make Google 2',
             description='make Google please 2',
-            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key='America/Panama')),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key='America/Panama')),
             course=c2
         )
         response = self.client.get(reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
@@ -67,11 +54,10 @@ class TestViewCoursePage(TestCase):
         self.assertNotIn(a2, a_list)
 
 
-class TestAddCoursePage(TestCase):
+class TestAddCoursePage(ViewTest):
 
     def setUp(self):
-        self.test_user = _add_staff_user()
-        self.client.force_login(self.test_user)
+        super().setUp()
 
     def tearDown(self) -> None:
         upload_file = f'{getcwd()}\\class_htmls\\CS_220_May.xls'
@@ -89,7 +75,7 @@ class TestAddCoursePage(TestCase):
         self.assertTemplateUsed(request, 'teacher_view/course/create.html')
 
     def test_add_courses_passes_current_courses_to_navbar(self):
-        new_course = _make_class(self.test_user)
+        new_course = self._make_course(self.test_user)
         request = self.client.get(reverse('staff_add_course_page'))
         courses = request.context['current_courses']
         self.assertIn(new_course, courses)
@@ -121,29 +107,10 @@ class TestAddCoursePage(TestCase):
         self.assertEqual(1, courses)
 
 
-class TestEditCoursePage(TestCase):
+class TestEditCoursePage(ViewTest):
 
     def setUp(self):
-        self.test_user = _add_staff_user()
-        self.client.force_login(self.test_user)
-        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
-        file = open(f'{self.base_path}\\CS_260.xls')
-        imf = InMemoryUploadedFile(
-            file=file,
-            field_name='source_file',
-            name='CS_260.xls',
-            content_type='application/vnd.ms-excel',
-            size=14054,
-            charset=None,
-            content_type_extra={}
-        )
-        self.c = Course.objects.create(
-            source_file=imf,
-            code='CS 260 01',
-            title='Introduction to Comp',
-            term='2024 May Term',
-            course_instructor=self.test_user
-        )
+        super().setUp()
     
     def tearDown(self) -> None:
         upload_dir = f'{getcwd()}\\class_htmls'
@@ -203,11 +170,10 @@ class TestEditCoursePage(TestCase):
         self.assertEqual(data['title'], c.title)
 
 
-class TestCoursesViewPage(TestCase):
+class TestCoursesViewPage(ViewTest):
 
     def setUp(self) -> None:
-        self.test_user = _add_staff_user()
-        self.client.force_login(self.test_user)
+        super().setUp()
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
         file = open(f'{self.base_path}\\CS_260.xls')
         imf = InMemoryUploadedFile(
@@ -226,7 +192,6 @@ class TestCoursesViewPage(TestCase):
             term='2024 May Term',
             course_instructor=self.test_user
         )
-        return super().setUp()
     
     def tearDown(self) -> None:
         upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'

@@ -5,7 +5,7 @@ from teacher_view.models import Course
 from os import getcwd, remove, path
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.contrib.auth.models import User
-import zoneinfo
+from zoneinfo import ZoneInfo
 
 class TestCourseModelFileForm(TestCase):
 
@@ -126,8 +126,8 @@ class TestAssignmentForm(TestCase):
         self.data = {
             'title': 'Test Assignment',
             'description': 'this is bout the assignment',
-            'due_date': datetime(2024, 12, 30, 12, 12, 1, tzinfo=zoneinfo.ZoneInfo(key='America/Panama')),
-            'display_date': datetime(2024, 12, 23, 12, 12, 1, tzinfo=zoneinfo.ZoneInfo(key='America/Panama'))
+            'due_date': datetime(2024, 12, 30, 12, 12, 1, tzinfo=ZoneInfo(key='America/Panama')),
+            'display_date': datetime(2024, 12, 23, 12, 12, 1, tzinfo=ZoneInfo(key='America/Panama'))
         }
         return super().setUp()
     

@@ -1,34 +1,19 @@
-from django.test import TestCase
 from django.urls import reverse
-from django.contrib.auth.models import User, Group
 from teacher_view.models import Course, Assignment
 from django.utils.timezone import datetime
-import zoneinfo
+from zoneinfo import ZoneInfo
 from teacher_view.forms import AssignmentForm
+from .inherit import ViewTest
 
 
 TZ = 'America/New_York'
 
 
-def _add_staff_user():
-    test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
-    staff_group = Group.objects.create(name='staff')
-    staff_group.user_set.add(test_user)
-    return test_user
-
-def _make_class(user, title='test course'):
-    term = f'2023 Fall Term'
-    return Course.objects.create(title=title, course_instructor = user, term=term)
-
-
-class TestCreateAssignmentPage(TestCase):
+class TestCreateAssignmentPage(ViewTest):
     
     def setUp(self) -> None:
-        self.test_user = _add_staff_user()
-        self.c = _make_class(self.test_user)
-        self.client.force_login(self.test_user)
+        super().setUp()
         self.response = self.client.get(reverse('add_assignment', kwargs={'course_id':self.c.pk}))
-        return super().setUp()
 
     def tearDown(self) -> None:
         return super().tearDown()
@@ -46,19 +31,16 @@ class TestCreateAssignmentPage(TestCase):
         self.assertIsInstance(form, AssignmentForm)
 
 
-class TestCreateAssignmentPOST(TestCase):
+class TestCreateAssignmentPOST(ViewTest):
 
     def setUp(self) -> None:
-        self.test_user = _add_staff_user()
-        self.client.force_login(self.test_user)
-        self.c = _make_class(self.test_user)
+        super().setUp()
         self.data = {
             'title': 'make Google',
             'description': 'make google please',
             'due_date': datetime.now(),
             'display_date': datetime(2024, 12, 31, 12, 12, 0)
         }
-        return super().setUp()
     
     def tearDown(self) -> None:
         return super().tearDown()
@@ -84,21 +66,18 @@ class TestCreateAssignmentPOST(TestCase):
         self.assertTemplateUsed(response,'teacher_view/assignment/create.html')
 
 
-class TestEditAssignmentGET(TestCase):
+class TestEditAssignmentGET(ViewTest):
 
     def setUp(self) -> None:
-        self.test_user = _add_staff_user()
-        self.client.force_login(self.test_user)
-        self.c = _make_class(self.test_user)
+        super().setUp()
         self.a = Assignment.objects.create(
             title='Make Goog',
             description='make Google please',
-            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
-            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key=TZ)),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key=TZ)),
             course=self.c
         )
         self.response = self.client.get(reverse('staff_edit_assignment_page', kwargs={'assignment_id':self.a.pk}), follow=True)
-        return super().setUp()
     
     def tearDown(self) -> None:
         return super().tearDown()
@@ -122,27 +101,24 @@ class TestEditAssignmentGET(TestCase):
         self.assertTemplateUsed(response, 'login/login.html')
 
 
-class TestEditAssignmentPOST(TestCase):
+class TestEditAssignmentPOST(ViewTest):
 
     def setUp(self) -> None:
-        self.test_user = _add_staff_user()
-        self.client.force_login(self.test_user)
-        self.c = _make_class(self.test_user)
+        super().setUp()
         self.a = Assignment.objects.create(
             title='Make Goog',
             description='make Google please',
-            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
-            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            due_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key=TZ)),
+            display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key=TZ)),
             course=self.c
         )
         self.data = {
             'title': 'dont make Google',
             'description': 'its evil',
-            'due_date': datetime(2024, 1, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
-            'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            'due_date': datetime(2024, 1, 31, 12, 12, 0, tzinfo=ZoneInfo(key=TZ)),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key=TZ)),
             'course': self.c.pk
         }
-        return super().setUp()
     
     def tearDown(self) -> None:
         return super().tearDown()
@@ -160,7 +136,7 @@ class TestEditAssignmentPOST(TestCase):
         self.assertRedirects(response, reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
 
     def test_assignment_redirects_to_correct_course_page_on_POST(self):
-        new_course = _make_class(self.test_user, 'Make Yahoo')
+        new_course = self._make_course(self.test_user, 'Make Yahoo')
         self.data['course'] = new_course.pk
         
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
@@ -169,8 +145,8 @@ class TestEditAssignmentPOST(TestCase):
     def test_bad_post_does_not_redirect(self):
         bad_data = {
             'description': 'its evil',
-            'due_date': datetime(2024, 1, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
-            'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=zoneinfo.ZoneInfo(key=TZ)),
+            'due_date': datetime(2024, 1, 31, 12, 12, 0, tzinfo=ZoneInfo(key=TZ)),
+            'display_date': datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key=TZ)),
             'course': self.c.pk
         }
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), bad_data)

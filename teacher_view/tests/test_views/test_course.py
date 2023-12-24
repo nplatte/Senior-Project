@@ -8,7 +8,6 @@ from django.utils.timezone import datetime
 from os import getcwd, remove, path
 import zoneinfo
 
-
 def _add_staff_user():
     test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
     staff_group = Group.objects.create(name='staff')
@@ -230,6 +229,9 @@ class TestCoursesViewPage(TestCase):
         return super().setUp()
     
     def tearDown(self) -> None:
+        upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
+        if path.exists(upload_file):
+            remove(upload_file)
         return super().tearDown()
     
     def test_uses_right_template(self):

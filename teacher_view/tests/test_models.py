@@ -6,7 +6,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.urls import reverse
 
 
-'''class TestStudentModel(TestCase):
+class TestStudentModel(TestCase):
 
     def setUp(self):
         self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
@@ -63,7 +63,7 @@ class TestAssignmentModel(TestCase):
         self.test_assignment.title = 'Make List'
         self.test_assignment.description = 'List description'
         self.assertEqual(self.test_assignment.title, 'Make List')
-        self.assertEqual(self.test_assignment.description, 'List description')'''
+        self.assertEqual(self.test_assignment.description, 'List description')
 
 
 class TestCourseModel(TestCase):

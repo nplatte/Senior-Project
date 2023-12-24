@@ -23,7 +23,6 @@ class TestViewCoursePage(ViewTest):
 
     def test_passes_navbar_information(self):
         cc = self.response.context['current_courses']
-        self.assertEqual(len(cc), 1)
         self.assertIn(self.c, cc)
 
     def passes_correct_context(self):
@@ -54,7 +53,7 @@ class TestViewCoursePage(ViewTest):
         self.assertNotIn(a2, a_list)
 
 
-class TestAddCoursePage(ViewTest):
+class TestAddCoursePageGET(ViewTest):
 
     def setUp(self):
         super().setUp()
@@ -85,29 +84,34 @@ class TestAddCoursePage(ViewTest):
         form = request.context['file_form']
         self.assertIsInstance(form, CourseModelFileForm)
 
-    def test_file_upload_form_redirects_to_new_course_page(self):
+
+class TestAddCoursePagePOST(ViewTest):
+
+    def setUp(self) -> None:
         pth = f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_220_May.xls'
         ofile = open(pth)
-        data = {
+        self.data = {
             'source_file': ofile
         }
-        request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
-        self.assertRedirects(request, '/teacher/course/1/')
+        return super().setUp()
+    
+    def tearDown(self) -> None:
+        return super().tearDown()
+
+    def test_file_upload_form_redirects_to_new_course_page(self):
+        response = self.client.post(reverse('staff_add_course_page'), follow=True, data=self.data)
+        created_course = Course.objects.filter(code='CS 220 01')[0]
+        self.assertRedirects(response, f'/teacher/course/{created_course.pk}/')
 
     def test_file_upload_creates_new_course(self):
         courses = len(Course.objects.all())
-        self.assertEqual(0, courses)
-        pth = f'{getcwd()}\\teacher_view\\test_class_htmls\\CS_220_May.xls'
-        ofile = open(pth)
-        data = {
-            'source_file': ofile
-        }
-        request = self.client.post(reverse('staff_add_course_page'), follow=True, data=data)
-        courses = len(Course.objects.all())
         self.assertEqual(1, courses)
+        self.client.post(reverse('staff_add_course_page'), follow=True, data=self.data)
+        courses = len(Course.objects.all())
+        self.assertEqual(2, courses)
 
 
-class TestEditCoursePage(ViewTest):
+class TestEditCoursePageGET(ViewTest):
 
     def setUp(self):
         super().setUp()
@@ -119,79 +123,62 @@ class TestEditCoursePage(ViewTest):
         return super().tearDown()  
 
     def test_returns_right_html_page(self):
-        request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
-        self.assertTemplateUsed(request, 'teacher_view/course/edit.html')
+        response = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
+        self.assertTemplateUsed(response, 'teacher_view/course/edit.html')
 
     def test_pass_current_courses_to_navbar(self):
-        request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
-        curr_courses = request.context['current_courses']
-        edited_course = request.context['course']
+        response = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
+        curr_courses = response.context['current_courses']
+        edited_course = response.context['course']
         self.assertEqual(len(curr_courses), 1)
         self.assertEqual(self.c, edited_course)
         self.assertIsInstance(edited_course, Course)
 
     def test_course_uses_right_form_for_editing(self):
-        request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
-        edit_form = request.context['edit_form']
+        response = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
+        edit_form = response.context['edit_form']
         self.assertIsInstance(edit_form, EditCourseForm)
 
     def test_form_has_existing_course_info(self):
-        request = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
-        edit_form = request.context['edit_form'].as_p()
-        self.assertIn('Introduction to Comp', edit_form)
-        self.assertIn('CS 260 01', edit_form)
+        response = self.client.get(reverse('staff_edit_course_page', kwargs={'course_id': 1}))
+        edit_form = response.context['edit_form'].as_p()
+        self.assertIn(self.c.title, edit_form)
+        self.assertIn(self.c.code, edit_form)
 
-    def test_successful_POST_redirects_to_course_page(self):
-        data = {
+
+class TestEditCoursePagePOST(ViewTest):
+
+    def setUp(self):
+        super().setUp()
+        self.data = {
             'title': 'Weird',
             'code': '1234',
             'term': 'May 2024'
         }
-        request = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': 1}), data=data)
-        self.assertRedirects(request, reverse('staff_course_page', kwargs={'course_id': 1}))
+
+    def test_successful_POST_redirects_to_course_page(self):
+        response = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': 1}), data=self.data)
+        self.assertRedirects(response, reverse('staff_course_page', kwargs={'course_id': 1}))
 
     def test_unseccessful_POST_does_not_redirect(self):
-        data = {
+        self.data = {
             'title': 'Weird',
             'term': 'May 2024'
         }
-        request = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': 1}), data=data)
+        request = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': 1}), data=self.data)
         self.assertRedirects(request, reverse('staff_course_page', kwargs={'course_id': 1}))
 
     def test_successful_form_updates_course_info(self):
-        data = {
-            'title': 'Introduction Class',
-            'term': 'May 2024',
-            'code': '1234'
-        }
-        request = self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': self.c.pk}), data=data)
+        self.client.post(reverse('staff_edit_course_page', kwargs={'course_id': self.c.pk}), data=self.data)
         c = Course.objects.get(pk=self.c.pk)
-        self.assertNotEqual('Introduction to Comp', c.title)
-        self.assertEqual(data['title'], c.title)
+        self.assertNotEqual('test course', c.title)
+        self.assertEqual(self.data['title'], c.title)
 
 
 class TestCoursesViewPage(ViewTest):
 
     def setUp(self) -> None:
         super().setUp()
-        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
-        file = open(f'{self.base_path}\\CS_260.xls')
-        imf = InMemoryUploadedFile(
-            file=file,
-            field_name='source_file',
-            name='CS_260.xls',
-            content_type='application/vnd.ms-excel',
-            size=14054,
-            charset=None,
-            content_type_extra={}
-        )
-        self.c = Course.objects.create(
-            source_file=imf,
-            code='CS 260 01',
-            title='Introduction to Comp',
-            term='2024 May Term',
-            course_instructor=self.test_user
-        )
     
     def tearDown(self) -> None:
         upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'

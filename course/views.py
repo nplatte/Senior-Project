@@ -27,16 +27,16 @@ def find_terms():
 @login_required()
 def edit_course_page(request, course_id):
     current_classes = get_staff_classes(request.user)
-    course = Course.objects.get(pk=course_id)
+    edited_course = Course.objects.get(pk=course_id)
     if request.method == 'POST':
-        form = EditCourseForm(request.POST, instance=course)
+        form = EditCourseForm(request.POST, instance=edited_course)
         if form.is_valid():
             form.save()
-            return redirect(reverse('staff_course_page', kwargs={'course_id': course.pk}))
+            return redirect(edited_course.get_absolute_url())
     return render(request, 'teacher_view/course/edit.html', {
         'current_courses': current_classes,
-        'course': course,
-        'edit_form': EditCourseForm(instance=course)
+        'course': edited_course,
+        'edit_form': EditCourseForm(instance=edited_course)
     })
 
 @login_required()
@@ -46,7 +46,7 @@ def add_course_page(request):
         file_form = CourseModelFileForm(request.POST, request.FILES)
         if file_form.is_valid():
             new_course = file_form.save()
-            return redirect(course_page, course_id=new_course.pk)
+            return redirect(new_course.get_absolute_url(), course_id=new_course.pk)
     else:
         file_form = CourseModelFileForm()
     return render(request, 'teacher_view/course/create.html', 

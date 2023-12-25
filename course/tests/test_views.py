@@ -70,7 +70,7 @@ class TestViewCoursePage(ViewTest):
             display_date=datetime(2024, 12, 31, 12, 12, 0, tzinfo=ZoneInfo(key='America/Panama')),
             course=c2
         )
-        response = self.client.get(reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
+        response = self.client.get(reverse('view_course_page', kwargs={'course_id': self.c.pk}))
         a_list = response.context['assignments']
         self.assertIn(a1, a_list)
         self.assertNotIn(a2, a_list)
@@ -196,8 +196,9 @@ class TestEditCoursePagePOST(ViewTest):
             'title': 'Weird',
             'term': 'May 2024'
         }
-        request = self.client.post(self.url, data=self.data)
-        self.assertRedirects(request, self.url)
+        response = self.client.post(self.url, data=self.data)
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed('teacher_view/course/edit.html')
 
     def test_successful_form_updates_course_info(self):
         self.client.post(self.url, data=self.data)

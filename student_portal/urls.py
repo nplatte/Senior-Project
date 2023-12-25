@@ -17,10 +17,13 @@ Including another URLconf
 from django.urls import path, include
 from django.contrib import admin
 from teacher_view import urls as teacher_urls
+from course import urls as course_urls
 from login import views as login_views
 
 urlpatterns = [
     path('', login_views.login_page, name='login_page'),
     path('admin/', admin.site.urls),
+    path('course/', include(course_urls)),
     path('teacher/', include(teacher_urls)),
+    
 ]

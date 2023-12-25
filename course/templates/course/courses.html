@@ -9,7 +9,7 @@
 {% block body %}
 {% for c in all_courses %}
 <div class="course_container">
-    <a href="{% url 'staff_course_page' course_id=c.pk %}">{{ c.title }}</a>
+    <a href="{% url 'view_course_page' course_id=c.pk %}">{{ c.title }}</a>
 </div>
 {% endfor %}
 {% endblock %}

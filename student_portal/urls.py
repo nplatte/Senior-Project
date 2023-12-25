@@ -19,11 +19,13 @@ from django.contrib import admin
 from teacher_view import urls as teacher_urls
 from course import urls as course_urls
 from login import views as login_views
+from assignment import urls as assignment_urls
 
 urlpatterns = [
     path('', login_views.login_page, name='login_page'),
     path('admin/', admin.site.urls),
     path('course/', include(course_urls)),
     path('teacher/', include(teacher_urls)),
+    path('assignment/', include(assignment_urls))
     
 ]

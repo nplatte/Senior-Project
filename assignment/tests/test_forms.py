@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.utils.timezone import datetime
-from teacher_view.forms import AssignmentForm
+from assignment.forms import AssignmentForm
 from zoneinfo import ZoneInfo
         
 

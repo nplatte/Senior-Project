@@ -1,5 +1,5 @@
 from django.test import TestCase
-from teacher_view.models import Assignment
+from assignment.models import Assignment
 from os import getcwd
 
 

@@ -1,6 +1,6 @@
 from django import forms
 from django import forms
-from teacher_view.models import Assignment
+from assignment.models import Assignment
 
 
 class AssignmentForm(forms.ModelForm):

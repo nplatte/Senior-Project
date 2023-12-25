@@ -42,7 +42,7 @@ class TestViewCoursePage(ViewTest):
         return super().tearDown()
     
     def test_uses_right_template(self):
-        self.assertTemplateUsed(self.response, 'teacher_view/course/view.html')
+        self.assertTemplateUsed(self.response, 'course/view.html')
 
     def test_passes_navbar_information(self):
         cc = self.response.context['current_courses']
@@ -95,7 +95,7 @@ class TestAddCoursePageGET(ViewTest):
 
     def test_page_uses_right_template(self):
         request = self.client.get(self.url, follow=True)
-        self.assertTemplateUsed(request, 'teacher_view/course/create.html')
+        self.assertTemplateUsed(request, 'course/create.html')
 
     def test_add_courses_passes_current_courses_to_navbar(self):
         new_course = self._make_course(self.test_user)
@@ -153,7 +153,7 @@ class TestEditCoursePageGET(ViewTest):
 
     def test_returns_right_html_page(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, 'teacher_view/course/edit.html')
+        self.assertTemplateUsed(response, 'course/edit.html')
 
     def test_pass_current_courses_to_navbar(self):
         response = self.client.get(self.url)
@@ -198,7 +198,7 @@ class TestEditCoursePagePOST(ViewTest):
         }
         response = self.client.post(self.url, data=self.data)
         self.assertEqual(200, response.status_code)
-        self.assertTemplateUsed('teacher_view/course/edit.html')
+        self.assertTemplateUsed('course/edit.html')
 
     def test_successful_form_updates_course_info(self):
         self.client.post(self.url, data=self.data)
@@ -221,7 +221,7 @@ class TestCoursesViewPage(ViewTest):
     
     def test_uses_right_template(self):
         response = self.client.get(self.url)
-        self.assertTemplateUsed(response, 'teacher_view/course/courses.html')
+        self.assertTemplateUsed(response, 'course/courses.html')
 
     def test_passes_navbar_courses(self):
         request = self.client.get(self.url)

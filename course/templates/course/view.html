@@ -1,0 +1,48 @@
+{% extends 'teacher_view/navbar.html' %}
+{% load static %}
+
+{% block title %}
+<title>{{ current_course.title }}</title>
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'staff_edit_course_page' course_id=current_course.pk %}" id="edit-course-link">Edit Course</a>
+<h2 id="course-title">{{ current_course.title }}</h2>
+<h2>Upcoming Assingments</h2>
+{% for a in assignments %}
+<div class = assignment_container>
+    <a class="assignment" id="assignment_{{ a.pk }}"> {{ a.title }}</a>
+    <p id="assignment_{{ a.pk }}_due_date">Due Date: {{ a.due_date|date:"Y-m-d H:i:s" }}</p>
+    <a href="{% url 'staff_edit_assignment_page' assignment_id=a.pk %}" id="edit_assignment_{{ a.pk }}">Edit {{ a.title }}</a>
+</div>
+{% endfor %}
+<div class = assignment_container>
+    <a class="assignment" href="{% url 'add_assignment' current_course.pk %}" id="create-assignment-link"> Create Assignment</a>
+</div>
+
+<h2>Students</h2>
+{% for student in students %}
+<div class = student_container>
+    <p class = student> {{ student.name }}: {{ student.number }}</p>
+</div>
+{% endfor %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" name=student_id placeholder="Student ID Number">
+    <input type="submit" name=submit value="Add Student">
+    <input type="submit" name="delete" value="Delete Student">
+</form>
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css"
+href="{% static 'teacher_view/css/navbar.css' %}">
+<link rel="stylesheet" type="text/css"
+href="{% static 'student_view/css/assignments.css' %}">
+<link rel="stylesheet" type="text/css"
+href="{% static 'teacher_view/css/students.css' %}">
+{% endblock %}
+
+{% block script %}
+<script type = "text/javascript" src = "{% static 'student_view/js/assignments.js' %}" ></script>
+{% endblock %}

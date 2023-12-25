@@ -1,4 +1,4 @@
-from teacher_view.models import Assignment
+from assignment.models import Assignment
 from django.urls import reverse
 from course.models import Course
 from course.forms import CourseModelFileForm, EditCourseForm

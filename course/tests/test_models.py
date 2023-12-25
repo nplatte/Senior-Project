@@ -4,7 +4,6 @@ from os import getcwd, path, remove
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.urls import reverse
-from teacher_view.models import Assignment
 
 
 '''class TestStudentModel(TestCase):
@@ -48,23 +47,6 @@ from teacher_view.models import Assignment
 
     def test_student_has_account(self):
         self.assertEqual(User.objects.all().count(), 17)'''
-
-
-class TestAssignmentModel(TestCase):
-
-    def setUp(self):
-        self.test_assignment = Assignment()
-        self.test_assignment.save()
-        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
-
-    def tearDown(self):
-        pass
-
-    def test_assignment_has_title_and_body(self):
-        self.test_assignment.title = 'Make List'
-        self.test_assignment.description = 'List description'
-        self.assertEqual(self.test_assignment.title, 'Make List')
-        self.assertEqual(self.test_assignment.description, 'List description')
 
 
 class TestCourseModel(TestCase):

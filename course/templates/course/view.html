@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<a href="{% url 'staff_edit_course_page' course_id=current_course.pk %}" id="edit-course-link">Edit Course</a>
+<a href="{% url 'edit_course_page' course_id=current_course.pk %}" id="edit-course-link">Edit Course</a>
 <h2 id="course-title">{{ current_course.title }}</h2>
 <h2>Upcoming Assingments</h2>
 {% for a in assignments %}

@@ -46,6 +46,6 @@ class Course(models.Model):
     instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True, related_name='instructor')
 
     def get_absolute_url(self):
-        return reverse('staff_course_page', kwargs={'course_id': self.pk})
+        return reverse('view_course_page', kwargs={'course_id': self.pk})
 
   

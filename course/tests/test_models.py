@@ -1,9 +1,10 @@
 from django.test import TestCase
-from teacher_view.models import Course, Assignment, Student
+from course.models import Course, Student
 from os import getcwd, path, remove
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.urls import reverse
+from teacher_view.models import Assignment
 
 
 '''class TestStudentModel(TestCase):
@@ -106,4 +107,4 @@ class TestCourseModel(TestCase):
 
     def test_Course_model_has_correct_get_absolute_URL(self):
         url = self.test_class.get_absolute_url()
-        self.assertEqual(url, reverse('staff_course_page', kwargs={'course_id': self.test_class.pk}))
+        self.assertEqual(url, reverse('view_course_page', kwargs={'course_id': self.test_class.pk}))

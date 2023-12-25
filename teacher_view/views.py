@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from teacher_view.models import Assignment
-from .models import Grade
+from assignment.models import Assignment
 from datetime import date
-from teacher_view.forms import AssignmentForm
+from assignment.forms import AssignmentForm
 from django.contrib.auth.decorators import login_required
 from django import views
 from django.utils.decorators import method_decorator
@@ -45,42 +44,7 @@ class HomePageView(TeacherView):
 class ProfilePageView(TeacherView):
 
     template = "teacher_view/profile.html"
-
-
-
-def add_assignment_page(request, course_id):
-    if request.method == 'POST':
-        form = AssignmentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            c = Course.objects.get(pk=course_id)
-            return redirect(c.get_absolute_url(), course_id=course_id)
-    form = AssignmentForm()
-    current_classes = get_staff_classes(request.user)
-    context = {
-        'current_courses': current_classes,
-        'assignment_form': form
-    }
-    return render(
-        request, 'teacher_view/assignment/create.html',
-        context
-    )
-
-@login_required()
-def edit_assignment_page(request, assignment_id):
-    edit_ass = Assignment.objects.get(pk=assignment_id)
-    current_classes = get_staff_classes(request.user)
-    form = AssignmentForm(instance=edit_ass)
-    if request.method == 'POST':
-        form = AssignmentForm(request.POST, instance=edit_ass)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('view_course_page', kwargs={'course_id':edit_ass.course.pk}))
-    return render(request, 'teacher_view/assignment/edit.html',
-    {'current_courses' : current_classes,
-    'assignment' : edit_ass,
-    'form': form
-    })
+ 
 
 def get_staff_classes(user):
     terms = find_terms()
@@ -98,13 +62,7 @@ def find_terms():
         terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
         return terms
 
-def get_all_past_terms(request):
-    terms = find_terms()
-    user_courses = Course.objects.filter(instructor=request.user).exclude(term__in=terms).values('term')
-    past_terms = set( val for dic in user_courses for val in dic.values())
-    return past_terms
-
-def update_grades(request, title):
+'''def update_grades(request, title):
     terms = find_terms()
     current_course = Course.objects.get(title=title, term__in=terms)
     parsed_file = parse_grade_file(request.FILES["grade_file"])
@@ -129,4 +87,4 @@ def parse_grade_file(file):
         for entry in group:
             if entry in char_remove:
                 group.remove(entry)
-    return content_list[:-1]
+    return content_list[:-1]'''

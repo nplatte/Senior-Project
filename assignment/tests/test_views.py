@@ -20,7 +20,7 @@ class TestCreateAssignmentPage(ViewTest):
         return super().tearDown()
 
     def test_uses_right_template(self):
-        self.assertTemplateUsed(self.response, 'teacher_view/assignment/create.html')
+        self.assertTemplateUsed(self.response, 'assignment/create.html')
 
     def test_sends_navbar_information(self):
         c = Course.objects.get(pk=1)
@@ -66,7 +66,8 @@ class TestCreateAssignmentPOST(ViewTest):
             'display_date': datetime(2024, 12, 31, 12, 12, 0)
         }
         response = self.client.post(self.url, data=self.data, follow=True)
-        self.assertTemplateUsed(response,'teacher_view/assignment/create.html')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response,'assignment/create.html')
 
 
 class TestEditAssignmentGET(ViewTest):
@@ -87,7 +88,7 @@ class TestEditAssignmentGET(ViewTest):
         return super().tearDown()
     
     def test_uses_right_template(self):
-        self.assertTemplateUsed(self.response, 'teacher_view/assignment/edit.html')
+        self.assertTemplateUsed(self.response, 'assignment/edit.html')
 
     def test_uses_right_form(self):
         edit_assignment_form = self.response.context['form']
@@ -101,7 +102,7 @@ class TestEditAssignmentGET(ViewTest):
     def test_edit_assignment_uses_login_page(self):
         self.client.logout()
         response = self.client.get(self.url, follow=True)
-        self.assertTemplateNotUsed(response, 'teacher_view/assignment/edit.html')
+        self.assertTemplateNotUsed(response, 'assignment/edit.html')
         self.assertTemplateUsed(response, 'login/login.html')
 
 
@@ -138,14 +139,15 @@ class TestEditAssignmentPOST(ViewTest):
 
     def test_redirects_course_page_on_POST(self):
         response = self.client.post(self.url, self.data)
-        self.assertRedirects(response, reverse('view_course_page', kwargs={'course_id': self.c.pk}))
+        redirect_url = reverse('view_course_page', kwargs={'course_id': self.c.pk})
+        self.assertRedirects(response, redirect_url)
 
     def test_assignment_redirects_to_correct_course_page_on_POST(self):
         new_course = self._make_course(self.test_user, 'Make Yahoo')
         self.data['course'] = new_course.pk
-        
         response = self.client.post(self.url, self.data)
-        self.assertRedirects(response, reverse('view_course_page', kwargs={'course_id': new_course.pk}))
+        redirect_url = reverse('view_course_page', kwargs={'course_id': new_course.pk})
+        self.assertRedirects(response, redirect_url)
 
     def test_bad_post_does_not_redirect(self):
         bad_data = {
@@ -155,7 +157,8 @@ class TestEditAssignmentPOST(ViewTest):
             'course': self.c.pk
         }
         response = self.client.post(self.url, bad_data)
-        self.assertTemplateUsed(response, 'teacher_view/assignment/edit.html')
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'assignment/edit.html')
 
     def test_time_submitted_converted_to_UTC(self):
         self.client.post(self.url, self.data)

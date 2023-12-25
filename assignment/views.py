@@ -36,7 +36,7 @@ def add_assignment_page(request, course_id):
         'assignment_form': form
     }
     return render(
-        request, 'teacher_view/assignment/create.html',
+        request, 'assignment/create.html',
         context
     )
 
@@ -50,7 +50,7 @@ def edit_assignment_page(request, assignment_id):
         if form.is_valid():
             form.save()
             return redirect(reverse('view_course_page', kwargs={'course_id':edit_ass.course.pk}))
-    return render(request, 'teacher_view/assignment/edit.html',
+    return render(request, 'assignment/edit.html',
     {'current_courses' : current_classes,
     'assignment' : edit_ass,
     'form': form

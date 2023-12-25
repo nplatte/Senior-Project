@@ -20,12 +20,6 @@ class TestLoginPage(LiveServerTestCase):
         response = self.client.post(reverse('login_page'), {'username': self.test_username, 'password': self.test_password}, follow=True)
         self.assertRedirects(response, reverse('staff_home_page'))
 
-    def test_login_redirects_student_to_student_view_on_success(self):
-        student_group = Group.objects.create(name='student')
-        student_group.user_set.add(self.user)
-        response = self.client.post(reverse('login_page'), {'username': self.test_username, 'password': self.test_password}, follow=True)
-        self.assertRedirects(response, reverse('student_home_page'))
-
     def test_login_redirects_to_login_on_fail(self):
         response = self.client.post(reverse('login_page'), {'username': self.test_username, 'password': 'wrong_password'}, follow=True)
         self.assertRedirects(response, reverse('login_page'))

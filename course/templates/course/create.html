@@ -8,6 +8,10 @@
         href="{% static 'teacher_view/css/navbar.css' %}">
 {% endblock %}
 
+{% block title %}
+<title>Create Course</title>
+{% endblock %}
+
 {% block content %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}

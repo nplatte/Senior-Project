@@ -4,7 +4,7 @@ from assignment.models import Assignment
 from django.utils.timezone import datetime
 from zoneinfo import ZoneInfo
 from assignment.forms import AssignmentForm
-from teacher_view.tests.test_views.inherit import ViewTest
+from teacher_view.tests.inherit import ViewTest
 
 
 TZ = 'America/New_York'

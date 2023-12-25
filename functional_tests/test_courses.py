@@ -3,7 +3,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from os import getcwd
 
-from teacher_view.models import Course
+from course.models import Course
 from functional_tests.inherits import BasicSeleniumTest
 
 
@@ -28,8 +28,6 @@ class TestTeacherClass(BasicSeleniumTest):
         chain = ActionChains(self.browser)
         home_btn = self.browser.find_element(By.ID, 'nav-home')
         courses_btn = self.browser.find_element(By.ID, 'nav-courses')
-        #assignments_btn = self.browser.find_element(By.ID, 'nav-assignments')
-        grades_btn = self.browser.find_element(By.ID, 'nav-grades')
         # they move to the courses dropdown and reveal other options
         chain.move_to_element(courses_btn).perform()
         add_course_btn = self.browser.find_element(By.ID, 'add-course')

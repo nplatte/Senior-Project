@@ -53,6 +53,6 @@ class BasicSeleniumTest(StaticLiveServerTestCase):
             code='CS 260 01',
             title='Introduction to Comp',
             term='2024 May Term',
-            course_instructor=instructor
+            instructor=instructor
         )
         return c

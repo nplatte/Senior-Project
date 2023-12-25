@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 import string, random
 from django.urls import reverse
+from course.models import Course as CCourse
 
 
 class Student(models.Model):
@@ -54,7 +55,7 @@ class Course(models.Model):
 
 class Assignment(models.Model):
     
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, blank=True, null=True)
+    course = models.ForeignKey(CCourse, on_delete=models.CASCADE, blank=True, null=True)
     title = models.CharField(max_length=50, default='')
     description = models.TextField(default='')
     due_date = models.DateTimeField(blank=True, null=True)

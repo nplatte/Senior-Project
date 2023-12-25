@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from teacher_view.models import Course, Assignment, Student
+from teacher_view.models import Assignment
 from .models import Grade
 from datetime import date
-from teacher_view.forms import CourseModelFileForm, EditCourseForm, AssignmentForm
+from teacher_view.forms import AssignmentForm
 from django.contrib.auth.decorators import login_required
 from django import views
 from django.utils.decorators import method_decorator
+from course.models import Course, Student
 
 
 @method_decorator(login_required, 'dispatch')
@@ -46,83 +47,14 @@ class ProfilePageView(TeacherView):
     template = "teacher_view/profile.html"
 
 
-@login_required()
-def edit_course_page(request, course_id):
-    current_classes = get_staff_classes(request.user)
-    course = Course.objects.get(pk=course_id)
-    if request.method == 'POST':
-        form = EditCourseForm(request.POST, instance=course)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('staff_course_page', kwargs={'course_id': course.pk}))
-    return render(request, 'teacher_view/course/edit.html', {
-        'current_courses': current_classes,
-        'course': course,
-        'edit_form': EditCourseForm(instance=course)
-    })
-
-@login_required()
-def add_course_page(request):
-    current_classes = get_staff_classes(request.user)
-    if request.method == 'POST':
-        file_form = CourseModelFileForm(request.POST, request.FILES)
-        if file_form.is_valid():
-            new_course = file_form.save()
-            return redirect(course_page, course_id=new_course.pk)
-    else:
-        file_form = CourseModelFileForm()
-    return render(request, 'teacher_view/course/create.html', 
-    {'current_courses' : current_classes,
-     'file_form': file_form
-        })
-
-def courses_page(request):
-    all_staff_courses = Course.objects.filter(course_instructor=request.user)
-    current_courses = get_staff_classes(request.user)
-    return render(request, 'teacher_view/course/courses.html', {
-        'all_courses': all_staff_courses,
-        'current_courses': current_courses
-    })
-
-def course_page(request, course_id):
-    current_classes = get_staff_classes(request.user)
-    current_course = Course.objects.get(pk=int(course_id))
-    if request.POST.get('submit',):
-        new_student = Student.objects.get(number=request.POST.get('student_id')) 
-        current_course.students.add(new_student)
-        current_course.save()
-    elif request.POST.get('delete',):
-        deleted_student = Student.objects.get(number=request.POST.get('student_id'))
-        current_course.students.remove(deleted_student)
-        current_course.save()
-    assignments =  Assignment.objects.filter(
-        course=current_course, 
-        ).order_by('-due_date').reverse()
-    course_students = Student.objects.filter(enrolled_students=current_course)
-    return render(request, 'teacher_view/course/view.html', 
-    {'current_courses' : current_classes,
-    'current_course' : current_course,
-    'assignments': assignments,
-    'students' : course_students,
-        })
-
-def grade_course_page(request, course_title):
-    if request.method == 'POST':
-        update_grades(request, course_title)
-    current_classes = get_staff_classes(request.user)
-    current_course = current_classes.get(title=course_title)
-    course_grades = Grade.objects.filter(course=current_course)
-    return render(request, 'teacher_view/course/grade_course.html',
-    {'current_courses' : current_classes,
-    'student_grades' : course_grades, 
-    })
 
 def add_assignment_page(request, course_id):
     if request.method == 'POST':
         form = AssignmentForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect(course_page, course_id=course_id)
+            c = Course.objects.get(pk=course_id)
+            return redirect(c.get_absolute_url(), course_id=course_id)
     form = AssignmentForm()
     current_classes = get_staff_classes(request.user)
     context = {
@@ -143,7 +75,7 @@ def edit_assignment_page(request, assignment_id):
         form = AssignmentForm(request.POST, instance=edit_ass)
         if form.is_valid():
             form.save()
-            return redirect(reverse('staff_course_page', kwargs={'course_id':edit_ass.course.pk}))
+            return redirect(reverse('view_course_page', kwargs={'course_id':edit_ass.course.pk}))
     return render(request, 'teacher_view/assignment/edit.html',
     {'current_courses' : current_classes,
     'assignment' : edit_ass,
@@ -152,7 +84,7 @@ def edit_assignment_page(request, assignment_id):
 
 def get_staff_classes(user):
     terms = find_terms()
-    current_courses = Course.objects.filter(course_instructor=user, term__in=terms)
+    current_courses = Course.objects.filter(instructor=user, term__in=terms)
     return current_courses
 
 def find_terms():
@@ -168,7 +100,7 @@ def find_terms():
 
 def get_all_past_terms(request):
     terms = find_terms()
-    user_courses = Course.objects.filter(course_instructor=request.user).exclude(term__in=terms).values('term')
+    user_courses = Course.objects.filter(instructor=request.user).exclude(term__in=terms).values('term')
     past_terms = set( val for dic in user_courses for val in dic.values())
     return past_terms
 

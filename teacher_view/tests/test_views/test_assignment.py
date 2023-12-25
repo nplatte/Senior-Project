@@ -47,7 +47,8 @@ class TestCreateAssignmentPOST(ViewTest):
 
     def test_good_form_redirects_to_course_page(self):
         response = self.client.post(reverse('add_assignment', kwargs={'course_id':self.c.pk}), data=self.data, follow=True)
-        self.assertRedirects(response, f'/teacher/course/{self.c.pk}/')
+
+        self.assertRedirects(response, reverse('view_course_page', kwargs={'course_id': self.c.pk}))
 
     def test_good_form_makes_new_assignment(self):
         a_list = Assignment.objects.all()
@@ -133,14 +134,14 @@ class TestEditAssignmentPOST(ViewTest):
 
     def test_redirects_course_page_on_POST(self):
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
-        self.assertRedirects(response, reverse('staff_course_page', kwargs={'course_id': self.c.pk}))
+        self.assertRedirects(response, reverse('view_course_page', kwargs={'course_id': self.c.pk}))
 
     def test_assignment_redirects_to_correct_course_page_on_POST(self):
         new_course = self._make_course(self.test_user, 'Make Yahoo')
         self.data['course'] = new_course.pk
         
         response = self.client.post(reverse('staff_edit_assignment_page', kwargs={'assignment_id': self.a.pk}), self.data)
-        self.assertRedirects(response, reverse('staff_course_page', kwargs={'course_id': new_course.pk}))
+        self.assertRedirects(response, reverse('view_course_page', kwargs={'course_id': new_course.pk}))
 
     def test_bad_post_does_not_redirect(self):
         bad_data = {

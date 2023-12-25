@@ -13,23 +13,12 @@
 
 
     <div class="dropdown">
-        <button class="dropbtn" id="nav-grades">Grades
-          <i class="fa fa-caret-down"></i>
-        </button>
-        <div class="dropdown-content">
-          {% for course in current_courses %}
-          <a href="{% url 'course_grade_page' course.title %}">{{ course.title }}</a>
-          {% endfor %}
-        </div>
-    </div>
-
-    <div class="dropdown">
       <button class="dropbtn" id="nav-courses">Courses 
         <i class="fa fa-caret-down"></i>
       </button>
       <div class="dropdown-content">
-        <a href="{% url 'staff_courses_page' %}" id="curr-courses">Courses</a>
-        <a href="{% url 'staff_add_course_page' %}" id="add-course">Add Course</a>
+        <a href="{% url 'courses_page' %}" id="curr-courses">Courses</a>
+        <a href="{% url 'add_course_page' %}" id="add-course">Add Course</a>
         {% for course in current_courses %}
         <a href="{{ course.get_absolute_url }}" id="course-{{ course.pk }}-link">{{ course.title }}</a>
         {% endfor %}

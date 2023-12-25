@@ -13,11 +13,11 @@
 <div class = assignment_container>
     <a class="assignment" id="assignment_{{ a.pk }}"> {{ a.title }}</a>
     <p id="assignment_{{ a.pk }}_due_date">Due Date: {{ a.due_date|date:"Y-m-d H:i:s" }}</p>
-    <a href="{% url 'staff_edit_assignment_page' assignment_id=a.pk %}" id="edit_assignment_{{ a.pk }}">Edit {{ a.title }}</a>
+    <a href="{% url 'edit_assignment_page' assignment_id=a.pk %}" id="edit_assignment_{{ a.pk }}">Edit {{ a.title }}</a>
 </div>
 {% endfor %}
 <div class = assignment_container>
-    <a class="assignment" href="{% url 'add_assignment' current_course.pk %}" id="create-assignment-link"> Create Assignment</a>
+    <a class="assignment" href="{% url 'add_assignment_page' current_course.pk %}" id="create-assignment-link"> Create Assignment</a>
 </div>
 
 <h2>Students</h2>

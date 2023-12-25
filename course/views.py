@@ -4,7 +4,7 @@ from datetime import datetime
 from course.models import Course, Student
 from course.forms import CourseModelFileForm, EditCourseForm
 from django.contrib.auth.decorators import login_required
-from teacher_view.models import Assignment
+from assignment.models import Assignment
 
 
 def get_staff_classes(user):

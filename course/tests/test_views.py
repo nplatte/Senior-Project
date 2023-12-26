@@ -1,34 +1,29 @@
 from assignment.models import Assignment
 from django.urls import reverse
-from course.models import Course
+from course.models import Course, Student
 from course.forms import CourseModelFileForm, EditCourseForm
 from django.utils.timezone import datetime
 from os import getcwd, remove, path
 from zoneinfo import ZoneInfo
-from django.test import TestCase
-from django.contrib.auth.models import User, Group
+from rest_framework.test import APIRequestFactory
+from teacher_view.tests.inherit import ViewTest
 
 
+class TestViewStudentCoursesAPI(ViewTest):
 
-class ViewTest(TestCase):
+    def setUp(self):
+        self.ts = Student.objects.create(
+            name='Jane Doe',
+            email='jd@gmail.com',
+            number=12345678,
+            year=2020
+        )
+        self.factory = APIRequestFactory()
+        self.url = reverse('view_courses_api', kwargs={'student_id': self.ts.number})
 
-    def setUp(self) -> None:
-        self.test_user = self._add_staff_user()
-        self.client.force_login(self.test_user)
-        self.c = self._make_course(self.test_user)
-        return super().setUp()
-
-    def _add_staff_user(self):
-        # inorder to login, a user must be part of the staff group
-        test_user = User.objects.create_user('new', 'new@gmail.com', 'password')
-        staff_group = Group.objects.create(name='staff')
-        staff_group.user_set.add(test_user)
-        return test_user
-
-    def _make_course(self, user, title='test course'):
-        # this makes a course with the passed user as the instructor
-        term = f'2023 Fall Term'
-        return Course.objects.create(title=title, instructor = user, term=term)
+    def test_api_requests_gets_a_course(self):
+        response = self.factory.get(self.url)
+        print(response)
 
 
 class TestViewCoursePage(ViewTest):

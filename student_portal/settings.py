@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'login',
     'teacher_view',
     'course',
-    'assignment',    
+    'assignment',
+    'rest_framework',    
 ]
 
 MIDDLEWARE = [

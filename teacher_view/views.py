@@ -61,30 +61,4 @@ def find_terms():
     elif month > 6:
         terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
         return terms
-
-'''def update_grades(request, title):
-    terms = find_terms()
-    current_course = Course.objects.get(title=title, term__in=terms)
-    parsed_file = parse_grade_file(request.FILES["grade_file"])
-    for grade_object in Grade.objects.filter(course=current_course):
-        grade_object.delete()
-    for grade_set in parsed_file[1:-2]:
-        new_grade = Grade()
-        new_grade.student = Student.objects.get(number=grade_set[0])
-        tab = '   '
-        new_grade.student_scores = tab.join(grade_set)[:-2]
-        new_grade.course = current_course
-        new_grade.catagories = tab.join(parsed_file[0])[:-2]
-        new_grade.points_possible = tab.join(parsed_file[-1])[:-3]
-        new_grade.letter_grade = grade_set[-1][:-2]
-        new_grade.save()
-
-def parse_grade_file(file):
-    content_list = str(file.read()).split('\\n')
-    content_list = [group.split('\\t') for group in content_list]
-    char_remove = ['','b"', ' ']
-    for group in content_list:
-        for entry in group:
-            if entry in char_remove:
-                group.remove(entry)
-    return content_list[:-1]'''
+    

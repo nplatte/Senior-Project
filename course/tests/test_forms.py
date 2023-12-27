@@ -121,6 +121,50 @@ class TestEditCourseForm(TestCase):
         self.assertIn('id="edit-course-term"', f_as_p)
 
 
+class TestEditCourseFormRequiredFields(TestCase):
+
+    def setUp(self):
+        instr = User.objects.create_user('test', 'test@test.com', 'p@ssword')
+        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
+        file = open(f'{self.base_path}\\CS_260.xls')
+        imf = InMemoryUploadedFile(
+            file=file,
+            field_name='source_file',
+            name='CS_260.xls',
+            content_type='application/vnd.ms-excel',
+            size=14054,
+            charset=None,
+            content_type_extra={}
+        )
+        self.c = Course.objects.create(
+            source_file=imf,
+            code='CS 260 01',
+            title='Introduction to Comp',
+            term='May Term',
+            year='23-24',
+            instructor=instr
+        )
+        self.data = {
+            'title': 'Intro to Graphics',
+            'code': 'CS 250 01',
+            'term': 'May Term',
+            'year': '24-25',
+            'instructor': instr
+        }
+
+    def _field_throws_error_when_absent(self, field_name):
+        del self.data[field_name]
+        form = EditCourseForm(self.data, instance=self.c)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(form.errors[field_name][0], 'This field is required.')
+
+    def test_no_title_throws_error(self):
+        self._field_throws_error_when_absent('title')
+        self._field_throws_error_when_absent('code')
+        self._field_throws_error_when_absent('term')
+        self._field_throws_error_when_absent('year')
+
+
 class TestMyHTMLParser(TestCase):
 
     def setUp(self):

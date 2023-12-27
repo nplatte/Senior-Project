@@ -67,7 +67,8 @@ class TestCourseModel(TestCase):
             source_file=imf,
             code='CS 260 01',
             title='Introduction to Computer Graphics',
-            term='2019 May Term'
+            term='May Term',
+            year='23-24'
         )
 
     def tearDown(self) -> None:
@@ -78,13 +79,13 @@ class TestCourseModel(TestCase):
     
     def test_course_has_info(self):
         self.assertEqual(self.test_class.code, 'CS 260 01')
-        self.assertEqual(self.test_class.term, '2019 May Term')
+        self.assertEqual(self.test_class.term, 'May Term')
         self.assertEqual(self.test_class.title, 'Introduction to Computer Graphics')
 
     def test_Course_uses_database(self):
         course = Course.objects.all().first()
         self.assertEqual(course.title, 'Introduction to Computer Graphics')
-        self.assertEqual(course.term, '2019 May Term')
+        self.assertEqual(course.term, 'May Term')
         self.assertEqual(course.code, 'CS 260 01')
 
     def test_Course_model_has_correct_get_absolute_URL(self):

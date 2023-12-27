@@ -5,10 +5,15 @@ from course.forms import CourseModelFileForm, EditCourseForm
 from django.contrib.auth.decorators import login_required
 from assignment.models import Assignment
 from teacher_view.views import get_staff_classes
+from django.http import JsonResponse
+from course.serializers import CourseSerializer
 
 
 def courses_api_page(request, student_id):
-    pass
+    s = Student.objects.get(number=student_id)
+    student_courses = Course.objects.filter(students__number=student_id)
+    serializer = CourseSerializer(student_courses, many=True)
+    return JsonResponse(serializer.data, safe=False)
 
 @login_required()
 def edit_course_page(request, course_id):

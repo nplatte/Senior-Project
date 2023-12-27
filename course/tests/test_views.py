@@ -5,25 +5,36 @@ from course.forms import CourseModelFileForm, EditCourseForm
 from django.utils.timezone import datetime
 from os import getcwd, remove, path
 from zoneinfo import ZoneInfo
-from rest_framework.test import APIRequestFactory
+import json
+from rest_framework.test import APIRequestFactory, APITestCase
 from teacher_view.tests.inherit import ViewTest
 
 
-class TestViewStudentCoursesAPI(ViewTest):
+class TestViewStudentCoursesAPI(ViewTest, APITestCase):
 
     def setUp(self):
+        super().setUp()
         self.ts = Student.objects.create(
             name='Jane Doe',
             email='jd@gmail.com',
             number=12345678,
             year=2020
         )
-        self.factory = APIRequestFactory()
+        self.c.students.add(self.ts)
+        self.c.save()
+        
         self.url = reverse('view_courses_api', kwargs={'student_id': self.ts.number})
 
     def test_api_requests_gets_a_course(self):
-        response = self.factory.get(self.url)
-        print(response)
+        response = self.client.get(self.url)
+        expected_data = [{
+            'id': self.c.pk,
+            'title': self.c.title,
+            'code': self.c.code,
+            'term': self.c.term,
+            'instructor': self.c.instructor.pk,
+        }]
+        self.assertJSONEqual(response.content, json.dumps(expected_data))
 
 
 class TestViewCoursePage(ViewTest):

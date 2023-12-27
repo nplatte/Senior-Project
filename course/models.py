@@ -41,7 +41,8 @@ class Course(models.Model):
     source_file = models.FileField(upload_to='class_htmls', default='')
     code = models.CharField(default='', max_length=20)
     title = models.CharField(default='', max_length=50)
-    term = models.CharField(default='', max_length=60)
+    term = models.CharField(default='', max_length=20)
+    year = models.CharField(default='', max_length=10)
     students = models.ManyToManyField(Student, related_name='enrolled_students')
     instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, blank=True, null=True, related_name='instructor')
 

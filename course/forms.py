@@ -51,7 +51,7 @@ class CourseModelFileForm(forms.ModelForm):
 class EditCourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['title', 'code', 'term']
+        fields = ['title', 'code', 'term', 'year']
         widgets = {
             'title': forms.TextInput(
                 attrs={

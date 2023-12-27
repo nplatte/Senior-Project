@@ -84,7 +84,8 @@ class TestEditCourseForm(TestCase):
             source_file=imf,
             code='CS 260 01',
             title='Introduction to Comp',
-            term='2024 May Term',
+            term='May Term',
+            year='23-24',
             instructor=instr
         )
 
@@ -98,7 +99,8 @@ class TestEditCourseForm(TestCase):
         data = {
             'title': 'Intro to Graphics',
             'code': 'CS 250 01',
-            'term': '2025 May Term'
+            'term': 'May Term',
+            'year': '24-25'
         }
         form = EditCourseForm(data=data, instance=self.c)
         self.assertTrue(form.is_valid())
@@ -109,6 +111,7 @@ class TestEditCourseForm(TestCase):
         self.assertEqual(new_title, data['title'])
         self.assertEqual(new_code, data['code'])
         self.assertEqual(new_term, data['term'])
+        self.assertEqual(self.c.year, data['year'])
 
     def test_form_attributes(self):
         form = EditCourseForm()

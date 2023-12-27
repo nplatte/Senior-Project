@@ -70,6 +70,18 @@ class EditCourseForm(forms.ModelForm):
             )
         }
 
+    def clean_term(self):
+        term = self.cleaned_data['term']
+        accepted = [
+            'Summer Term',
+            'Fall Term',
+            'May Term',
+            'Winter Term',
+        ]
+        if term in accepted:
+            return term
+        raise ValidationError(f'Term {term} not in {accepted}')
+
 
 class MyHTMLParser(HTMLParser):
     def __init__(self):

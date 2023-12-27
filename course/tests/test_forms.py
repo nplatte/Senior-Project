@@ -88,6 +88,13 @@ class TestEditCourseForm(TestCase):
             year='23-24',
             instructor=instr
         )
+        self.data = {
+            'title': 'Intro to Graphics',
+            'code': 'CS 250 01',
+            'term': 'May Term',
+            'year': '24-25',
+            'instructor': instr
+        }
 
     def tearDown(self) -> None:
         upload_file = f'{getcwd()}\\class_htmls\\CS_260.xls'
@@ -96,22 +103,16 @@ class TestEditCourseForm(TestCase):
         return super().tearDown()
 
     def test_good_form_success(self):
-        data = {
-            'title': 'Intro to Graphics',
-            'code': 'CS 250 01',
-            'term': 'May Term',
-            'year': '24-25'
-        }
-        form = EditCourseForm(data=data, instance=self.c)
+        form = EditCourseForm(data=self.data, instance=self.c)
         self.assertTrue(form.is_valid())
         form.save()
         new_title = self.c.title
         new_code = self.c.code
         new_term = self.c.term
-        self.assertEqual(new_title, data['title'])
-        self.assertEqual(new_code, data['code'])
-        self.assertEqual(new_term, data['term'])
-        self.assertEqual(self.c.year, data['year'])
+        self.assertEqual(new_title, self.data['title'])
+        self.assertEqual(new_code, self.data['code'])
+        self.assertEqual(new_term, self.data['term'])
+        self.assertEqual(self.c.year, self.data['year'])
 
     def test_form_attributes(self):
         form = EditCourseForm()
@@ -119,38 +120,6 @@ class TestEditCourseForm(TestCase):
         self.assertIn('id="edit-course-title"', f_as_p)
         self.assertIn('id="edit-course-code"', f_as_p)
         self.assertIn('id="edit-course-term"', f_as_p)
-
-
-class TestEditCourseFormRequiredFields(TestCase):
-
-    def setUp(self):
-        instr = User.objects.create_user('test', 'test@test.com', 'p@ssword')
-        self.base_path = f'{getcwd()}\\teacher_view\\test_class_htmls'
-        file = open(f'{self.base_path}\\CS_260.xls')
-        imf = InMemoryUploadedFile(
-            file=file,
-            field_name='source_file',
-            name='CS_260.xls',
-            content_type='application/vnd.ms-excel',
-            size=14054,
-            charset=None,
-            content_type_extra={}
-        )
-        self.c = Course.objects.create(
-            source_file=imf,
-            code='CS 260 01',
-            title='Introduction to Comp',
-            term='May Term',
-            year='23-24',
-            instructor=instr
-        )
-        self.data = {
-            'title': 'Intro to Graphics',
-            'code': 'CS 250 01',
-            'term': 'May Term',
-            'year': '24-25',
-            'instructor': instr
-        }
 
     def _field_throws_error_when_absent(self, field_name):
         del self.data[field_name]
@@ -163,6 +132,22 @@ class TestEditCourseFormRequiredFields(TestCase):
         self._field_throws_error_when_absent('code')
         self._field_throws_error_when_absent('term')
         self._field_throws_error_when_absent('year')
+
+    def test_accepted_terms(self):
+        terms = ['Summer Term', 'Fall Term',
+            'May Term', 'Winter Term']
+        for term in terms:
+            self.data['term'] = term
+            form = EditCourseForm(self.data, instance=self.c)
+            self.assertTrue(form.is_valid())
+
+    def test_bad_term(self):
+        bad_term = 'Polka Term'
+        self.data['term'] = bad_term
+        form = EditCourseForm(self.data, instance=self.c)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(1, len(form.errors['term']))
+        self.assertEqual(form.errors['term'][0], f"Term {bad_term} not in ['Summer Term', 'Fall Term', 'May Term', 'Winter Term']")
 
 
 class TestMyHTMLParser(TestCase):

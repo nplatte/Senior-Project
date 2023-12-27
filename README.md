@@ -30,3 +30,24 @@ This app has the Assignment model, the forms for creating a new assignment for a
 ### login
 This app handles the login screen and uses Djangos implementation of user authentication. It is built to be easily ported between projects with minimal imports from outside.
 
+# API Guide
+
+The REST API is implemented using Django REST Framework. and can be used to pull course information. The goal is to eventually be abe to pull assignment information, submit assignments, view grades and more. The student portal will use this API to collect data, and display it. The seperation from the database allows for a more secure and controlled experience. 
+
+## Course API
+
+This is written to be used by students, so use will be from their perspective, teachers should be able to do similar functions. Such as viewing courses a student is in.
+
+### View All Courses
+
+A student should be able to view all of the courses they are in for the current year. A teacher should also be able to view what courses a student is enrolled in. However another student should not be able to see what courses a different student is in. The returned information would be a list of courses the student is in, including the id, title, term, code and instructor. This would be a GET request that uses the student id and the year.
+
+### View Course
+
+A student/instructor should be able to view a course by id and see course title, term, instructor, code, and any assignments that are due should have a title, due date, and id sent. This would be a GET request that uses the course id.
+
+### Edit Course
+
+The only people who should be able to edit a course are the course instructors. This includes changing the title, code, term, instructor. This would be a PATCH request as it would only partially modify a resourse.
+
+### Create Course

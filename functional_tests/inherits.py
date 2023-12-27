@@ -64,7 +64,8 @@ class BasicSeleniumTest(StaticLiveServerTestCase):
             source_file=imf,
             code='CS 260 01',
             title='Introduction to Comp',
-            term='2024 May Term',
+            term='May Term',
+            year='23-24',
             instructor=instructor
         )
         return c

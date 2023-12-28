@@ -85,14 +85,14 @@ class TestEditCourseForm(TestCase):
             code='CS 260 01',
             title='Introduction to Comp',
             term='May Term',
-            year='23-24',
+            year='2023-2024',
             instructor=instr
         )
         self.data = {
             'title': 'Intro to Graphics',
             'code': 'CS 250 01',
             'term': 'May Term',
-            'year': '24-25',
+            'year': '2024-2025',
             'instructor': instr
         }
 
@@ -148,6 +148,14 @@ class TestEditCourseForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(1, len(form.errors['term']))
         self.assertEqual(form.errors['term'][0], f"Term {bad_term} not in ['Summer Term', 'Fall Term', 'May Term', 'Winter Term']")
+
+    def test_bad_year(self):
+        bad_year = '23-24'
+        self.data['year'] = bad_year
+        form = EditCourseForm(self.data, instance=self.c)
+        self.assertFalse(form.is_valid())
+        self.assertEqual(1, len(form.errors['year']))
+        self.assertEqual(form.errors['year'][0], f"year {bad_year} must be in format of YYYY-YYYY. Ex: 2023-2024")
 
 
 class TestMyHTMLParser(TestCase):

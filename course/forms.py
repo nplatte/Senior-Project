@@ -70,6 +70,13 @@ class EditCourseForm(forms.ModelForm):
             )
         }
 
+    def clean_year(self):
+        year = self.cleaned_data['year']
+        splt_yr = year.split('-')
+        if 1000 < int(splt_yr[0]) < 9000 and 1000 < int(splt_yr[0]) < 9000:
+            return year
+        raise ValidationError(f'year {year} must be in format of YYYY-YYYY. Ex: 2023-2024')
+
     def clean_term(self):
         term = self.cleaned_data['term']
         accepted = [

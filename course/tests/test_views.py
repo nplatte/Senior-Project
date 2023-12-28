@@ -189,7 +189,7 @@ class TestEditCoursePagePOST(ViewTest):
             'title': 'Weird',
             'code': '1234',
             'term': 'May Term',
-            'year': '23-24'
+            'year': '2023-2024'
         }
         self.url = reverse('edit_course_page', kwargs={'course_id': self.c.pk})
 
@@ -199,11 +199,7 @@ class TestEditCoursePagePOST(ViewTest):
         self.assertRedirects(response, expected_url)
 
     def test_unseccessful_POST_does_not_redirect(self):
-        self.data = {
-            'title': 'Weird',
-            'term': 'May Term',
-            'year': '23-24'
-        }
+        del self.data['title']
         response = self.client.post(self.url, data=self.data)
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed('course/edit.html')

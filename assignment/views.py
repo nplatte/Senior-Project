@@ -4,9 +4,9 @@ from assignment.models import Assignment
 from assignment.forms import AssignmentForm
 from django.contrib.auth.decorators import login_required
 from course.models import Course
-from datetime import datetime
+from teacher_view.views import get_staff_classes
 
-def get_staff_classes(user):
+'''def get_staff_classes(user):
     terms = find_terms()
     current_courses = Course.objects.filter(instructor=user, term__in=terms)
     return current_courses
@@ -20,7 +20,7 @@ def find_terms():
         return terms
     elif month > 6:
         terms = [f'{year} Fall Term', f'{year+1} Winter Term', f'{year+1} May Term']
-        return terms
+        return terms'''
 
 def add_assignment_page(request, course_id):
     if request.method == 'POST':

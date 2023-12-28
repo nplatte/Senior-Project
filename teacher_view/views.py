@@ -47,8 +47,14 @@ class ProfilePageView(TeacherView):
  
 
 def get_staff_classes(user):
-    terms = find_terms()
-    current_courses = Course.objects.filter(instructor=user, term__in=terms)
+    today = date.today()
+    y_num = today.year
+    if today.month < 6:
+        year = f'{y_num-1}-{y_num}'
+    else:
+        year = f'{y_num}-{y_num+1}'
+    #terms = find_terms()
+    current_courses = Course.objects.filter(instructor=user, year=year)
     return current_courses
 
 def find_terms():

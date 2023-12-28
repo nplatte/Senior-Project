@@ -19,5 +19,6 @@ class ViewTest(TestCase):
 
     def _make_course(self, user, title='test course'):
         # this makes a course with the passed user as the instructor
-        term = f'2023 Fall Term'
-        return Course.objects.create(title=title, instructor = user, term=term)
+        term = 'Fall Term'
+        year = '2023-2024'
+        return Course.objects.create(title=title, instructor = user, term=term, year=year)

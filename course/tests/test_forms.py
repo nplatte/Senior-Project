@@ -59,10 +59,21 @@ class TestCourseModelFileForm(TestCase):
         form = CourseModelFileForm(*self.test_data)
         self.assertEqual(len(form.errors), 0)
         new_course = form.save()
-
         self.assertEqual(new_course.title, 'Obj-Orient Prog & Intro Data Struct')
         self.assertEqual(new_course.code, 'CS 220 01')
         self.assertEqual(new_course.term, 'May Term')
+        self.assertEqual(new_course.year, '2018-2019')
+
+    def test_file_form_get_year(self):
+        helper_func = CourseModelFileForm()._get_year
+        terms = ['Summer Term', 'Fall Term', 'Winter Term', 'May Term']
+        for t in terms[:2]:
+            y = helper_func(t, 2020)
+            self.assertEqual(y, '2020-2021')
+        for t in terms[2:]:
+            y = helper_func(t, 2020)
+            self.assertEqual(y, '2019-2020')
+        
 
 
 class TestEditCourseForm(TestCase):
@@ -127,7 +138,7 @@ class TestEditCourseForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors[field_name][0], 'This field is required.')
 
-    def test_no_title_throws_error(self):
+    def test_no_attribute_throws_error(self):
         self._field_throws_error_when_absent('title')
         self._field_throws_error_when_absent('code')
         self._field_throws_error_when_absent('term')

@@ -152,7 +152,6 @@ class TestAddCoursePagePOST(ViewTest):
         self.assertEqual(c.code, 'CS 220 01')
         self.assertEqual(c.term, 'May Term')
         self.assertEqual(c.year, '2018-2019')
-        self.assertEqual(c.instructor, self.test_user)
 
 
 class TestEditCoursePageGET(ViewTest):

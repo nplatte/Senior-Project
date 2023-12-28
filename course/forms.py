@@ -33,10 +33,18 @@ class CourseModelFileForm(forms.ModelForm):
         course_info = self._get_course_info(new_course)
         new_course.title = course_info[4]
         new_course.term = f'{course_info[1]} {course_info[2]}'
+        year = self._get_year(f'{course_info[1]} {course_info[2]}', int(course_info[0]))
         new_course.code = course_info[3]
-        new_course.year = int(course_info[0])
+        new_course.year = year
         new_course.save()
         return new_course 
+
+    def _get_year(self, _term: str, _year: int):
+        if _term in ['Winter Term', 'May Term']:
+            y = f'{_year-1}-{_year}'
+        elif _term in ['Summer Term', 'Fall Term']:
+            y = f'{_year}-{_year+1}'
+        return y
 
     def _get_course_info(self, course):
         file_path = f'{getcwd()}\\{course.source_file.name}'
@@ -75,7 +83,7 @@ class EditCourseForm(forms.ModelForm):
         splt_yr = year.split('-')
         if 1000 < int(splt_yr[0]) < 9000 and 1000 < int(splt_yr[0]) < 9000:
             return year
-        raise ValidationError(f'year {year} must be in format of YYYY-YYYY. Ex: 2023-2024')
+        raise ValidationError(f'year {year } must be in format of YYYY-YYYY. Ex: 2023-2024')
 
     def clean_term(self):
         term = self.cleaned_data['term']

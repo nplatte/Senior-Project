@@ -16,7 +16,7 @@ def courses_api_page(request, student_id):
     return JsonResponse(serializer.data, safe=False)
 
 @login_required()
-def edit_course_page(request, course_id):
+def edit_page(request, course_id):
     current_classes = get_staff_classes(request.user)
     edited_course = Course.objects.get(pk=course_id)
     if request.method == 'POST':
@@ -31,7 +31,7 @@ def edit_course_page(request, course_id):
     })
 
 @login_required()
-def add_course_page(request):
+def add_page(request):
     current_classes = get_staff_classes(request.user)
     if request.method == 'POST':
         file_form = CourseModelFileForm(request.POST, request.FILES)
@@ -53,7 +53,7 @@ def courses_page(request):
         'current_courses': current_courses
     })
 
-def course_page(request, course_id):
+def view_page(request, course_id):
     current_classes = get_staff_classes(request.user)
     current_course = Course.objects.get(pk=int(course_id))
     if request.POST.get('submit',):

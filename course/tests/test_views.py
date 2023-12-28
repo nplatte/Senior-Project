@@ -135,7 +135,8 @@ class TestAddCoursePagePOST(ViewTest):
     def test_file_upload_form_redirects_to_new_course_page(self):
         response = self.client.post(self.url, follow=True, data=self.data)
         created_course = Course.objects.filter(code='CS 220 01')[0]
-        self.assertRedirects(response, created_course.get_absolute_url())
+        expected_url = created_course.get_absolute_url()
+        self.assertRedirects(response, expected_url)
 
     def test_file_upload_creates_new_course(self):
         courses = len(Course.objects.all())
@@ -143,6 +144,15 @@ class TestAddCoursePagePOST(ViewTest):
         self.client.post(self.url, follow=True, data=self.data)
         courses = len(Course.objects.all())
         self.assertEqual(2, courses)
+
+    def test_file_upload_assigns_all_attributes(self):
+        response = self.client.post(self.url, data=self.data, follow=True)
+        c = response.context['current_course']
+        self.assertEqual(c.title, 'Obj-Orient Prog & Intro Data Struct')
+        self.assertEqual(c.code, 'CS 220 01')
+        self.assertEqual(c.term, 'May Term')
+        self.assertEqual(c.year, '2018-2019')
+        self.assertEqual(c.instructor, self.test_user)
 
 
 class TestEditCoursePageGET(ViewTest):
